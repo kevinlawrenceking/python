@@ -1,0 +1,18 @@
+2025-06-24 10:40:21,511 - INFO - Filtering for specific case ID: 171274
+2025-06-24 10:40:21,599 - INFO - Database Connection Established
+2025-06-24 10:40:21,677 - INFO - === PACER Scraper Started ===
+2025-06-24 10:40:21,689 - INFO - PACER credentials retrieved successfully
+2025-06-24 10:40:23,019 - INFO - ChromeDriver Initialized Successfully
+2025-06-24 10:40:32,017 - INFO - Client Code 'DocketWatch' entered successfully.
+2025-06-24 10:40:35,354 - INFO - PACER login successful.
+2025-06-24 10:40:35,358 - INFO - Script Failed: not enough values to unpack (expected 8, got 6)
+2025-06-24 10:40:37,579 - INFO - PACER Scraper Completed Successfully
+2025-06-24 10:41:34,902 - INFO - Filtering for specific case ID: 171274
+2025-06-24 10:41:34,989 - INFO - Database Connection Established
+2025-06-24 10:41:35,059 - INFO - === PACER Scraper Started ===
+2025-06-24 10:41:35,072 - INFO - PACER credentials retrieved successfully
+2025-06-24 10:41:36,331 - INFO - ChromeDriver Initialized Successfully
+2025-06-24 10:41:43,321 - INFO - Client Code 'DocketWatch' entered successfully.
+2025-06-24 10:41:46,892 - INFO - PACER login successful.
+2025-06-24 10:41:46,893 - INFO - Script Failed: not enough values to unpack (expected 8, got 6)
+2025-06-24 10:41:50,204 - INFO - PACER Scraper Completed Successfully

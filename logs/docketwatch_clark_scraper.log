@@ -1,0 +1,27 @@
+2025-07-14 11:53:30,226 - INFO - Chrome launched successfully.
+2025-07-14 11:53:30,233 - INFO - Performing login for tool 15
+2025-07-14 11:53:41,200 - INFO - Login failed: Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c220256]
+	(No symbol) [0x0x7ff79c22050c]
+	(No symbol) [0x0x7ff79c273887]
+	(No symbol) [0x0x7ff79c2484af]
+	(No symbol) [0x0x7ff79c27065c]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+2025-07-14 11:53:44,468 - INFO - Scraper completed and resources closed.

@@ -1,0 +1,27 @@
+"Error","ajp-nio-127.0.0.1-8020-exec-4","06/24/25","00:00:00","","Attribute validation error for tag cfquery.The value of the attribute datasource, which is currently '', is invalid. The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\sched\birthday_fix.cfm, line: 3 "
+coldfusion.tagext.sql.QueryTag$InvalidTagAttributeException: Attribute validation error for tag cfquery.
+
+"Error","ajp-nio-127.0.0.1-8020-exec-2","06/24/25","09:16:59","TAO","The EVENTID argument passed to the DETevents_24492 function is not of type numeric.If the component name is specified as a type of this argument, it is possible that either a definition file for the component cannot be found or is not accessible. The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\app\appoint-update\index.cfm, line: 878 "
+coldfusion.runtime.UDFMethod$InvalidArgumentTypeException: The EVENTID argument passed to the DETevents_24492 function is not of type numeric.
+
+"Error","ajp-nio-127.0.0.1-8020-exec-7","06/24/25","10:53:37","TAO","File not found: /include/CompanyLookup.cfc The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\include\CompanyLookup.cfc'' "
+coldfusion.runtime.TemplateNotFoundException: File not found: /include/CompanyLookup.cfc
+
+"Error","ajp-nio-127.0.0.1-8020-exec-8","06/24/25","10:53:38","TAO","File not found: /include/CompanyLookup.cfc The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\include\CompanyLookup.cfc'' "
+coldfusion.runtime.TemplateNotFoundException: File not found: /include/CompanyLookup.cfc
+
+"Error","ajp-nio-127.0.0.1-8020-exec-5","06/25/25","00:00:00","","Attribute validation error for tag cfquery.The value of the attribute datasource, which is currently '', is invalid. The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\sched\birthday_fix.cfm, line: 3 "
+coldfusion.tagext.sql.QueryTag$InvalidTagAttributeException: Attribute validation error for tag cfquery.
+
+"Error","ajp-nio-127.0.0.1-8020-exec-5","06/25/25","08:14:49","TAO","The EVENTID argument passed to the DETevents_24492 function is not of type numeric.If the component name is specified as a type of this argument, it is possible that either a definition file for the component cannot be found or is not accessible. The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\app\appoint-update\index.cfm, line: 878 "
+coldfusion.runtime.UDFMethod$InvalidArgumentTypeException: The EVENTID argument passed to the DETevents_24492 function is not of type numeric.
+
+"Error","ajp-nio-127.0.0.1-8020-exec-8","06/25/25","18:50:56","TAO","Element IMAGESURL is undefined in APPLICATION. The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\new-subdomain\auth-recoverpw.cfm, line: 121 "
+coldfusion.runtime.UndefinedElementException: Element IMAGESURL is undefined in APPLICATION.
+
+"Error","ajp-nio-127.0.0.1-8020-exec-5","06/25/25","22:18:49","TAO","File not found: /include/CompanyLookup.cfc The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\include\CompanyLookup.cfc'' "
+coldfusion.runtime.TemplateNotFoundException: File not found: /include/CompanyLookup.cfc
+
+"Error","ajp-nio-127.0.0.1-8020-exec-5","06/26/25","00:00:00","","Attribute validation error for tag cfquery.The value of the attribute datasource, which is currently '', is invalid. The specific sequence of files included or processed is: C:\home\theactorsoffice.com\wwwroot\app-subdomain_1.5\sched\birthday_fix.cfm, line: 3 "
+coldfusion.tagext.sql.QueryTag$InvalidTagAttributeException: Attribute validation error for tag cfquery.
+

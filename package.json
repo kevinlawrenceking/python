@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "puppeteer": "^24.12.1"
+  },
+  "name": "python",
+  "version": "1.0.0",
+  "main": "download_map_filing.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

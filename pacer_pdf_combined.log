@@ -1,0 +1,101 @@
+[2025-06-16 13:17:49] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:17:49] Found 5 document rows.
+[2025-06-16 13:17:49] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 13:17:51] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:17:52] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 13:17:52] Updated existing PDF: Declaration in Support of Motion
+[2025-06-16 13:17:52] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 13:17:54] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:17:55] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 13:17:55] Updated existing PDF: Exhibit A - Public Version 1 page
+[2025-06-16 13:17:55] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 13:17:57] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:17:58] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 13:17:58] Updated existing PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 13:17:58] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 13:18:00] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:18:00] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 13:18:00] Updated existing PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 13:18:00] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 13:18:03] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:18:04] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 13:18:04] Updated existing PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 13:22:36] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:22:36] Found 5 document rows.
+[2025-06-16 13:22:36] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 13:22:39] {"status": "error", "message": "An error occurred: download_and_save_pdf() missing 1 required positional argument: 'doc_data'"}
+[2025-06-16 13:24:56] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:24:56] Found 5 document rows.
+[2025-06-16 13:24:56] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 13:24:58] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:24:59] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137698721.pdf
+[2025-06-16 13:24:59] Updated existing PDF: Declaration in Support of Motion
+[2025-06-16 13:24:59] {"status": "error", "message": "An error occurred: cannot access local variable 'save_path' where it is not associated with a value"}
+[2025-06-16 13:27:52] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:27:52] Found 5 document rows.
+[2025-06-16 13:27:52] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 13:27:55] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:27:55] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137698721.pdf
+[2025-06-16 13:27:55] Updated existing PDF: Declaration in Support of Motion
+[2025-06-16 13:27:55] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 13:27:58] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:27:58] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137698722.pdf
+[2025-06-16 13:27:58] Updated existing PDF: Exhibit A - Public Version 1 page
+[2025-06-16 13:27:58] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 13:28:01] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:28:01] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137698724.pdf
+[2025-06-16 13:28:01] Updated existing PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 13:28:01] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 13:28:04] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:28:04] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137698725.pdf
+[2025-06-16 13:28:04] Updated existing PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 13:28:04] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 13:28:07] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:28:07] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137698726.pdf
+[2025-06-16 13:28:07] Updated existing PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 13:28:07] {"status": "success", "message": "PDFs downloaded for case_event_id 290476BC-8B9A-4437-AD40-4F2A8AC83483"}
+[2025-06-16 13:31:31] {"status": "error", "message": "An error occurred: Message: invalid argument: 'url' must be a string\n  (Session info: chrome=137.0.7151.103)\nStacktrace:\n\tGetHandleVerifier [0x0x7ff613f96f65+78965]\n\tGetHandleVerifier [0x0x7ff613f96fc0+79056]\n\t(No symbol) [0x0x7ff613d29dda]\n\t(No symbol) [0x0x7ff613dd1bc4]\n\t(No symbol) [0x0x7ff613da866a]\n\t(No symbol) [0x0x7ff613dd0dbe]\n\t(No symbol) [0x0x7ff613da8443]\n\t(No symbol) [0x0x7ff613d71311]\n\t(No symbol) [0x0x7ff613d720a3]\n\tGetHandleVerifier [0x0x7ff61424e26d+2926461]\n\tGetHandleVerifier [0x0x7ff614248993+2903715]\n\tGetHandleVerifier [0x0x7ff614266aed+3026941]\n\tGetHandleVerifier [0x0x7ff613fb16fe+187406]\n\tGetHandleVerifier [0x0x7ff613fb96ef+220159]\n\tGetHandleVerifier [0x0x7ff613f9faf4+114692]\n\tGetHandleVerifier [0x0x7ff613f9fca9+115129]\n\tGetHandleVerifier [0x0x7ff613f864d8+10728]\n\tBaseThreadInitThunk [0x0x7ffa84784de0+16]\n\tRtlUserThreadStart [0x0x7ffa8583edab+43]\n"}
+[2025-06-16 13:32:12] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:32:12] Found 2 document rows.
+[2025-06-16 13:32:12] Inserted new PDF: Stay
+[2025-06-16 13:32:15] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:32:15] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137667249.pdf
+[2025-06-16 13:32:15] Updated existing PDF: Stay
+[2025-06-16 13:32:15] Inserted new PDF: Exhibit A - Notice of Deposition of Street Releations & Subpoena 19 pages
+[2025-06-16 13:32:18] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:32:18] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137667250.pdf
+[2025-06-16 13:32:18] Updated existing PDF: Exhibit A - Notice of Deposition of Street Releations & Subpoena 19 pages
+[2025-06-16 13:32:18] {"status": "success", "message": "PDFs downloaded for case_event_id 13647FEA-4DEA-4606-A6CF-F0AC789C439E"}
+[2025-06-16 13:35:34] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:35:34] Found 2 document rows.
+[2025-06-16 13:35:34] Inserted new PDF: Stay
+[2025-06-16 13:35:37] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:35:37] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137667249.pdf
+[2025-06-16 13:35:37] Updated existing PDF: Stay
+[2025-06-16 13:35:37] Inserted new PDF: Exhibit A - Notice of Deposition of Street Releations & Subpoena 19 pages
+[2025-06-16 13:35:40] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:35:40] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137667250.pdf
+[2025-06-16 13:35:40] Updated existing PDF: Exhibit A - Notice of Deposition of Street Releations & Subpoena 19 pages
+[2025-06-16 13:35:40] {"status": "success", "message": "PDFs downloaded for case_event_id 13647FEA-4DEA-4606-A6CF-F0AC789C439E"}
+[2025-06-16 13:37:24] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:37:24] Found 2 document rows.
+[2025-06-16 13:37:24] Inserted new PDF: Stay
+[2025-06-16 13:37:26] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:37:27] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137667249.pdf
+[2025-06-16 13:37:27] Updated existing PDF: Stay
+[2025-06-16 13:37:27] Inserted new PDF: Exhibit A - Notice of Deposition of Street Releations & Subpoena 19 pages
+[2025-06-16 13:37:29] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:37:29] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\doc1-127137667250.pdf
+[2025-06-16 13:37:29] Updated existing PDF: Exhibit A - Notice of Deposition of Street Releations & Subpoena 19 pages
+[2025-06-16 13:37:29] {"status": "success", "message": "PDFs downloaded for case_event_id 13647FEA-4DEA-4606-A6CF-F0AC789C439E"}
+[2025-06-16 13:39:47] Multiple document rows detected. Processing all attachments.
+[2025-06-16 13:39:47] Found 2 document rows.
+[2025-06-16 13:39:47] Skipping already downloaded: https://ecf.nysd.uscourts.gov/doc1/127137667249
+[2025-06-16 13:39:47] Skipping already downloaded: https://ecf.nysd.uscourts.gov/doc1/127137667250
+[2025-06-16 13:39:47] {"status": "success", "message": "PDFs downloaded for case_event_id 13647FEA-4DEA-4606-A6CF-F0AC789C439E"}
+[2025-06-16 13:40:52] Single PDF case. Processing...
+[2025-06-16 13:40:53] {"status": "error", "message": "An error occurred: download_and_save_pdf() missing 1 required positional argument: 'doc_data'"}
+[2025-06-16 13:41:46] Single PDF case. Processing...
+[2025-06-16 13:41:46] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 13:41:47] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 13:41:47] Updated existing PDF: Order on Motion to Intervene

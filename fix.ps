@@ -1,0 +1,23 @@
+from bs4 import BeautifulSoup
+
+def extract_case_data_from_html(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    rows = soup.find_all('tr')
+    results = []
+
+    for row in rows:
+        a_tag = row.find('a', href=True)
+        if a_tag:
+            case_number = a_tag.get_text(strip=True)
+            href = a_tag['href']
+            results.append((case_number, href))
+
+    return results
+
+# Example usage:
+with open('fix.txt', 'r', encoding='utf-8') as file:
+    html_data = file.read()
+
+case_data = extract_case_data_from_html(html_data)
+for case_number, href in case_data:
+    print(case_number, href)

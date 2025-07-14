@@ -1,0 +1,37 @@
+2025-07-02 14:32:07,093 - INFO - === Script scraper_base started ===
+2025-07-02 14:32:08,300 - INFO - Found 1 cases to evaluate for updates
+2025-07-02 14:32:08,301 - INFO - Processing case_id: 84388
+2025-07-02 14:32:08,306 - INFO - Case update summary script complete.
+2025-07-02 15:09:06,557 - INFO - === Script scraper_base started ===
+2025-07-02 15:09:06,730 - INFO - Found 0 cases to evaluate for updates
+2025-07-02 15:09:06,731 - INFO - Case update summary script complete.
+2025-07-02 15:10:17,220 - INFO - === Script scraper_base started ===
+2025-07-02 15:10:17,383 - INFO - Found 1 cases to evaluate for updates
+2025-07-02 15:10:17,384 - INFO - Processing case_id: 107762
+2025-07-02 15:10:17,384 - INFO - Creating case update for case_id: 107762
+2025-07-02 15:10:17,387 - INFO - No unemailed case_events to create update for case_id: 107762
+2025-07-02 15:10:17,388 - INFO - Case update summary script complete.
+2025-07-02 15:15:34,152 - INFO - === Script scraper_base started ===
+2025-07-02 15:15:34,325 - INFO - Running find_recent_case_ids query
+2025-07-02 15:15:34,337 - INFO - Identified 0 recent case_ids to check: []
+2025-07-02 15:15:34,337 - INFO - Found 0 cases to evaluate for updates
+2025-07-02 15:15:34,339 - INFO - Case update summary script complete.
+2025-07-02 15:16:55,555 - INFO - === Script scraper_base started ===
+2025-07-02 15:16:55,737 - INFO - Running find_recent_case_ids query
+2025-07-02 15:16:55,740 - INFO - Identified 1 recent case_ids to check: [107762]
+2025-07-02 15:16:55,740 - INFO - Found 1 cases to evaluate for updates
+2025-07-02 15:16:55,740 - INFO - Processing case_id: 107762
+2025-07-02 15:16:55,741 - INFO - Starting process_case_update for case_id 107762
+2025-07-02 15:16:55,743 - INFO - No new update needed for case_id 107762
+2025-07-02 15:16:55,745 - INFO - Case update summary script complete.
+2025-07-02 15:38:44,555 - INFO - === Script scraper_base started ===
+2025-07-02 15:38:44,731 - INFO - Running find_recent_case_ids query
+2025-07-02 15:38:44,751 - INFO - Identified 1 recent case_ids to check: [84388]
+2025-07-02 15:38:44,752 - INFO - Found 1 cases to evaluate for updates
+2025-07-02 15:38:44,753 - INFO - Processing case_id: 84388
+2025-07-02 15:38:44,753 - INFO - Starting process_case_update for case_id 84388
+2025-07-02 15:38:44,761 - INFO - Created case_update ec4cbc0d-b2a7-4d29-bb34-c34cc3dce68d with 4 events
+2025-07-02 15:38:44,761 - INFO - Event IDs: ['89792C1F-F623-41E8-8175-1555434D6487', 'F1C161B1-086C-4921-852E-16A38EA2991E', 'E08AA631-6ACE-454B-8713-8955A5EC7A06', 'F11CFA45-191D-4707-B955-DB9B7F7031F3']
+2025-07-02 15:39:24,673 - INFO - Alert sent for case_update ec4cbc0d-b2a7-4d29-bb34-c34cc3dce68d
+2025-07-02 15:39:24,674 - INFO - Alert sent for case_update ec4cbc0d-b2a7-4d29-bb34-c34cc3dce68d (storyworthy: True)
+2025-07-02 15:39:24,676 - INFO - Case update summary script complete.

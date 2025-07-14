@@ -1,0 +1,269 @@
+[2025-06-13 17:22:32] Multiple document rows detected. Processing all attachments.
+[2025-06-13 17:22:32] Found 6 document rows.
+[2025-06-13 17:22:35] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:22:35] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:22:35] Inserted new PDF: Miscellaneous Relief
+[2025-06-13 17:22:37] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:22:37] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:22:37] Inserted new PDF: Exhibit A-McGee Sentencing Transcript 75 pages
+[2025-06-13 17:22:40] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:22:40] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:22:40] Inserted new PDF: Exhibit B- Kelly Search Warrant Application 24 pages
+[2025-06-13 17:22:42] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:22:42] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:22:42] Inserted new PDF: Exhibit C-Declaration of Kishan Modugumudi 2 pages
+[2025-06-13 17:22:45] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:22:45] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:22:45] Inserted new PDF: Exhibit D-Resume Subbanna Varanasi 2 pages
+[2025-06-13 17:22:47] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:22:47] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:22:47] Inserted new PDF: Exhibit E-Declaration of Mikael Stine 5 pages
+[2025-06-13 17:22:47] {"status": "success", "message": "PDFs downloaded for case_event_id 7B3ED1C7-D36B-4776-9046-8D54BCE666ED"}
+[2025-06-13 17:39:05] Single PDF case. Processing download.
+[2025-06-13 17:39:10] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:39:11] PDF saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:39:11] Inserted new PDF record (pending download): Miscellaneous Relief
+[2025-06-13 17:39:11] {"status": "success", "message": "PDFs processed for case_event_id 7B3ED1C7-D36B-4776-9046-8D54BCE666ED"}
+[2025-06-13 17:51:56] Single PDF case. Skipping download.
+[2025-06-13 17:51:56] {"status": "success", "message": "PDFs scraped for case_event_id 7B3ED1C7-D36B-4776-9046-8D54BCE666ED"}
+[2025-06-13 17:53:36] Single PDF case. Processing download.
+[2025-06-13 17:53:41] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:53:41] PDF saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:53:41] PDF record already exists for https://ecf.ilnd.uscourts.gov/doc1/067032653081?caseid=366672&de_seq_num=1877
+[2025-06-13 17:53:41] {"status": "success", "message": "PDFs processed for case_event_id 7B3ED1C7-D36B-4776-9046-8D54BCE666ED"}
+[2025-06-13 17:54:12] Multiple document rows detected. Processing all attachments.
+[2025-06-13 17:54:12] Found 6 document rows.
+[2025-06-13 17:54:14] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:54:14] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:54:14] Inserted new PDF: Miscellaneous Relief
+[2025-06-13 17:54:17] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:54:17] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:54:17] Inserted new PDF: Exhibit A-McGee Sentencing Transcript 75 pages
+[2025-06-13 17:54:19] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:54:19] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:54:19] Inserted new PDF: Exhibit B- Kelly Search Warrant Application 24 pages
+[2025-06-13 17:54:22] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:54:22] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:54:22] Inserted new PDF: Exhibit C-Declaration of Kishan Modugumudi 2 pages
+[2025-06-13 17:54:24] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:54:24] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:54:24] Inserted new PDF: Exhibit D-Resume Subbanna Varanasi 2 pages
+[2025-06-13 17:54:26] Direct PDF URL: https://ecf.ilnd.uscourts.gov
+[2025-06-13 17:54:27] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-13 17:54:27] Inserted new PDF: Exhibit E-Declaration of Mikael Stine 5 pages
+[2025-06-13 17:54:27] {"status": "success", "message": "PDFs downloaded for case_event_id 7B3ED1C7-D36B-4776-9046-8D54BCE666ED"}
+[2025-06-13 18:01:42] Multiple document rows detected. Processing all attachments.
+[2025-06-13 18:04:36] Multiple document rows detected. Inserting only.
+[2025-06-13 18:04:36] Found 6 document rows.
+[2025-06-13 18:04:36] Inserted new PDF record (no download): Miscellaneous Relief
+[2025-06-13 18:04:36] Inserted new PDF record (no download): Exhibit A-McGee Sentencing Transcript 75 pages
+[2025-06-13 18:04:36] Inserted new PDF record (no download): Exhibit B- Kelly Search Warrant Application 24 pages
+[2025-06-13 18:04:36] Inserted new PDF record (no download): Exhibit C-Declaration of Kishan Modugumudi 2 pages
+[2025-06-13 18:04:36] Inserted new PDF record (no download): Exhibit D-Resume Subbanna Varanasi 2 pages
+[2025-06-13 18:04:36] Inserted new PDF record (no download): Exhibit E-Declaration of Mikael Stine 5 pages
+[2025-06-13 18:04:36] {"status": "success", "message": "Metadata inserted for case_event_id 7B3ED1C7-D36B-4776-9046-8D54BCE666ED"}
+[2025-06-15 18:52:53] Single PDF case. Extracting metadata only.
+[2025-06-15 18:52:53] Inserted new PDF record (no download): Proposed Stipulation and Order
+[2025-06-15 19:17:43] Multiple document rows detected. Inserting only.
+[2025-06-15 19:17:43] Found 5 document rows.
+[2025-06-15 19:17:43] Inserted new PDF record (no download): Declaration in Support of Motion
+[2025-06-15 19:17:43] Inserted new PDF record (no download): Exhibit A - Public Version 1 page
+[2025-06-15 19:17:43] Inserted new PDF record (no download): Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-15 19:17:43] Inserted new PDF record (no download): Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-15 19:17:43] Inserted new PDF record (no download): Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-15 20:25:54] {"status": "error", "message": "An error occurred: ('42S22', \"[42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Invalid column name 'arr_de_seq_num'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)\")"}
+[2025-06-15 23:33:06] Ensured arr_de_seq_nums is populated where possible.
+[2025-06-15 23:33:06] {"status": "error", "message": "An error occurred: ('42S22', \"[42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Invalid column name 'arr_de_seq_num'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)\")"}
+[2025-06-15 23:35:22] Ensured arr_de_seq_nums is populated where possible.
+[2025-06-15 23:35:22] Final Download URL: https://ecf.nysd.uscourts.gov/cgi-bin/show_multidocs.pl?caseid=634304&arr_de_seq_nums=1166&magic_num=&pdf_header=2&hdr=&psf_report=&pdf_toggle_possible=1&exclude_attachments=37701962&zipit=1&got_warning=&create_roa=&create_appendix=&bates_format=&sort1=&date_range_type=&dkt=&got_receipt=1
+[2025-06-15 23:35:33] Failed to trigger download: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//input[@type='button' and contains(@value, 'Download Documents')]"}
+  (Session info: chrome=137.0.7151.103); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x0x7ff613f96f65+78965]
+	GetHandleVerifier [0x0x7ff613f96fc0+79056]
+	(No symbol) [0x0x7ff613d29dda]
+	(No symbol) [0x0x7ff613d802ea]
+	(No symbol) [0x0x7ff613d8059c]
+	(No symbol) [0x0x7ff613dd3f37]
+	(No symbol) [0x0x7ff613da86af]
+	(No symbol) [0x0x7ff613dd0dbe]
+	(No symbol) [0x0x7ff613da8443]
+	(No symbol) [0x0x7ff613d71311]
+	(No symbol) [0x0x7ff613d720a3]
+	GetHandleVerifier [0x0x7ff61424e26d+2926461]
+	GetHandleVerifier [0x0x7ff614248993+2903715]
+	GetHandleVerifier [0x0x7ff614266aed+3026941]
+	GetHandleVerifier [0x0x7ff613fb16fe+187406]
+	GetHandleVerifier [0x0x7ff613fb96ef+220159]
+	GetHandleVerifier [0x0x7ff613f9faf4+114692]
+	GetHandleVerifier [0x0x7ff613f9fca9+115129]
+	GetHandleVerifier [0x0x7ff613f864d8+10728]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+[2025-06-16 09:56:23] Ensured arr_de_seq_nums is populated where possible.
+[2025-06-16 09:56:23] Final Download URL: https://ecf.nysd.uscourts.gov/cgi-bin/show_multidocs.pl?caseid=634304&arr_de_seq_nums=1166&magic_num=&pdf_header=2&hdr=&psf_report=&pdf_toggle_possible=1&exclude_attachments=37701962&zipit=1&got_warning=&create_roa=&create_appendix=&bates_format=&sort1=&date_range_type=&dkt=&got_receipt=1
+[2025-06-16 09:56:32] Failed to trigger download: Message: no such element: Unable to locate element: {"method":"xpath","selector":"//input[@type='button' and contains(@value, 'Download Documents')]"}
+  (Session info: chrome=137.0.7151.103); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+Stacktrace:
+	GetHandleVerifier [0x0x7ff613f96f65+78965]
+	GetHandleVerifier [0x0x7ff613f96fc0+79056]
+	(No symbol) [0x0x7ff613d29dda]
+	(No symbol) [0x0x7ff613d802ea]
+	(No symbol) [0x0x7ff613d8059c]
+	(No symbol) [0x0x7ff613dd3f37]
+	(No symbol) [0x0x7ff613da86af]
+	(No symbol) [0x0x7ff613dd0dbe]
+	(No symbol) [0x0x7ff613da8443]
+	(No symbol) [0x0x7ff613d71311]
+	(No symbol) [0x0x7ff613d720a3]
+	GetHandleVerifier [0x0x7ff61424e26d+2926461]
+	GetHandleVerifier [0x0x7ff614248993+2903715]
+	GetHandleVerifier [0x0x7ff614266aed+3026941]
+	GetHandleVerifier [0x0x7ff613fb16fe+187406]
+	GetHandleVerifier [0x0x7ff613fb96ef+220159]
+	GetHandleVerifier [0x0x7ff613f9faf4+114692]
+	GetHandleVerifier [0x0x7ff613f9fca9+115129]
+	GetHandleVerifier [0x0x7ff613f864d8+10728]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+[2025-06-16 11:58:06] Single PDF case. Processing...
+[2025-06-16 11:58:06] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 11:58:07] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 11:58:07] Inserted new PDF: Proposed Stipulation and Order
+[2025-06-16 11:58:07] {"status": "success", "message": "PDFs downloaded for case_event_id 6B526EB1-1BD3-4FD3-9D9B-A48F18A58DAE"}
+[2025-06-16 12:00:18] Single PDF case. Processing...
+[2025-06-16 12:00:19] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:00:19] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:00:19] Inserted new PDF: Proposed Stipulation and Order
+[2025-06-16 12:00:19] {"status": "success", "message": "PDFs downloaded for case_event_id 6B526EB1-1BD3-4FD3-9D9B-A48F18A58DAE"}
+[2025-06-16 12:03:50] Multiple document rows detected. Processing all attachments.
+[2025-06-16 12:03:50] Found 5 document rows.
+[2025-06-16 12:03:53] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:03:53] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:03:53] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 12:03:56] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:03:56] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:03:56] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 12:03:59] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:03:59] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:03:59] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 12:04:02] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:04:03] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:04:03] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 12:04:05] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:04:06] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:04:06] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 12:04:06] {"status": "success", "message": "PDFs downloaded for case_event_id 290476BC-8B9A-4437-AD40-4F2A8AC83483"}
+[2025-06-16 12:41:41] {"status": "error", "message": "An error occurred: Message: invalid argument: 'url' must be a string\n  (Session info: chrome=137.0.7151.103)\nStacktrace:\n\tGetHandleVerifier [0x0x7ff613f96f65+78965]\n\tGetHandleVerifier [0x0x7ff613f96fc0+79056]\n\t(No symbol) [0x0x7ff613d29dda]\n\t(No symbol) [0x0x7ff613dd1bc4]\n\t(No symbol) [0x0x7ff613da866a]\n\t(No symbol) [0x0x7ff613dd0dbe]\n\t(No symbol) [0x0x7ff613da8443]\n\t(No symbol) [0x0x7ff613d71311]\n\t(No symbol) [0x0x7ff613d720a3]\n\tGetHandleVerifier [0x0x7ff61424e26d+2926461]\n\tGetHandleVerifier [0x0x7ff614248993+2903715]\n\tGetHandleVerifier [0x0x7ff614266aed+3026941]\n\tGetHandleVerifier [0x0x7ff613fb16fe+187406]\n\tGetHandleVerifier [0x0x7ff613fb96ef+220159]\n\tGetHandleVerifier [0x0x7ff613f9faf4+114692]\n\tGetHandleVerifier [0x0x7ff613f9fca9+115129]\n\tGetHandleVerifier [0x0x7ff613f864d8+10728]\n\tBaseThreadInitThunk [0x0x7ffa84784de0+16]\n\tRtlUserThreadStart [0x0x7ffa8583edab+43]\n"}
+[2025-06-16 12:57:27] Multiple document rows detected. Processing all attachments.
+[2025-06-16 12:57:27] Found 5 document rows.
+[2025-06-16 12:57:30] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:57:30] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:57:30] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 12:57:33] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:57:33] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:57:33] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 12:57:36] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:57:36] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:57:36] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 12:57:39] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:57:39] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:57:39] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 12:57:42] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 12:57:42] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 12:57:42] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 12:57:42] {"status": "success", "message": "PDFs downloaded for case_event_id 290476BC-8B9A-4437-AD40-4F2A8AC83483"}
+[2025-06-16 14:11:05] {"status": "error", "message": "An error occurred: Message: invalid session id: session deleted as the browser has closed the connection\nfrom disconnected: not connected to DevTools\n  (Session info: chrome=137.0.7151.103)\nStacktrace:\n\tGetHandleVerifier [0x0x7ff613f96f65+78965]\n\tGetHandleVerifier [0x0x7ff613f96fc0+79056]\n\t(No symbol) [0x0x7ff613d29dda]\n\t(No symbol) [0x0x7ff613d15bc5]\n\t(No symbol) [0x0x7ff613d3ac04]\n\t(No symbol) [0x0x7ff613db0195]\n\t(No symbol) [0x0x7ff613dd06cd]\n\t(No symbol) [0x0x7ff613da8443]\n\t(No symbol) [0x0x7ff613d71311]\n\t(No symbol) [0x0x7ff613d720a3]\n\tGetHandleVerifier [0x0x7ff61424e26d+2926461]\n\tGetHandleVerifier [0x0x7ff614248993+2903715]\n\tGetHandleVerifier [0x0x7ff614266aed+3026941]\n\tGetHandleVerifier [0x0x7ff613fb16fe+187406]\n\tGetHandleVerifier [0x0x7ff613fb96ef+220159]\n\tGetHandleVerifier [0x0x7ff613f9faf4+114692]\n\tGetHandleVerifier [0x0x7ff613f9fca9+115129]\n\tGetHandleVerifier [0x0x7ff613f864d8+10728]\n\tBaseThreadInitThunk [0x0x7ffa84784de0+16]\n\tRtlUserThreadStart [0x0x7ffa8583edab+43]\n"}
+[2025-06-16 14:12:09] Multiple document rows detected. Processing all attachments.
+[2025-06-16 14:12:09] Found 5 document rows.
+[2025-06-16 14:12:12] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:12:12] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:12:12] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 14:12:15] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:12:15] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:12:15] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 14:12:18] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:12:18] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:12:18] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 14:12:21] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:12:21] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:12:21] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 14:12:24] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:12:24] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:12:24] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 14:12:24] {"status": "success", "message": "PDFs downloaded for case_event_id 290476BC-8B9A-4437-AD40-4F2A8AC83483"}
+[2025-06-16 14:13:46] Multiple document rows detected. Processing all attachments.
+[2025-06-16 14:13:46] Found 5 document rows.
+[2025-06-16 14:13:48] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:13:49] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:13:49] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 14:13:51] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:13:51] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:13:51] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 14:13:54] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:13:54] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:13:54] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 14:13:57] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:13:57] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:13:57] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 14:14:00] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:14:00] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:14:00] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 14:14:00] {"status": "success", "message": "PDFs downloaded for case_event_id 290476BC-8B9A-4437-AD40-4F2A8AC83483"}
+[2025-06-16 14:15:07] Multiple document rows detected. Processing all attachments.
+[2025-06-16 14:15:07] Found 3 document rows.
+[2025-06-16 14:15:09] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:15:10] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:15:10] Inserted new PDF: Opposition Brief
+[2025-06-16 14:15:12] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:15:13] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:15:13] Inserted new PDF: Exhibit A - Placeholder for Exhibit Under Seal 1 page
+[2025-06-16 14:15:15] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:15:16] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:15:16] Inserted new PDF: Exhibit B - Placeholder for Exhibit Under Seal 1 page
+[2025-06-16 14:15:16] {"status": "success", "message": "PDFs downloaded for case_event_id A060F3D1-1EA4-4EFA-B6D4-621A0A664DF4"}
+[2025-06-16 14:28:54] Single PDF case. Processing...
+[2025-06-16 14:28:54] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:28:55] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:28:55] Updated existing PDF: Remark
+[2025-06-16 14:28:55] {"status": "success", "message": "PDFs downloaded for case_event_id 34790257-21B8-4FF5-A549-01E75254F820"}
+[2025-06-16 14:30:56] Multiple document rows detected. Processing all attachments.
+[2025-06-16 14:30:56] Found 5 document rows.
+[2025-06-16 14:30:59] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:30:59] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:30:59] Inserted new PDF: Declaration in Support of Motion
+[2025-06-16 14:31:02] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:31:02] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:31:03] Inserted new PDF: Exhibit A - Public Version 1 page
+[2025-06-16 14:31:05] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:31:05] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:31:05] Inserted new PDF: Exhibit B - Lively v. Wayfarer Studios LLC et al., No. 1_24-cv-10049-LJL, No. 1_ 3 pages
+[2025-06-16 14:31:08] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:31:08] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:31:08] Inserted new PDF: Exhibit C - 2025.05.08 - Notice of Intention to Serve Subpoena - Taylor Swift 14 pages
+[2025-06-16 14:31:11] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:31:11] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:31:11] Inserted new PDF: Exhibit D - Case No. 1_25-mc-00060 - Motion to Quash Subpoena 4 pages
+[2025-06-16 14:31:11] {"status": "success", "message": "PDFs downloaded for case_event_id 290476BC-8B9A-4437-AD40-4F2A8AC83483"}
+[2025-06-16 14:32:47] Single PDF case. Processing...
+[2025-06-16 14:32:48] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:32:48] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:32:48] Updated existing PDF: Memo Endorsement
+[2025-06-16 14:32:48] {"status": "success", "message": "PDFs downloaded for case_event_id 64BE02E3-4EE1-4B0A-85A3-23576ECCD8E9"}
+[2025-06-16 14:38:53] Single PDF case. Processing...
+[2025-06-16 14:38:54] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:38:54] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:38:54] Inserted new PDF: Memo Endorsement
+[2025-06-16 14:38:54] {"status": "success", "message": "PDFs downloaded for case_event_id 64BE02E3-4EE1-4B0A-85A3-23576ECCD8E9"}
+[2025-06-16 14:40:55] Single PDF case. Processing...
+[2025-06-16 14:40:55] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 14:40:56] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 14:40:56] Inserted new PDF: Memo Endorsement
+[2025-06-16 14:40:56] {"status": "success", "message": "PDFs downloaded for case_event_id 64BE02E3-4EE1-4B0A-85A3-23576ECCD8E9"}
+[2025-06-16 15:05:54] Single PDF case. Processing...
+[2025-06-16 15:05:55] Direct PDF URL: https://ecf.nysd.uscourts.gov
+[2025-06-16 15:05:55] PDF successfully saved to \\10.146.176.84\general\docketwatch\python\pacer_pdfs\.pdf
+[2025-06-16 15:05:55] Updated existing PDF: Unseal
+[2025-06-16 15:05:55] {"status": "success", "message": "PDFs downloaded for case_event_id 84BF2B58-00B7-4A86-A9F5-52FD923B5391"}

@@ -1,0 +1,60 @@
+import sys
+import time
+import pyodbc
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# === Read params from command line ===
+if len(sys.argv) != 4:
+    print("Usage: python launch_viewer.py <name> <key> <end>")
+    sys.exit(1)
+
+pdf_name = sys.argv[1]
+pdf_key = sys.argv[2]
+pdf_end = sys.argv[3]
+
+viewer_url = f"https://ww2.lacourt.org/documentviewer/v1/?name={pdf_name}&key={pdf_key}&end={pdf_end}"
+
+# === Fetch login creds from DB ===
+conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
+cursor = conn.cursor()
+cursor.execute("""
+    SELECT [login_url], [username], [pass]
+    FROM [docketwatch].[dbo].[tools]
+    WHERE id = 6
+""")
+row = cursor.fetchone()
+login_url, username, password = row
+
+# === Launch browser ===
+CHROMEDRIVER_PATH = "C:\\WebDriver\\chromedriver.exe"
+chrome_options = Options()
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--disable-gpu")
+service = Service(CHROMEDRIVER_PATH)
+driver = webdriver.Chrome(service=service, options=chrome_options)
+
+# === Step 1: Login ===
+try:
+    print("Logging into media.lacourt.org...")
+    driver.get(login_url)
+    wait = WebDriverWait(driver, 20)
+    wait.until(EC.presence_of_element_located((By.ID, "logonIdentifier"))).send_keys(username)
+    wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(password)
+    wait.until(EC.element_to_be_clickable((By.ID, "next"))).click()
+    time.sleep(5)
+    if "media.lacourt.org" in driver.current_url or "dashboard" in driver.current_url:
+        print("Login successful. Opening viewer URL...")
+        driver.get(viewer_url)
+    else:
+        print(f"Login failed. Current URL: {driver.current_url}")
+        driver.quit()
+
+except Exception as e:
+    print(f"Login error: {e}")
+    driver.quit()

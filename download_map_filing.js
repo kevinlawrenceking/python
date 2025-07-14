@@ -1,0 +1,138 @@
+const puppeteer = require('puppeteer');
+const fs = require('fs-extra');
+const path = require('path');
+const { spawn } = require('child_process');
+
+const FILE_NAME = process.env.FILE_NAME;
+const KEY = process.env.KEY;
+const END = process.env.END;
+const COOKIE = process.env.COOKIE;
+const FK_CASE = process.env.COURT_CASE_NUMBER || 'Unfiled';  // This is now the fk_case GUID
+
+if (!FILE_NAME || !KEY || !END || !COOKIE) {
+  console.error('[×] Missing one or more required environment variables.');
+  process.exit(1);
+}
+
+const VIEWER_URL = `https://ww2.lacourt.org/documentviewer/v1/?name=${FILE_NAME}&key=${KEY}&end=${END}`;
+const SAVE_DIR = path.resolve(__dirname, 'temp_pages');
+fs.ensureDirSync(SAVE_DIR);
+
+(async () => {
+  console.log(`[+] Launching Chromium...`);
+  const browser = await puppeteer.launch({
+    headless: true,
+    defaultViewport: null,
+    args: [
+      '--start-maximized',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--disable-dev-shm-usage'
+    ]
+  });
+
+  const page = await browser.newPage();
+
+  await page.setCookie({
+    name: '.AspNetCore.Cookies',
+    value: COOKIE,
+    domain: 'ww2.lacourt.org',
+    path: '/',
+    httpOnly: true,
+    secure: true
+  });
+
+  const seen = new Set();
+
+  page.on('response', async (res) => {
+    const url = res.url();
+    const ct = res.headers()['content-type'] || '';
+    if (ct.startsWith('image') && url.includes('page=')) {
+      try {
+        const buffer = await res.buffer();
+        const match = url.match(/page=(\d+)/);
+        const pageNum = match ? match[1].padStart(3, '0') : 'unknown';
+        const filename = `${FILE_NAME}_page_${pageNum}.png`;
+        const filePath = path.join(SAVE_DIR, filename);
+        if (!seen.has(url)) {
+          await fs.writeFile(filePath, buffer);
+          seen.add(url);
+          console.log(`[✓] Saved: ${filename}`);
+        }
+      } catch (err) {
+        console.error(`[×] Failed to save image from ${url}`, err);
+      }
+    }
+  });
+
+  try {
+    console.log(`[+] Navigating to viewer: ${VIEWER_URL}`);
+    await page.goto(VIEWER_URL, { waitUntil: 'networkidle2', timeout: 60000 });
+  } catch (err) {
+    console.error(`[×] Viewer page load failed:`, err.message);
+    await browser.close();
+    process.exit(1);
+  }
+
+  console.log(`[→] Clicking 'Next Page' until all pages load...`);
+  let lastSeen = 0;
+  let stableCount = 0;
+
+  while (stableCount < 3) {
+    const newUrls = await page.evaluate(() =>
+      Array.from(document.images).map(img => img.src).filter(u => u.includes('page='))
+    );
+
+    const fresh = newUrls.filter(u => !seen.has(u));
+    fresh.forEach(u => seen.add(u));
+
+    if (seen.size === lastSeen) {
+      stableCount++;
+    } else {
+      stableCount = 0;
+      lastSeen = seen.size;
+    }
+
+    const clicked = await page.evaluate(() => {
+      const nextBtn = Array.from(document.querySelectorAll('span.ui-button-text'))
+        .find(el => el.innerText.trim().toLowerCase() === 'next page');
+      if (nextBtn) {
+        nextBtn.click();
+        return true;
+      }
+      return false;
+    });
+
+    if (!clicked) {
+      console.log('[!] "Next Page" button not found — exiting.');
+      break;
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+
+  console.log(`[→] Total pages detected: ${seen.size}`);
+  console.log(`[!] Final wait before closing...`);
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  await browser.close();
+
+  console.log(`[+] Generating PDF for case ID: ${FK_CASE}`);
+  const py = spawn('python', ['combine_images_to_pdf.py'], {
+    env: {
+      ...process.env,
+      COURT_CASE_NUMBER: FK_CASE  // this is now a GUID
+    },
+    cwd: __dirname
+  });
+
+  py.stdout.on('data', data => process.stdout.write(data));
+  py.stderr.on('data', data => process.stderr.write(data));
+  py.on('close', code => {
+    if (code === 0) {
+      console.log(`[✓] PDF generated and saved under docs\\cases\\${FK_CASE}\\E<case_number>.pdf`);
+    } else {
+      console.error(`[×] combine_images_to_pdf.py exited with code ${code}`);
+    }
+  });
+})();

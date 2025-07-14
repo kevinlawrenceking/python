@@ -1,0 +1,293 @@
+
+2025-06-24 23:30:54,505 - INFO - PACER login failed. Check credentials.
+2025-06-24 23:30:54,540 - INFO - PACER Scraper script finished.
+2025-06-24 23:37:38,035 - INFO - Billing reference (datetime): 06/25/2025 02:37:35
+2025-06-24 23:37:38,061 - INFO - Parsed billing data: PACER Login = TMZFEDPACER
+2025-06-24 23:37:38,065 - INFO - Parsed billing data: Client Code = DocketWatch
+2025-06-24 23:37:38,068 - INFO - Parsed billing data: Description = Docket Report
+2025-06-24 23:37:38,072 - INFO - Parsed billing data: Search Criteria = 12-29164-PGH Fil or Ent: filed   Doc From: 0 Doc To: 99999999 Term: included     Format: html Page counts for documents: included
+2025-06-24 23:37:38,084 - INFO - Parsed billing data: Billable Pages = 5
+2025-06-24 23:37:38,087 - INFO - Parsed billing data: Cost = 0.50
+2025-06-24 23:37:38,092 - INFO - Failed to extract PACER billing data: ('22001', '[22001] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]String or binary data would be truncated. (8152) (SQLExecDirectW); [22001] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]The statement has been terminated. (3621)')
+2025-06-24 23:37:38,097 - INFO - 199 existing dockets for case USA v. Williams et al
+2025-06-24 23:37:38,152 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,190 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,224 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,257 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,291 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,323 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,354 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,385 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,417 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,448 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,478 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,512 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,545 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,575 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,605 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,634 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,662 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,691 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,723 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,754 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,783 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,812 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,856 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,885 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,914 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,941 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:38,969 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,000 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,030 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,059 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,087 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,120 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,148 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,177 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,210 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,240 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,268 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,297 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,324 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,352 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,380 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,407 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,433 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,461 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,488 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,514 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,540 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,568 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,614 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,643 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,671 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,700 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,729 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,758 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:39,788 - INFO - New docket discovered! Docket added to case USA v. Williams et al
+2025-06-24 23:37:45,315 - INFO - Gemini summary saved
+2025-06-24 23:37:45,319 - INFO - PACER Scraper Completed Successfully
+2025-06-24 23:41:15,271 - INFO - Billing reference (datetime): 06/25/2025 02:41:13
+2025-06-24 23:41:15,296 - INFO - Parsed billing data: PACER Login = TMZFEDPACER
+2025-06-24 23:41:15,302 - INFO - Parsed billing data: Client Code = DocketWatch
+2025-06-24 23:41:15,305 - INFO - Parsed billing data: Description = Docket Report
+2025-06-24 23:41:15,308 - INFO - Parsed billing data: Search Criteria = 5:25-cv-00268-FL
+2025-06-24 23:41:15,310 - INFO - Parsed billing data: Billable Pages = 2
+2025-06-24 23:41:15,313 - INFO - Parsed billing data: Cost = 0.20
+2025-06-24 23:41:15,318 - INFO - PACER billing: 2 pages / $0.20 – Docket Report
+2025-06-24 23:41:15,322 - INFO - 10 existing dockets for case Jones v. Truist Bank
+2025-06-24 23:41:15,370 - INFO - Docket number 1 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,396 - INFO - Docket number 2 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,422 - INFO - Docket number 3 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,449 - INFO - Docket number 4 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,477 - INFO - Docket number 0 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,502 - INFO - Docket number 5 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,527 - INFO - Docket number 6 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,555 - INFO - Docket number 7 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,580 - INFO - Docket number 8 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,606 - INFO - Docket number 9 already exists for case Jones v. Truist Bank
+2025-06-24 23:41:15,662 - INFO - Updated case metadata
+2025-06-24 23:41:19,417 - INFO - Gemini summary saved
+2025-06-24 23:41:19,422 - INFO - PACER Scraper Completed Successfully
+2025-06-24 23:43:29,388 - INFO - Billing reference (datetime): 06/24/2025 23:43:27
+2025-06-24 23:43:29,395 - INFO - Parsed billing data: PACER Login = TMZFEDPACER
+2025-06-24 23:43:29,398 - INFO - Parsed billing data: Client Code = DocketWatch
+2025-06-24 23:43:29,402 - INFO - Parsed billing data: Description = Docket Report
+2025-06-24 23:43:29,404 - INFO - Parsed billing data: Search Criteria = 2:24-cv-01417-GW-BFM   End date: 6/24/2025
+2025-06-24 23:43:29,407 - INFO - Parsed billing data: Billable Pages = 10
+2025-06-24 23:43:29,409 - INFO - Parsed billing data: Cost = 1.00
+2025-06-24 23:43:29,412 - INFO - PACER billing: 10 pages / $1.00 – Docket Report
+2025-06-24 23:43:29,415 - INFO - 5 existing dockets for case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,463 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,493 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,522 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,550 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,576 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,604 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,632 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,659 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,686 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,712 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,738 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,764 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,790 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,815 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,843 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,873 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,901 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,937 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,965 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:29,993 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,021 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,049 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,077 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,105 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,137 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,166 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,198 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,227 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,262 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,290 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,324 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,353 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,384 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,411 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,441 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,469 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,497 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,526 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,554 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,582 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,609 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,636 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,664 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,693 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,721 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,748 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,774 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,801 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,833 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,862 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,888 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,915 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,945 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:30,974 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,002 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,029 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,056 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,084 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,113 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,140 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,170 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,199 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,230 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,256 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,285 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,317 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,347 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,379 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,411 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,441 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,474 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,518 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,549 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,579 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,609 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,637 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,667 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,696 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,735 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,762 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,789 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,818 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,847 - INFO - New docket discovered! Docket added to case Barry Tubb v. Paramount Pictures Corporation
+2025-06-24 23:43:31,913 - INFO - Updated case metadata
+2025-06-24 23:43:36,624 - INFO - Gemini summary saved
+2025-06-24 23:43:36,629 - INFO - PACER Scraper Completed Successfully
+2025-06-24 23:54:32,033 - INFO - Billing reference (datetime): 06/25/2025 02:54:28
+2025-06-24 23:54:32,055 - INFO - Parsed billing data: PACER Login = TMZFEDPACER
+2025-06-24 23:54:32,058 - INFO - Parsed billing data: Client Code = DocketWatch
+2025-06-24 23:54:32,061 - INFO - Parsed billing data: Description = Docket Report
+2025-06-24 23:54:32,065 - INFO - Parsed billing data: Search Criteria = 9:24-cv-04914-RMG
+2025-06-24 23:54:32,068 - INFO - Parsed billing data: Billable Pages = 15
+2025-06-24 23:54:32,071 - INFO - Parsed billing data: Cost = 1.50
+2025-06-24 23:54:32,077 - INFO - PACER billing: 15 pages / $1.50 – Docket Report
+2025-06-24 23:54:32,081 - INFO - 4 existing dockets for case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,132 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,160 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,188 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,215 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,242 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,269 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,298 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,326 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,359 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,389 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,418 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,444 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,471 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,501 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,527 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,553 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,579 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,620 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,647 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,677 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,704 - INFO - Docket number 25 already exists for case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,729 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,758 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,785 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,819 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,848 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,881 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,909 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,936 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,965 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:32,992 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,020 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,046 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,073 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,101 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,127 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,153 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,180 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,208 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,236 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,264 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,296 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,330 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,362 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,394 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,426 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,457 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,492 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,521 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,551 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,581 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,610 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,641 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,669 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,700 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,728 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,756 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,784 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,814 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,843 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,871 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,900 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,930 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,959 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:33,990 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,020 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,047 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,075 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,105 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,135 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,165 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,192 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,220 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,248 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,276 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,307 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,337 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,368 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,396 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,427 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,459 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,488 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,515 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,544 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,572 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,599 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,626 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,656 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,684 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,713 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,742 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,768 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,800 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,830 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,859 - INFO - New docket discovered! Docket added to case Murdaugh v. Blackfin, Inc. et al
+2025-06-24 23:54:34,921 - INFO - Updated case metadata
+2025-06-24 23:54:40,253 - INFO - Gemini summary saved
+2025-06-24 23:54:40,256 - INFO - PACER Scraper Completed Successfully

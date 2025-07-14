@@ -1,0 +1,2074 @@
+2025-06-26 11:01:44,332 - INFO - Running case update for case_id 84392
+2025-06-26 11:01:45,668 - INFO - Marked events as emailed for case_id 84392
+2025-06-26 11:01:45,669 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 11:01:44'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-06-26 11:01:45'} ---
+2025-06-26 11:06:12,038 - INFO - Running case update for case_id 90993
+2025-06-26 11:06:13,297 - INFO - Marked events as emailed for case_id 90993
+2025-06-26 11:06:13,299 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 11:06:11'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-06-26 11:06:13'} ---
+2025-06-26 11:10:15,562 - INFO - Running case update for case_id 84390
+2025-06-26 11:10:16,848 - INFO - Marked events as emailed for case_id 84390
+2025-06-26 11:10:16,848 - INFO - Running case update for case_id 84392
+2025-06-26 11:10:18,460 - INFO - Marked events as emailed for case_id 84392
+2025-06-26 11:10:18,461 - INFO - Running case update for case_id 90993
+2025-06-26 11:10:19,572 - INFO - Marked events as emailed for case_id 90993
+2025-06-26 11:10:19,573 - INFO - Running case update for case_id 91002
+2025-06-26 11:10:20,687 - INFO - Marked events as emailed for case_id 91002
+2025-06-26 11:10:20,688 - INFO - Running case update for case_id 91010
+2025-06-26 11:10:22,065 - INFO - Marked events as emailed for case_id 91010
+2025-06-26 11:10:22,065 - INFO - Running case update for case_id 98052
+2025-06-26 11:10:23,272 - INFO - Marked events as emailed for case_id 98052
+2025-06-26 11:10:23,273 - INFO - Running case update for case_id 98137
+2025-06-26 11:10:24,514 - INFO - Marked events as emailed for case_id 98137
+2025-06-26 11:10:24,515 - INFO - Running case update for case_id 98144
+2025-06-26 11:10:25,806 - INFO - Marked events as emailed for case_id 98144
+2025-06-26 11:10:25,807 - INFO - Running case update for case_id 98167
+2025-06-26 11:10:27,072 - INFO - Marked events as emailed for case_id 98167
+2025-06-26 11:10:27,072 - INFO - Running case update for case_id 98198
+2025-06-26 11:10:28,310 - INFO - Marked events as emailed for case_id 98198
+2025-06-26 11:10:28,311 - INFO - Running case update for case_id 107279
+2025-06-26 11:10:29,954 - INFO - Marked events as emailed for case_id 107279
+2025-06-26 11:10:29,955 - INFO - Running case update for case_id 107340
+2025-06-26 11:10:31,052 - INFO - Marked events as emailed for case_id 107340
+2025-06-26 11:10:31,053 - INFO - Running case update for case_id 107352
+2025-06-26 11:10:32,349 - INFO - Marked events as emailed for case_id 107352
+2025-06-26 11:10:32,350 - INFO - Running case update for case_id 107762
+2025-06-26 11:10:33,470 - INFO - Marked events as emailed for case_id 107762
+2025-06-26 11:10:33,471 - INFO - Running case update for case_id 107784
+2025-06-26 11:10:35,107 - INFO - Marked events as emailed for case_id 107784
+2025-06-26 11:10:35,108 - INFO - Running case update for case_id 131783
+2025-06-26 11:10:36,544 - INFO - Marked events as emailed for case_id 131783
+2025-06-26 11:10:36,545 - INFO - Running case update for case_id 131788
+2025-06-26 11:10:38,638 - INFO - Marked events as emailed for case_id 131788
+2025-06-26 11:10:38,639 - INFO - Running case update for case_id 131804
+2025-06-26 11:10:40,304 - INFO - Marked events as emailed for case_id 131804
+2025-06-26 11:10:40,305 - INFO - Running case update for case_id 131807
+2025-06-26 11:10:41,598 - INFO - Marked events as emailed for case_id 131807
+2025-06-26 11:10:41,598 - INFO - Running case update for case_id 142947
+2025-06-26 11:10:42,849 - INFO - Marked events as emailed for case_id 142947
+2025-06-26 11:10:42,850 - INFO - Running case update for case_id 142948
+2025-06-26 11:10:44,223 - INFO - Marked events as emailed for case_id 142948
+2025-06-26 11:10:44,224 - INFO - Running case update for case_id 149968
+2025-06-26 11:10:45,350 - INFO - Marked events as emailed for case_id 149968
+2025-06-26 11:10:45,352 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 11:10:15'} ---
+Output: (No output from script)
+Execution Time: 30 seconds
+--- Task Completed: {ts '2025-06-26 11:10:45'} ---
+2025-06-26 11:16:12,636 - INFO - Running case update for case_id 84390
+2025-06-26 11:16:14,239 - INFO - Marked events as emailed for case_id 84390
+2025-06-26 11:16:14,239 - INFO - Running case update for case_id 84392
+2025-06-26 11:16:15,676 - INFO - Marked events as emailed for case_id 84392
+2025-06-26 11:16:15,677 - INFO - Running case update for case_id 90993
+2025-06-26 11:16:17,147 - INFO - Marked events as emailed for case_id 90993
+2025-06-26 11:16:17,147 - INFO - Running case update for case_id 91002
+2025-06-26 11:16:18,572 - INFO - Marked events as emailed for case_id 91002
+2025-06-26 11:16:18,572 - INFO - Running case update for case_id 91010
+2025-06-26 11:16:20,178 - INFO - Marked events as emailed for case_id 91010
+2025-06-26 11:16:20,179 - INFO - Running case update for case_id 98052
+2025-06-26 11:16:21,903 - INFO - Marked events as emailed for case_id 98052
+2025-06-26 11:16:21,903 - INFO - Running case update for case_id 98137
+2025-06-26 11:16:23,178 - INFO - Marked events as emailed for case_id 98137
+2025-06-26 11:16:23,179 - INFO - Running case update for case_id 98144
+2025-06-26 11:16:24,647 - INFO - Marked events as emailed for case_id 98144
+2025-06-26 11:16:24,648 - INFO - Running case update for case_id 98167
+2025-06-26 11:16:25,976 - INFO - Marked events as emailed for case_id 98167
+2025-06-26 11:16:25,977 - INFO - Running case update for case_id 98198
+2025-06-26 11:16:27,144 - INFO - Marked events as emailed for case_id 98198
+2025-06-26 11:16:27,145 - INFO - Running case update for case_id 107279
+2025-06-26 11:16:28,452 - INFO - Marked events as emailed for case_id 107279
+2025-06-26 11:16:28,453 - INFO - Running case update for case_id 107340
+2025-06-26 11:16:29,619 - INFO - Marked events as emailed for case_id 107340
+2025-06-26 11:16:29,620 - INFO - Running case update for case_id 107352
+2025-06-26 11:16:30,719 - INFO - Marked events as emailed for case_id 107352
+2025-06-26 11:16:30,720 - INFO - Running case update for case_id 107762
+2025-06-26 11:16:32,023 - INFO - Marked events as emailed for case_id 107762
+2025-06-26 11:16:32,024 - INFO - Running case update for case_id 107784
+2025-06-26 11:16:33,122 - INFO - Marked events as emailed for case_id 107784
+2025-06-26 11:16:33,123 - INFO - Running case update for case_id 131783
+2025-06-26 11:16:34,675 - INFO - Marked events as emailed for case_id 131783
+2025-06-26 11:16:34,676 - INFO - Running case update for case_id 131788
+2025-06-26 11:16:36,077 - INFO - Marked events as emailed for case_id 131788
+2025-06-26 11:16:36,077 - INFO - Running case update for case_id 131804
+2025-06-26 11:16:37,402 - INFO - Marked events as emailed for case_id 131804
+2025-06-26 11:16:37,403 - INFO - Running case update for case_id 131807
+2025-06-26 11:16:38,615 - INFO - Marked events as emailed for case_id 131807
+2025-06-26 11:16:38,615 - INFO - Running case update for case_id 142947
+2025-06-26 11:16:39,721 - INFO - Marked events as emailed for case_id 142947
+2025-06-26 11:16:39,722 - INFO - Running case update for case_id 142948
+2025-06-26 11:16:40,871 - INFO - Marked events as emailed for case_id 142948
+2025-06-26 11:16:40,871 - INFO - Running case update for case_id 149968
+2025-06-26 11:16:42,185 - INFO - Marked events as emailed for case_id 149968
+2025-06-26 11:16:42,187 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 11:16:12'} ---
+Output: (No output from script)
+Execution Time: 29 seconds
+--- Task Completed: {ts '2025-06-26 11:16:42'} ---
+2025-06-26 12:30:00,347 - INFO - Running case update for case_id 98258
+2025-06-26 12:30:01,863 - INFO - Marked events as emailed for case_id 98258
+2025-06-26 12:30:01,863 - INFO - Running case update for case_id 131783
+2025-06-26 12:30:03,107 - INFO - Marked events as emailed for case_id 131783
+2025-06-26 12:30:03,107 - INFO - Running case update for case_id 131807
+2025-06-26 12:30:04,863 - INFO - Marked events as emailed for case_id 131807
+2025-06-26 12:30:04,863 - INFO - Running case update for case_id 142928
+2025-06-26 12:30:06,349 - INFO - Marked events as emailed for case_id 142928
+2025-06-26 12:30:06,350 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-06-26 12:30:06'} ---
+2025-06-26 13:35:00,321 - INFO - Running case update for case_id 90990
+2025-06-26 13:35:01,915 - INFO - Marked events as emailed for case_id 90990
+2025-06-26 13:35:01,916 - INFO - Running case update for case_id 98167
+2025-06-26 13:35:03,501 - INFO - Marked events as emailed for case_id 98167
+2025-06-26 13:35:03,502 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-06-26 13:35:03'} ---
+2025-06-26 14:40:00,450 - INFO - Running case update for case_id 84392
+2025-06-26 14:40:02,627 - INFO - Marked events as emailed for case_id 84392
+2025-06-26 14:40:02,628 - INFO - Running case update for case_id 98171
+2025-06-26 14:40:04,342 - INFO - Marked events as emailed for case_id 98171
+2025-06-26 14:40:04,343 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-06-26 14:40:04'} ---
+2025-06-26 15:45:00,322 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-26 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-26 15:45:00'} ---
+2025-06-26 16:50:00,429 - INFO - Running case update for case_id 107767
+2025-06-26 16:50:04,022 - INFO - Marked events as emailed for case_id 107767
+2025-06-26 16:50:04,023 - INFO - Running case update for case_id 131793
+2025-06-26 16:50:05,433 - INFO - Marked events as emailed for case_id 131793
+2025-06-26 16:50:05,434 - INFO - Running case update for case_id 142948
+2025-06-26 16:50:06,626 - INFO - Marked events as emailed for case_id 142948
+2025-06-26 16:50:06,627 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-06-26 16:50:06'} ---
+2025-06-26 17:55:00,331 - INFO - Running case update for case_id 142947
+2025-06-26 17:55:01,758 - INFO - Marked events as emailed for case_id 142947
+2025-06-26 17:55:01,759 - INFO - Running case update for case_id 149968
+2025-06-26 17:55:03,274 - INFO - Marked events as emailed for case_id 149968
+2025-06-26 17:55:03,275 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-06-26 17:55:03'} ---
+2025-06-26 19:00:00,429 - INFO - Running case update for case_id 98171
+2025-06-26 19:00:02,118 - INFO - Marked events as emailed for case_id 98171
+2025-06-26 19:00:02,120 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-06-26 19:00:02'} ---
+2025-06-26 20:05:00,303 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-26 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-26 20:05:00'} ---
+2025-06-26 21:10:00,331 - INFO - Running case update for case_id 84390
+2025-06-26 21:10:02,074 - INFO - Marked events as emailed for case_id 84390
+2025-06-26 21:10:02,076 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-26 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-06-26 21:10:02'} ---
+2025-06-26 22:15:00,295 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-26 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-26 22:15:00'} ---
+2025-06-26 23:20:00,344 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-26 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-26 23:20:00'} ---
+2025-06-27 06:00:00,403 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 06:00:00'} ---
+2025-06-27 07:05:00,280 - INFO - Running case update for case_id 107256
+2025-06-27 07:05:02,562 - INFO - Marked events as emailed for case_id 107256
+2025-06-27 07:05:02,562 - INFO - Running case update for case_id 107787
+2025-06-27 07:05:03,768 - INFO - Marked events as emailed for case_id 107787
+2025-06-27 07:05:03,770 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-06-27 07:05:03'} ---
+2025-06-27 08:10:00,326 - INFO - Running case update for case_id 107279
+2025-06-27 08:10:01,852 - INFO - Marked events as emailed for case_id 107279
+2025-06-27 08:10:01,853 - INFO - Running case update for case_id 131788
+2025-06-27 08:10:03,914 - INFO - Marked events as emailed for case_id 131788
+2025-06-27 08:10:03,915 - INFO - Running case update for case_id 142947
+2025-06-27 08:10:05,046 - INFO - Marked events as emailed for case_id 142947
+2025-06-27 08:10:05,047 - INFO - Running case update for case_id 149968
+2025-06-27 08:10:06,321 - INFO - Marked events as emailed for case_id 149968
+2025-06-27 08:10:06,323 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-06-27 08:10:06'} ---
+2025-06-27 09:15:00,302 - INFO - Running case update for case_id 131794
+2025-06-27 09:15:01,992 - INFO - Marked events as emailed for case_id 131794
+2025-06-27 09:15:01,994 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-06-27 09:15:02'} ---
+2025-06-27 10:20:00,343 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 10:20:00'} ---
+2025-06-27 11:25:00,358 - INFO - Running case update for case_id 98258
+2025-06-27 11:25:02,286 - INFO - Marked events as emailed for case_id 98258
+2025-06-27 11:25:02,287 - INFO - Running case update for case_id 131825
+2025-06-27 11:25:03,775 - INFO - Marked events as emailed for case_id 131825
+2025-06-27 11:25:03,776 - INFO - Running case update for case_id 131838
+2025-06-27 11:25:05,075 - INFO - Marked events as emailed for case_id 131838
+2025-06-27 11:25:05,076 - INFO - Running case update for case_id 142948
+2025-06-27 11:25:06,467 - INFO - Marked events as emailed for case_id 142948
+2025-06-27 11:25:06,468 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-06-27 11:25:06'} ---
+2025-06-27 12:30:00,404 - INFO - Running case update for case_id 91002
+2025-06-27 12:30:02,067 - INFO - Marked events as emailed for case_id 91002
+2025-06-27 12:30:02,068 - INFO - Running case update for case_id 107256
+2025-06-27 12:30:03,380 - INFO - Marked events as emailed for case_id 107256
+2025-06-27 12:30:03,381 - INFO - Running case update for case_id 107279
+2025-06-27 12:30:04,656 - INFO - Marked events as emailed for case_id 107279
+2025-06-27 12:30:04,656 - INFO - Running case update for case_id 107355
+2025-06-27 12:30:06,241 - INFO - Marked events as emailed for case_id 107355
+2025-06-27 12:30:06,241 - INFO - Running case update for case_id 107770
+2025-06-27 12:30:07,624 - INFO - Marked events as emailed for case_id 107770
+2025-06-27 12:30:07,624 - INFO - Running case update for case_id 107771
+2025-06-27 12:30:08,966 - INFO - Marked events as emailed for case_id 107771
+2025-06-27 12:30:08,968 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 8 seconds
+--- Task Completed: {ts '2025-06-27 12:30:08'} ---
+2025-06-27 13:35:00,413 - INFO - Running case update for case_id 131817
+2025-06-27 13:35:01,882 - INFO - Marked events as emailed for case_id 131817
+2025-06-27 13:35:01,883 - INFO - Running case update for case_id 131827
+2025-06-27 13:35:03,231 - INFO - Marked events as emailed for case_id 131827
+2025-06-27 13:35:03,233 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-06-27 13:35:03'} ---
+2025-06-27 14:40:00,378 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 14:40:00'} ---
+2025-06-27 15:45:00,338 - INFO - Running case update for case_id 98052
+2025-06-27 15:45:01,726 - INFO - Marked events as emailed for case_id 98052
+2025-06-27 15:45:01,727 - INFO - Running case update for case_id 107770
+2025-06-27 15:45:03,050 - INFO - Marked events as emailed for case_id 107770
+2025-06-27 15:45:03,051 - INFO - Running case update for case_id 107771
+2025-06-27 15:45:04,424 - INFO - Marked events as emailed for case_id 107771
+2025-06-27 15:45:04,425 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-06-27 15:45:04'} ---
+2025-06-27 16:50:00,303 - INFO - Running case update for case_id 98052
+2025-06-27 16:50:02,248 - INFO - Marked events as emailed for case_id 98052
+2025-06-27 16:50:02,248 - INFO - Running case update for case_id 107256
+2025-06-27 16:50:03,616 - INFO - Marked events as emailed for case_id 107256
+2025-06-27 16:50:03,617 - INFO - Running case update for case_id 107313
+2025-06-27 16:50:05,007 - INFO - Marked events as emailed for case_id 107313
+2025-06-27 16:50:05,008 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-06-27 16:50:05'} ---
+2025-06-27 17:55:00,350 - INFO - Running case update for case_id 107340
+2025-06-27 17:55:01,806 - INFO - Marked events as emailed for case_id 107340
+2025-06-27 17:55:01,808 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-06-27 17:55:01'} ---
+2025-06-27 19:00:00,333 - INFO - Running case update for case_id 131807
+2025-06-27 19:00:01,995 - INFO - Marked events as emailed for case_id 131807
+2025-06-27 19:00:01,996 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-27 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-06-27 19:00:02'} ---
+2025-06-27 20:05:00,390 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 20:05:00'} ---
+2025-06-27 21:10:00,377 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 21:10:00'} ---
+2025-06-27 22:15:00,344 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 22:15:00'} ---
+2025-06-27 23:20:00,358 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-27 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-27 23:20:00'} ---
+2025-06-28 06:00:00,373 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 06:00:00'} ---
+2025-06-28 07:05:00,285 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 07:05:00'} ---
+2025-06-28 08:10:00,345 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 08:10:00'} ---
+2025-06-28 09:15:00,347 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 09:15:00'} ---
+2025-06-28 10:20:00,326 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 10:20:00'} ---
+2025-06-28 11:25:00,336 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 11:25:00'} ---
+2025-06-28 12:30:00,354 - INFO - Running case update for case_id 131837
+2025-06-28 12:30:02,407 - INFO - Marked events as emailed for case_id 131837
+2025-06-28 12:30:02,409 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-28 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-06-28 12:30:02'} ---
+2025-06-28 13:35:00,349 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 13:35:00'} ---
+2025-06-28 14:40:00,318 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 14:40:00'} ---
+2025-06-28 15:45:00,346 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 15:45:00'} ---
+2025-06-28 16:50:00,364 - INFO - Running case update for case_id 107761
+2025-06-28 16:50:02,305 - INFO - Marked events as emailed for case_id 107761
+2025-06-28 16:50:02,312 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-28 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-06-28 16:50:02'} ---
+2025-06-28 17:55:00,342 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 17:55:00'} ---
+2025-06-28 19:00:00,400 - INFO - Running case update for case_id 84390
+2025-06-28 19:00:02,072 - INFO - Marked events as emailed for case_id 84390
+2025-06-28 19:00:02,073 - INFO - Running case update for case_id 107256
+2025-06-28 19:00:03,426 - INFO - Marked events as emailed for case_id 107256
+2025-06-28 19:00:03,428 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-28 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-06-28 19:00:03'} ---
+2025-06-28 20:05:00,288 - INFO - Running case update for case_id 84390
+2025-06-28 20:05:01,744 - INFO - Marked events as emailed for case_id 84390
+2025-06-28 20:05:01,745 - INFO - Running case update for case_id 107256
+2025-06-28 20:05:03,138 - INFO - Marked events as emailed for case_id 107256
+2025-06-28 20:05:03,139 - INFO - Running case update for case_id 107761
+2025-06-28 20:05:04,611 - INFO - Marked events as emailed for case_id 107761
+2025-06-28 20:05:04,612 - INFO - Running case update for case_id 131837
+2025-06-28 20:05:06,049 - INFO - Marked events as emailed for case_id 131837
+2025-06-28 20:05:06,052 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-28 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-06-28 20:05:06'} ---
+2025-06-28 21:10:00,329 - INFO - Running case update for case_id 107761
+2025-06-28 21:10:01,690 - INFO - Marked events as emailed for case_id 107761
+2025-06-28 21:10:01,691 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-28 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-06-28 21:10:01'} ---
+2025-06-28 22:15:00,345 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 22:15:00'} ---
+2025-06-28 23:20:00,394 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-28 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-28 23:20:00'} ---
+2025-06-29 06:00:00,348 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 06:00:00'} ---
+2025-06-29 07:05:00,304 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 07:05:00'} ---
+2025-06-29 08:10:00,319 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 08:10:00'} ---
+2025-06-29 09:15:00,380 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 09:15:00'} ---
+2025-06-29 10:20:00,320 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 10:20:00'} ---
+2025-06-29 11:25:00,348 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 11:25:00'} ---
+2025-06-29 12:30:00,391 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 12:30:00'} ---
+2025-06-29 13:35:00,393 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 13:35:00'} ---
+2025-06-29 14:40:00,388 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 14:40:00'} ---
+2025-06-29 15:45:00,371 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 15:45:00'} ---
+2025-06-29 16:50:00,372 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 16:50:00'} ---
+2025-06-29 17:55:00,434 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 17:55:00'} ---
+2025-06-29 19:00:00,333 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-06-29 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-06-29 19:00:00'} ---
+2025-06-30 14:17:16,908 - INFO - Running case update for case_id 84388
+2025-06-30 14:17:20,260 - INFO - Marked events as emailed for case_id 84388
+2025-06-30 14:17:20,261 - INFO - Running case update for case_id 84390
+2025-06-30 14:17:21,535 - INFO - Marked events as emailed for case_id 84390
+2025-06-30 14:17:21,535 - INFO - Running case update for case_id 90990
+2025-06-30 14:17:22,859 - INFO - Marked events as emailed for case_id 90990
+2025-06-30 14:17:22,860 - INFO - Running case update for case_id 98119
+2025-06-30 14:17:23,935 - INFO - Marked events as emailed for case_id 98119
+2025-06-30 14:17:23,936 - INFO - Running case update for case_id 98262
+2025-06-30 14:17:24,483 - INFO - Marked events as emailed for case_id 98262
+2025-06-30 14:17:24,483 - INFO - Running case update for case_id 107256
+2025-06-30 14:17:25,754 - INFO - Marked events as emailed for case_id 107256
+2025-06-30 14:17:25,754 - INFO - Running case update for case_id 107279
+2025-06-30 14:17:26,815 - INFO - Marked events as emailed for case_id 107279
+2025-06-30 14:17:26,816 - INFO - Running case update for case_id 107340
+2025-06-30 14:17:28,876 - INFO - Marked events as emailed for case_id 107340
+2025-06-30 14:17:28,876 - INFO - Running case update for case_id 107761
+2025-06-30 14:17:30,035 - INFO - Marked events as emailed for case_id 107761
+2025-06-30 14:17:30,035 - INFO - Running case update for case_id 107767
+2025-06-30 14:17:31,435 - INFO - Marked events as emailed for case_id 107767
+2025-06-30 14:17:31,436 - INFO - Running case update for case_id 131784
+2025-06-30 14:17:32,707 - INFO - Marked events as emailed for case_id 131784
+2025-06-30 14:17:32,707 - INFO - Running case update for case_id 131807
+2025-06-30 14:17:34,000 - INFO - Marked events as emailed for case_id 131807
+2025-06-30 14:17:34,000 - INFO - Running case update for case_id 131825
+2025-06-30 14:17:35,335 - INFO - Marked events as emailed for case_id 131825
+2025-06-30 14:17:35,335 - INFO - Running case update for case_id 131827
+2025-06-30 14:17:36,666 - INFO - Marked events as emailed for case_id 131827
+2025-06-30 14:17:36,667 - INFO - Running case update for case_id 131837
+2025-06-30 14:17:38,266 - INFO - Marked events as emailed for case_id 131837
+2025-06-30 14:17:38,267 - INFO - All case updates processed.
+--- Task Started: {ts '2025-06-30 14:17:16'} ---
+Output: (No output from script)
+Execution Time: 21 seconds
+--- Task Completed: {ts '2025-06-30 14:17:38'} ---
+2025-07-01 10:20:00,339 - INFO - Running case update for case_id 84388
+2025-07-01 10:20:02,057 - INFO - Marked events as emailed for case_id 84388
+2025-07-01 10:20:02,058 - INFO - Running case update for case_id 98195
+2025-07-01 10:20:03,283 - INFO - Marked events as emailed for case_id 98195
+2025-07-01 10:20:03,284 - INFO - Running case update for case_id 107761
+2025-07-01 10:20:04,753 - INFO - Marked events as emailed for case_id 107761
+2025-07-01 10:20:04,754 - INFO - Running case update for case_id 107768
+2025-07-01 10:20:05,932 - INFO - Marked events as emailed for case_id 107768
+2025-07-01 10:20:05,933 - INFO - Running case update for case_id 107777
+2025-07-01 10:20:07,284 - INFO - Marked events as emailed for case_id 107777
+2025-07-01 10:20:07,285 - INFO - Running case update for case_id 131801
+2025-07-01 10:20:08,811 - INFO - Marked events as emailed for case_id 131801
+2025-07-01 10:20:08,812 - INFO - Running case update for case_id 131807
+2025-07-01 10:20:10,193 - INFO - Marked events as emailed for case_id 131807
+2025-07-01 10:20:10,193 - INFO - Running case update for case_id 142928
+2025-07-01 10:20:11,302 - INFO - Marked events as emailed for case_id 142928
+2025-07-01 10:20:11,302 - INFO - Running case update for case_id 142948
+2025-07-01 10:20:12,537 - INFO - Marked events as emailed for case_id 142948
+2025-07-01 10:20:12,539 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 12 seconds
+--- Task Completed: {ts '2025-07-01 10:20:12'} ---
+2025-07-01 11:25:00,272 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-01 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-01 11:25:00'} ---
+2025-07-01 12:30:00,311 - INFO - Running case update for case_id 84388
+2025-07-01 12:30:02,563 - INFO - Marked events as emailed for case_id 84388
+2025-07-01 12:30:02,564 - INFO - Running case update for case_id 90993
+2025-07-01 12:30:03,881 - INFO - Marked events as emailed for case_id 90993
+2025-07-01 12:30:03,881 - INFO - Running case update for case_id 91010
+2025-07-01 12:30:05,385 - INFO - Marked events as emailed for case_id 91010
+2025-07-01 12:30:05,385 - INFO - Running case update for case_id 107744
+2025-07-01 12:30:06,753 - INFO - Marked events as emailed for case_id 107744
+2025-07-01 12:30:06,753 - INFO - Running case update for case_id 131799
+2025-07-01 12:30:07,979 - INFO - Marked events as emailed for case_id 131799
+2025-07-01 12:30:07,980 - INFO - Running case update for case_id 131802
+2025-07-01 12:30:09,514 - INFO - Marked events as emailed for case_id 131802
+2025-07-01 12:30:09,516 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 9 seconds
+--- Task Completed: {ts '2025-07-01 12:30:09'} ---
+2025-07-01 13:35:00,296 - INFO - Running case update for case_id 90990
+2025-07-01 13:35:01,858 - INFO - Marked events as emailed for case_id 90990
+2025-07-01 13:35:01,858 - INFO - Running case update for case_id 98258
+2025-07-01 13:35:03,895 - INFO - Marked events as emailed for case_id 98258
+2025-07-01 13:35:03,897 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-01 13:35:03'} ---
+2025-07-01 14:40:00,313 - INFO - Running case update for case_id 84388
+2025-07-01 14:40:02,037 - INFO - Marked events as emailed for case_id 84388
+2025-07-01 14:40:02,037 - INFO - Running case update for case_id 107759
+2025-07-01 14:40:03,489 - INFO - Marked events as emailed for case_id 107759
+2025-07-01 14:40:03,490 - INFO - Running case update for case_id 107761
+2025-07-01 14:40:04,666 - INFO - Marked events as emailed for case_id 107761
+2025-07-01 14:40:04,667 - INFO - Running case update for case_id 131817
+2025-07-01 14:40:05,746 - INFO - Marked events as emailed for case_id 131817
+2025-07-01 14:40:05,748 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-07-01 14:40:05'} ---
+2025-07-01 15:45:00,312 - INFO - Running case update for case_id 107340
+2025-07-01 15:45:01,677 - INFO - Marked events as emailed for case_id 107340
+2025-07-01 15:45:01,678 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-01 15:45:01'} ---
+2025-07-01 16:50:00,298 - INFO - Running case update for case_id 84390
+2025-07-01 16:50:01,735 - INFO - Marked events as emailed for case_id 84390
+2025-07-01 16:50:01,737 - INFO - Running case update for case_id 84392
+2025-07-01 16:50:03,015 - INFO - Marked events as emailed for case_id 84392
+2025-07-01 16:50:03,016 - INFO - Running case update for case_id 84393
+2025-07-01 16:50:04,415 - INFO - Marked events as emailed for case_id 84393
+2025-07-01 16:50:04,416 - INFO - Running case update for case_id 107768
+2025-07-01 16:50:07,820 - INFO - Marked events as emailed for case_id 107768
+2025-07-01 16:50:07,821 - INFO - Running case update for case_id 131804
+2025-07-01 16:50:09,113 - INFO - Marked events as emailed for case_id 131804
+2025-07-01 16:50:09,115 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 9 seconds
+--- Task Completed: {ts '2025-07-01 16:50:09'} ---
+2025-07-01 17:55:00,314 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-01 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-01 17:55:00'} ---
+2025-07-01 19:00:00,332 - INFO - Running case update for case_id 91010
+2025-07-01 19:00:01,971 - INFO - Marked events as emailed for case_id 91010
+2025-07-01 19:00:01,973 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-01 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-01 19:00:01'} ---
+2025-07-01 20:05:00,287 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-01 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-01 20:05:00'} ---
+2025-07-01 21:10:00,329 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-01 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-01 21:10:00'} ---
+2025-07-01 22:15:00,278 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-01 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-01 22:15:00'} ---
+2025-07-01 23:20:00,306 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-01 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-01 23:20:00'} ---
+2025-07-02 06:00:00,335 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-02 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-02 06:00:00'} ---
+2025-07-02 07:05:00,307 - INFO - Running case update for case_id 131788
+2025-07-02 07:05:02,407 - INFO - Marked events as emailed for case_id 131788
+2025-07-02 07:05:02,409 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-02 07:05:02'} ---
+2025-07-02 08:10:00,298 - INFO - Running case update for case_id 82798
+2025-07-02 08:10:01,818 - INFO - Marked events as emailed for case_id 82798
+2025-07-02 08:10:01,820 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-02 08:10:01'} ---
+2025-07-02 09:15:00,287 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-02 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-02 09:15:00'} ---
+2025-07-02 10:20:00,331 - INFO - Running case update for case_id 90993
+2025-07-02 10:20:01,831 - INFO - Marked events as emailed for case_id 90993
+2025-07-02 10:20:01,832 - INFO - Running case update for case_id 97939
+2025-07-02 10:20:03,385 - INFO - Marked events as emailed for case_id 97939
+2025-07-02 10:20:03,386 - INFO - Running case update for case_id 131829
+2025-07-02 10:20:05,003 - INFO - Marked events as emailed for case_id 131829
+2025-07-02 10:20:05,019 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-07-02 10:20:05'} ---
+2025-07-02 11:25:00,301 - INFO - Running case update for case_id 131829
+2025-07-02 11:25:01,692 - INFO - Marked events as emailed for case_id 131829
+2025-07-02 11:25:01,693 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-02 11:25:01'} ---
+2025-07-02 12:30:00,367 - INFO - Running case update for case_id 84388
+2025-07-02 12:30:02,126 - INFO - Marked events as emailed for case_id 84388
+2025-07-02 12:30:02,127 - INFO - Running case update for case_id 107736
+2025-07-02 12:30:03,658 - INFO - Marked events as emailed for case_id 107736
+2025-07-02 12:30:03,659 - INFO - Running case update for case_id 107744
+2025-07-02 12:30:04,845 - INFO - Marked events as emailed for case_id 107744
+2025-07-02 12:30:04,847 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-02 12:30:04'} ---
+2025-07-02 13:35:00,310 - INFO - Running case update for case_id 90989
+2025-07-02 13:35:01,814 - INFO - Marked events as emailed for case_id 90989
+2025-07-02 13:35:01,817 - INFO - Running case update for case_id 98171
+2025-07-02 13:35:03,420 - INFO - Marked events as emailed for case_id 98171
+2025-07-02 13:35:03,421 - INFO - Running case update for case_id 98198
+2025-07-02 13:35:04,756 - INFO - Marked events as emailed for case_id 98198
+2025-07-02 13:35:04,756 - INFO - Running case update for case_id 107768
+2025-07-02 13:35:05,888 - INFO - Marked events as emailed for case_id 107768
+2025-07-02 13:35:05,889 - INFO - Running case update for case_id 131838
+2025-07-02 13:35:07,171 - INFO - Marked events as emailed for case_id 131838
+2025-07-02 13:35:07,172 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 7 seconds
+--- Task Completed: {ts '2025-07-02 13:35:07'} ---
+2025-07-02 14:40:00,294 - INFO - Running case update for case_id 84388
+2025-07-02 14:40:01,889 - INFO - Marked events as emailed for case_id 84388
+2025-07-02 14:40:01,890 - INFO - Running case update for case_id 84392
+2025-07-02 14:40:03,261 - INFO - Marked events as emailed for case_id 84392
+2025-07-02 14:40:03,262 - INFO - Running case update for case_id 84393
+2025-07-02 14:40:04,604 - INFO - Marked events as emailed for case_id 84393
+2025-07-02 14:40:04,604 - INFO - Running case update for case_id 107740
+2025-07-02 14:40:05,951 - INFO - Marked events as emailed for case_id 107740
+2025-07-02 14:40:05,953 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-07-02 14:40:05'} ---
+2025-07-02 15:45:00,378 - INFO - Running case update for case_id 84388
+2025-07-02 15:45:01,859 - INFO - Marked events as emailed for case_id 84388
+2025-07-02 15:45:01,864 - INFO - Running case update for case_id 107736
+2025-07-02 15:45:03,512 - INFO - Marked events as emailed for case_id 107736
+2025-07-02 15:45:03,513 - INFO - Running case update for case_id 131807
+2025-07-02 15:45:04,915 - INFO - Marked events as emailed for case_id 131807
+2025-07-02 15:45:04,917 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-02 15:45:04'} ---
+2025-07-02 16:50:00,389 - INFO - Running case update for case_id 84392
+2025-07-02 16:50:01,815 - INFO - Marked events as emailed for case_id 84392
+2025-07-02 16:50:01,816 - INFO - Running case update for case_id 100391
+2025-07-02 16:50:03,383 - INFO - Marked events as emailed for case_id 100391
+2025-07-02 16:50:03,384 - INFO - Running case update for case_id 107736
+2025-07-02 16:50:05,017 - INFO - Marked events as emailed for case_id 107736
+2025-07-02 16:50:05,019 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-07-02 16:50:05'} ---
+2025-07-02 17:55:00,298 - INFO - Running case update for case_id 131793
+2025-07-02 17:55:01,599 - INFO - Marked events as emailed for case_id 131793
+2025-07-02 17:55:01,600 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-02 17:55:01'} ---
+2025-07-02 19:00:00,351 - INFO - Running case update for case_id 91010
+2025-07-02 19:00:01,939 - INFO - Marked events as emailed for case_id 91010
+2025-07-02 19:00:01,940 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-02 19:00:01'} ---
+2025-07-02 20:05:00,306 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-02 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-02 20:05:00'} ---
+2025-07-02 21:10:00,300 - INFO - Running case update for case_id 107767
+2025-07-02 21:10:01,829 - INFO - Marked events as emailed for case_id 107767
+2025-07-02 21:10:01,831 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-02 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-02 21:10:01'} ---
+2025-07-02 22:15:00,348 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-02 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-02 22:15:00'} ---
+2025-07-02 23:20:00,436 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-02 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-02 23:20:00'} ---
+2025-07-03 06:00:00,371 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-03 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-03 06:00:00'} ---
+2025-07-03 07:05:00,311 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-03 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-03 07:05:00'} ---
+2025-07-03 08:10:00,296 - INFO - Running case update for case_id 82797
+2025-07-03 08:10:01,565 - INFO - Marked events as emailed for case_id 82797
+2025-07-03 08:10:01,572 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-03 08:10:01'} ---
+2025-07-03 09:15:00,320 - INFO - Running case update for case_id 98258
+2025-07-03 09:15:01,831 - INFO - Marked events as emailed for case_id 98258
+2025-07-03 09:15:01,832 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-03 09:15:01'} ---
+2025-07-03 10:20:00,313 - INFO - Running case update for case_id 84392
+2025-07-03 10:20:01,918 - INFO - Marked events as emailed for case_id 84392
+2025-07-03 10:20:01,919 - INFO - Running case update for case_id 107752
+2025-07-03 10:20:03,255 - INFO - Marked events as emailed for case_id 107752
+2025-07-03 10:20:03,257 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-03 10:20:03'} ---
+2025-07-03 11:25:00,308 - INFO - Running case update for case_id 90990
+2025-07-03 11:25:02,293 - INFO - Marked events as emailed for case_id 90990
+2025-07-03 11:25:02,293 - INFO - Running case update for case_id 142928
+2025-07-03 11:25:03,767 - INFO - Marked events as emailed for case_id 142928
+2025-07-03 11:25:03,769 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-03 11:25:03'} ---
+2025-07-03 12:30:00,372 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-03 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-03 12:30:00'} ---
+2025-07-03 13:35:00,312 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-03 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-03 13:35:00'} ---
+2025-07-03 14:40:00,306 - INFO - Running case update for case_id 131790
+2025-07-03 14:40:02,220 - INFO - Marked events as emailed for case_id 131790
+2025-07-03 14:40:02,221 - INFO - Running case update for case_id 131804
+2025-07-03 14:40:03,345 - INFO - Marked events as emailed for case_id 131804
+2025-07-03 14:40:03,347 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-03 14:40:03'} ---
+2025-07-03 15:45:00,309 - INFO - Running case update for case_id 107768
+2025-07-03 15:45:01,834 - INFO - Marked events as emailed for case_id 107768
+2025-07-03 15:45:01,836 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-03 15:45:01'} ---
+2025-07-03 16:50:00,332 - INFO - Running case update for case_id 107767
+2025-07-03 16:50:02,023 - INFO - Marked events as emailed for case_id 107767
+2025-07-03 16:50:02,023 - INFO - Running case update for case_id 131802
+2025-07-03 16:50:03,501 - INFO - Marked events as emailed for case_id 131802
+2025-07-03 16:50:03,502 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-03 16:50:03'} ---
+2025-07-03 17:55:00,304 - INFO - Running case update for case_id 98198
+2025-07-03 17:55:01,854 - INFO - Marked events as emailed for case_id 98198
+2025-07-03 17:55:01,854 - INFO - Running case update for case_id 107279
+2025-07-03 17:55:03,253 - INFO - Marked events as emailed for case_id 107279
+2025-07-03 17:55:03,253 - INFO - Running case update for case_id 142948
+2025-07-03 17:55:04,578 - INFO - Marked events as emailed for case_id 142948
+2025-07-03 17:55:04,579 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-03 17:55:04'} ---
+2025-07-03 19:00:00,352 - INFO - Running case update for case_id 84392
+2025-07-03 19:00:02,071 - INFO - Marked events as emailed for case_id 84392
+2025-07-03 19:00:02,072 - INFO - Running case update for case_id 131817
+2025-07-03 19:00:03,813 - INFO - Marked events as emailed for case_id 131817
+2025-07-03 19:00:03,815 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-03 19:00:03'} ---
+2025-07-03 20:05:00,301 - INFO - Running case update for case_id 3145
+2025-07-03 20:05:01,692 - INFO - Marked events as emailed for case_id 3145
+2025-07-03 20:05:01,692 - INFO - Running case update for case_id 107789
+2025-07-03 20:05:03,244 - INFO - Marked events as emailed for case_id 107789
+2025-07-03 20:05:03,246 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-03 20:05:03'} ---
+2025-07-03 21:10:00,352 - INFO - Running case update for case_id 84390
+2025-07-03 21:10:02,475 - INFO - Marked events as emailed for case_id 84390
+2025-07-03 21:10:02,475 - INFO - Running case update for case_id 84392
+2025-07-03 21:10:03,890 - INFO - Marked events as emailed for case_id 84392
+2025-07-03 21:10:03,891 - INFO - Running case update for case_id 107789
+2025-07-03 21:10:05,304 - INFO - Marked events as emailed for case_id 107789
+2025-07-03 21:10:05,305 - INFO - Running case update for case_id 131799
+2025-07-03 21:10:06,392 - INFO - Marked events as emailed for case_id 131799
+2025-07-03 21:10:06,394 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-03 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-07-03 21:10:06'} ---
+2025-07-03 22:15:00,350 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-03 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-03 22:15:00'} ---
+2025-07-03 23:20:00,350 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-03 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-03 23:20:00'} ---
+2025-07-04 06:00:00,372 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 06:00:00'} ---
+2025-07-04 07:05:00,307 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 07:05:00'} ---
+2025-07-04 08:10:00,316 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 08:10:00'} ---
+2025-07-04 09:15:00,291 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 09:15:00'} ---
+2025-07-04 10:20:00,313 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 10:20:00'} ---
+2025-07-04 11:25:00,294 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 11:25:00'} ---
+2025-07-04 12:30:00,361 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 12:30:00'} ---
+2025-07-04 13:35:00,320 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 13:35:00'} ---
+2025-07-04 14:40:00,320 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 14:40:00'} ---
+2025-07-04 15:45:00,366 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 15:45:00'} ---
+2025-07-04 16:50:00,388 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 16:50:00'} ---
+2025-07-04 17:55:00,297 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 17:55:00'} ---
+2025-07-04 19:00:00,449 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 19:00:00'} ---
+2025-07-04 20:05:00,301 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 20:05:00'} ---
+2025-07-04 21:10:00,321 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 21:10:00'} ---
+2025-07-04 22:15:00,316 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 22:15:00'} ---
+2025-07-04 23:20:00,354 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-04 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-04 23:20:00'} ---
+2025-07-05 06:00:00,342 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 06:00:00'} ---
+2025-07-05 07:05:00,325 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 07:05:00'} ---
+2025-07-05 08:10:00,319 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 08:10:00'} ---
+2025-07-05 09:15:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 09:15:00'} ---
+2025-07-05 10:20:00,304 - INFO - Running case update for case_id 107761
+2025-07-05 10:20:01,938 - INFO - Marked events as emailed for case_id 107761
+2025-07-05 10:20:01,939 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-05 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-05 10:20:01'} ---
+2025-07-05 11:25:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 11:25:00'} ---
+2025-07-05 12:30:00,351 - INFO - Running case update for case_id 107759
+2025-07-05 12:30:01,671 - INFO - Marked events as emailed for case_id 107759
+2025-07-05 12:30:01,673 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-05 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-05 12:30:01'} ---
+2025-07-05 13:35:00,327 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 13:35:00'} ---
+2025-07-05 14:40:00,301 - INFO - Running case update for case_id 107761
+2025-07-05 14:40:02,145 - INFO - Marked events as emailed for case_id 107761
+2025-07-05 14:40:02,147 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-05 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-05 14:40:02'} ---
+2025-07-05 15:45:00,280 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 15:45:00'} ---
+2025-07-05 16:50:00,344 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 16:50:00'} ---
+2025-07-05 17:55:00,317 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 17:55:00'} ---
+2025-07-05 19:00:00,372 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 19:00:00'} ---
+2025-07-05 20:05:00,321 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 20:05:00'} ---
+2025-07-05 21:10:00,354 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 21:10:00'} ---
+2025-07-05 22:15:00,302 - INFO - Running case update for case_id 107736
+2025-07-05 22:15:02,023 - INFO - Marked events as emailed for case_id 107736
+2025-07-05 22:15:02,027 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-05 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-05 22:15:02'} ---
+2025-07-05 23:20:00,360 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-05 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-05 23:20:00'} ---
+2025-07-06 06:00:00,351 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 06:00:00'} ---
+2025-07-06 07:05:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 07:05:00'} ---
+2025-07-06 08:10:00,436 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 08:10:00'} ---
+2025-07-06 09:15:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 09:15:00'} ---
+2025-07-06 10:20:00,309 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 10:20:00'} ---
+2025-07-06 11:25:00,303 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 11:25:00'} ---
+2025-07-06 12:30:00,320 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 12:30:00'} ---
+2025-07-06 13:35:00,318 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 13:35:00'} ---
+2025-07-06 14:40:00,309 - INFO - Running case update for case_id 107759
+2025-07-06 14:40:01,977 - INFO - Marked events as emailed for case_id 107759
+2025-07-06 14:40:01,979 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-06 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-06 14:40:01'} ---
+2025-07-06 15:45:00,355 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 15:45:00'} ---
+2025-07-06 16:50:00,462 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 16:50:00'} ---
+2025-07-06 17:55:00,337 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 17:55:00'} ---
+2025-07-06 19:00:00,313 - INFO - Running case update for case_id 84392
+2025-07-06 19:00:01,754 - INFO - Marked events as emailed for case_id 84392
+2025-07-06 19:00:01,755 - INFO - Running case update for case_id 84393
+2025-07-06 19:00:03,539 - INFO - Marked events as emailed for case_id 84393
+2025-07-06 19:00:03,541 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-06 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-06 19:00:03'} ---
+2025-07-06 20:05:00,299 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 20:05:00'} ---
+2025-07-06 21:10:00,337 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 21:10:00'} ---
+2025-07-06 22:15:00,291 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 22:15:00'} ---
+2025-07-06 23:20:00,329 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-06 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-06 23:20:00'} ---
+2025-07-07 06:00:00,389 - INFO - Running case update for case_id 131829
+2025-07-07 06:00:02,472 - INFO - Marked events as emailed for case_id 131829
+2025-07-07 06:00:02,473 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-07 06:00:02'} ---
+2025-07-07 07:05:00,302 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-07 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-07 07:05:00'} ---
+2025-07-07 08:10:00,295 - INFO - Running case update for case_id 84388
+2025-07-07 08:10:01,906 - INFO - Marked events as emailed for case_id 84388
+2025-07-07 08:10:01,907 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-07 08:10:01'} ---
+2025-07-07 09:15:00,292 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-07 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-07 09:15:00'} ---
+2025-07-07 10:20:00,380 - INFO - Running case update for case_id 98026
+2025-07-07 10:20:02,205 - INFO - Marked events as emailed for case_id 98026
+2025-07-07 10:20:02,206 - INFO - Running case update for case_id 107759
+2025-07-07 10:20:03,769 - INFO - Marked events as emailed for case_id 107759
+2025-07-07 10:20:03,770 - INFO - Running case update for case_id 131790
+2025-07-07 10:20:05,201 - INFO - Marked events as emailed for case_id 131790
+2025-07-07 10:20:05,202 - INFO - Running case update for case_id 131794
+2025-07-07 10:20:06,377 - INFO - Marked events as emailed for case_id 131794
+2025-07-07 10:20:06,378 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-07-07 10:20:06'} ---
+2025-07-07 11:25:00,298 - INFO - Running case update for case_id 97488
+2025-07-07 11:25:01,598 - INFO - Marked events as emailed for case_id 97488
+2025-07-07 11:25:01,599 - INFO - Running case update for case_id 107787
+2025-07-07 11:25:03,093 - INFO - Marked events as emailed for case_id 107787
+2025-07-07 11:25:03,095 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-07 11:25:03'} ---
+2025-07-07 12:30:00,881 - INFO - Running case update for case_id 84390
+2025-07-07 12:30:02,678 - INFO - Marked events as emailed for case_id 84390
+2025-07-07 12:30:02,678 - INFO - Running case update for case_id 107759
+2025-07-07 12:30:03,833 - INFO - Marked events as emailed for case_id 107759
+2025-07-07 12:30:03,834 - INFO - Running case update for case_id 107771
+2025-07-07 12:30:05,390 - INFO - Marked events as emailed for case_id 107771
+2025-07-07 12:30:05,392 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-07-07 12:30:05'} ---
+2025-07-07 13:35:00,313 - INFO - Running case update for case_id 90989
+2025-07-07 13:35:01,690 - INFO - Marked events as emailed for case_id 90989
+2025-07-07 13:35:01,691 - INFO - Running case update for case_id 131794
+2025-07-07 13:35:03,370 - INFO - Marked events as emailed for case_id 131794
+2025-07-07 13:35:03,372 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-07 13:35:03'} ---
+2025-07-07 14:40:00,315 - INFO - Running case update for case_id 84388
+2025-07-07 14:40:01,652 - INFO - Marked events as emailed for case_id 84388
+2025-07-07 14:40:01,653 - INFO - Running case update for case_id 84392
+2025-07-07 14:40:02,764 - INFO - Marked events as emailed for case_id 84392
+2025-07-07 14:40:02,765 - INFO - Running case update for case_id 107761
+2025-07-07 14:40:04,099 - INFO - Marked events as emailed for case_id 107761
+2025-07-07 14:40:04,100 - INFO - Running case update for case_id 107769
+2025-07-07 14:40:05,426 - INFO - Marked events as emailed for case_id 107769
+2025-07-07 14:40:05,427 - INFO - Running case update for case_id 131802
+2025-07-07 14:40:06,797 - INFO - Marked events as emailed for case_id 131802
+2025-07-07 14:40:06,798 - INFO - Running case update for case_id 131819
+2025-07-07 14:40:08,105 - INFO - Marked events as emailed for case_id 131819
+2025-07-07 14:40:08,106 - INFO - Running case update for case_id 131835
+2025-07-07 14:40:09,402 - INFO - Marked events as emailed for case_id 131835
+2025-07-07 14:40:09,404 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 9 seconds
+--- Task Completed: {ts '2025-07-07 14:40:09'} ---
+2025-07-07 15:45:00,286 - INFO - Running case update for case_id 98026
+2025-07-07 15:45:01,726 - INFO - Marked events as emailed for case_id 98026
+2025-07-07 15:45:01,730 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-07 15:45:01'} ---
+2025-07-07 16:50:00,414 - INFO - Running case update for case_id 3145
+2025-07-07 16:50:01,975 - INFO - Marked events as emailed for case_id 3145
+2025-07-07 16:50:01,976 - INFO - Running case update for case_id 84392
+2025-07-07 16:50:03,207 - INFO - Marked events as emailed for case_id 84392
+2025-07-07 16:50:03,207 - INFO - Running case update for case_id 107788
+2025-07-07 16:50:04,590 - INFO - Marked events as emailed for case_id 107788
+2025-07-07 16:50:04,591 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-07 16:50:04'} ---
+2025-07-07 17:55:00,355 - INFO - Running case update for case_id 90989
+2025-07-07 17:55:01,901 - INFO - Marked events as emailed for case_id 90989
+2025-07-07 17:55:01,902 - INFO - Running case update for case_id 107789
+2025-07-07 17:55:03,306 - INFO - Marked events as emailed for case_id 107789
+2025-07-07 17:55:03,308 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-07 17:55:03'} ---
+2025-07-07 19:00:00,361 - INFO - Running case update for case_id 131793
+2025-07-07 19:00:02,468 - INFO - Marked events as emailed for case_id 131793
+2025-07-07 19:00:02,471 - INFO - Running case update for case_id 131796
+2025-07-07 19:00:04,146 - INFO - Marked events as emailed for case_id 131796
+2025-07-07 19:00:04,148 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-07 19:00:04'} ---
+2025-07-07 20:05:00,295 - INFO - Running case update for case_id 97217
+2025-07-07 20:05:01,704 - INFO - Marked events as emailed for case_id 97217
+2025-07-07 20:05:01,706 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-07 20:05:01'} ---
+2025-07-07 21:10:00,423 - INFO - Running case update for case_id 107768
+2025-07-07 21:10:01,700 - INFO - Marked events as emailed for case_id 107768
+2025-07-07 21:10:01,702 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-07 21:10:01'} ---
+2025-07-07 22:15:00,301 - INFO - Running case update for case_id 84392
+2025-07-07 22:15:02,301 - INFO - Marked events as emailed for case_id 84392
+2025-07-07 22:15:02,302 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-07 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-07 22:15:02'} ---
+2025-07-07 23:20:00,328 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-07 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-07 23:20:00'} ---
+2025-07-08 06:00:00,355 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-08 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-08 06:00:00'} ---
+2025-07-08 07:05:00,298 - INFO - Running case update for case_id 84394
+2025-07-08 07:05:02,401 - INFO - Marked events as emailed for case_id 84394
+2025-07-08 07:05:02,402 - INFO - Running case update for case_id 107769
+2025-07-08 07:05:04,595 - INFO - Marked events as emailed for case_id 107769
+2025-07-08 07:05:04,596 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-08 07:05:04'} ---
+2025-07-08 08:10:00,410 - INFO - Running case update for case_id 3145
+2025-07-08 08:10:01,870 - INFO - Marked events as emailed for case_id 3145
+2025-07-08 08:10:01,872 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-08 08:10:01'} ---
+2025-07-08 09:15:00,275 - INFO - Running case update for case_id 107759
+2025-07-08 09:15:01,680 - INFO - Marked events as emailed for case_id 107759
+2025-07-08 09:15:01,681 - INFO - Running case update for case_id 131794
+2025-07-08 09:15:03,456 - INFO - Marked events as emailed for case_id 131794
+2025-07-08 09:15:03,458 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-08 09:15:03'} ---
+2025-07-08 10:20:00,349 - INFO - Running case update for case_id 84388
+2025-07-08 10:20:02,634 - INFO - Marked events as emailed for case_id 84388
+2025-07-08 10:20:02,634 - INFO - Running case update for case_id 107229
+2025-07-08 10:20:03,754 - INFO - Marked events as emailed for case_id 107229
+2025-07-08 10:20:03,755 - INFO - Running case update for case_id 107759
+2025-07-08 10:20:05,054 - INFO - Marked events as emailed for case_id 107759
+2025-07-08 10:20:05,055 - INFO - Running case update for case_id 107767
+2025-07-08 10:20:06,417 - INFO - Marked events as emailed for case_id 107767
+2025-07-08 10:20:06,418 - INFO - Running case update for case_id 131837
+2025-07-08 10:20:07,793 - INFO - Marked events as emailed for case_id 131837
+2025-07-08 10:20:07,795 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 7 seconds
+--- Task Completed: {ts '2025-07-08 10:20:07'} ---
+2025-07-08 11:25:00,305 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-08 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-08 11:25:00'} ---
+2025-07-08 12:30:00,422 - INFO - Running case update for case_id 84388
+2025-07-08 12:30:02,341 - INFO - Marked events as emailed for case_id 84388
+2025-07-08 12:30:02,341 - INFO - Running case update for case_id 107256
+2025-07-08 12:30:03,472 - INFO - Marked events as emailed for case_id 107256
+2025-07-08 12:30:03,472 - INFO - Running case update for case_id 107767
+2025-07-08 12:30:04,947 - INFO - Marked events as emailed for case_id 107767
+2025-07-08 12:30:04,948 - INFO - Running case update for case_id 107788
+2025-07-08 12:30:06,198 - INFO - Marked events as emailed for case_id 107788
+2025-07-08 12:30:06,198 - INFO - Running case update for case_id 131803
+2025-07-08 12:30:07,307 - INFO - Marked events as emailed for case_id 131803
+2025-07-08 12:30:07,309 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 7 seconds
+--- Task Completed: {ts '2025-07-08 12:30:07'} ---
+2025-07-08 13:35:00,304 - INFO - Running case update for case_id 98026
+2025-07-08 13:35:01,126 - INFO - Marked events as emailed for case_id 98026
+2025-07-08 13:35:01,127 - INFO - Running case update for case_id 131814
+2025-07-08 13:35:02,869 - INFO - Marked events as emailed for case_id 131814
+2025-07-08 13:35:02,870 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-08 13:35:02'} ---
+2025-07-08 14:40:00,325 - INFO - Running case update for case_id 84392
+2025-07-08 14:40:01,968 - INFO - Marked events as emailed for case_id 84392
+2025-07-08 14:40:01,971 - INFO - Running case update for case_id 84393
+2025-07-08 14:40:03,498 - INFO - Marked events as emailed for case_id 84393
+2025-07-08 14:40:03,500 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-08 14:40:03'} ---
+2025-07-08 15:45:00,289 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-08 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-08 15:45:00'} ---
+2025-07-08 16:50:00,442 - INFO - Running case update for case_id 84390
+2025-07-08 16:50:02,099 - INFO - Marked events as emailed for case_id 84390
+2025-07-08 16:50:02,099 - INFO - Running case update for case_id 107746
+2025-07-08 16:50:03,550 - INFO - Marked events as emailed for case_id 107746
+2025-07-08 16:50:03,550 - INFO - Running case update for case_id 107759
+2025-07-08 16:50:04,694 - INFO - Marked events as emailed for case_id 107759
+2025-07-08 16:50:04,695 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-08 16:50:04'} ---
+2025-07-08 17:55:00,294 - INFO - Running case update for case_id 107256
+2025-07-08 17:55:01,507 - INFO - Marked events as emailed for case_id 107256
+2025-07-08 17:55:01,508 - INFO - Running case update for case_id 107784
+2025-07-08 17:55:02,824 - INFO - Marked events as emailed for case_id 107784
+2025-07-08 17:55:02,826 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-08 17:55:02'} ---
+2025-07-08 19:00:00,340 - INFO - Running case update for case_id 107332
+2025-07-08 19:00:01,704 - INFO - Marked events as emailed for case_id 107332
+2025-07-08 19:00:01,706 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-08 19:00:01'} ---
+2025-07-08 20:05:00,303 - INFO - Running case update for case_id 131797
+2025-07-08 20:05:01,524 - INFO - Marked events as emailed for case_id 131797
+2025-07-08 20:05:01,526 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-08 20:05:01'} ---
+2025-07-08 21:10:00,329 - INFO - Running case update for case_id 84392
+2025-07-08 21:10:01,630 - INFO - Marked events as emailed for case_id 84392
+2025-07-08 21:10:01,632 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-08 21:10:01'} ---
+2025-07-08 22:15:00,291 - INFO - Running case update for case_id 131817
+2025-07-08 22:15:01,975 - INFO - Marked events as emailed for case_id 131817
+2025-07-08 22:15:01,978 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-08 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-08 22:15:01'} ---
+2025-07-08 23:20:00,388 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-08 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-08 23:20:00'} ---
+2025-07-09 06:00:00,377 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 06:00:00'} ---
+2025-07-09 07:05:00,292 - INFO - Running case update for case_id 107256
+2025-07-09 07:05:01,787 - INFO - Marked events as emailed for case_id 107256
+2025-07-09 07:05:01,787 - INFO - Running case update for case_id 131802
+2025-07-09 07:05:03,244 - INFO - Marked events as emailed for case_id 131802
+2025-07-09 07:05:03,245 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-09 07:05:03'} ---
+2025-07-09 08:10:00,325 - INFO - Running case update for case_id 84392
+2025-07-09 08:10:01,976 - INFO - Marked events as emailed for case_id 84392
+2025-07-09 08:10:01,977 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-09 08:10:01'} ---
+2025-07-09 09:15:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 09:15:00'} ---
+2025-07-09 10:20:00,298 - INFO - Running case update for case_id 84392
+2025-07-09 10:20:01,608 - INFO - Marked events as emailed for case_id 84392
+2025-07-09 10:20:01,609 - INFO - Running case update for case_id 107767
+2025-07-09 10:20:03,480 - INFO - Marked events as emailed for case_id 107767
+2025-07-09 10:20:03,481 - INFO - Running case update for case_id 131796
+2025-07-09 10:20:04,935 - INFO - Marked events as emailed for case_id 131796
+2025-07-09 10:20:04,936 - INFO - Running case update for case_id 131817
+2025-07-09 10:20:06,274 - INFO - Marked events as emailed for case_id 131817
+2025-07-09 10:20:06,276 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-07-09 10:20:06'} ---
+2025-07-09 11:25:00,302 - INFO - Running case update for case_id 107335
+2025-07-09 11:25:01,941 - INFO - Marked events as emailed for case_id 107335
+2025-07-09 11:25:01,941 - INFO - Running case update for case_id 107769
+2025-07-09 11:25:03,089 - INFO - Marked events as emailed for case_id 107769
+2025-07-09 11:25:03,091 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-09 11:25:03'} ---
+2025-07-09 12:30:00,520 - INFO - Running case update for case_id 84392
+2025-07-09 12:30:02,011 - INFO - Marked events as emailed for case_id 84392
+2025-07-09 12:30:02,012 - INFO - Running case update for case_id 131804
+2025-07-09 12:30:03,474 - INFO - Marked events as emailed for case_id 131804
+2025-07-09 12:30:03,476 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-09 12:30:03'} ---
+2025-07-09 13:35:00,332 - INFO - Running case update for case_id 107736
+2025-07-09 13:35:01,882 - INFO - Marked events as emailed for case_id 107736
+2025-07-09 13:35:01,884 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-09 13:35:01'} ---
+2025-07-09 14:40:00,362 - INFO - Running case update for case_id 84388
+2025-07-09 14:40:02,264 - INFO - Marked events as emailed for case_id 84388
+2025-07-09 14:40:02,265 - INFO - Running case update for case_id 84390
+2025-07-09 14:40:03,604 - INFO - Marked events as emailed for case_id 84390
+2025-07-09 14:40:03,605 - INFO - Running case update for case_id 84392
+2025-07-09 14:40:05,012 - INFO - Marked events as emailed for case_id 84392
+2025-07-09 14:40:05,012 - INFO - Running case update for case_id 91010
+2025-07-09 14:40:06,350 - INFO - Marked events as emailed for case_id 91010
+2025-07-09 14:40:06,350 - INFO - Running case update for case_id 131796
+2025-07-09 14:40:07,922 - INFO - Marked events as emailed for case_id 131796
+2025-07-09 14:40:07,924 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 7 seconds
+--- Task Completed: {ts '2025-07-09 14:40:07'} ---
+2025-07-09 15:45:00,332 - INFO - Running case update for case_id 131793
+2025-07-09 15:45:02,133 - INFO - Marked events as emailed for case_id 131793
+2025-07-09 15:45:02,135 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-09 15:45:02'} ---
+2025-07-09 16:50:00,449 - INFO - Running case update for case_id 1444
+2025-07-09 16:50:02,137 - INFO - Marked events as emailed for case_id 1444
+2025-07-09 16:50:02,137 - INFO - Running case update for case_id 149967
+2025-07-09 16:50:03,655 - INFO - Marked events as emailed for case_id 149967
+2025-07-09 16:50:03,657 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-09 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-09 16:50:03'} ---
+2025-07-09 17:55:00,317 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 17:55:00'} ---
+2025-07-09 19:00:00,361 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 19:00:00'} ---
+2025-07-09 20:05:00,279 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 20:05:00'} ---
+2025-07-09 21:10:00,300 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 21:10:00'} ---
+2025-07-09 22:15:00,291 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 22:15:00'} ---
+2025-07-09 23:20:00,363 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-09 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-09 23:20:00'} ---
+2025-07-10 06:00:00,353 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-10 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-10 06:00:00'} ---
+2025-07-10 07:05:00,296 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-10 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-10 07:05:00'} ---
+2025-07-10 08:10:00,362 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-10 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-10 08:10:00'} ---
+2025-07-10 09:15:00,288 - INFO - Running case update for case_id 100391
+2025-07-10 09:15:01,865 - INFO - Marked events as emailed for case_id 100391
+2025-07-10 09:15:01,866 - INFO - Running case update for case_id 107759
+2025-07-10 09:15:03,188 - INFO - Marked events as emailed for case_id 107759
+2025-07-10 09:15:03,189 - INFO - Running case update for case_id 107766
+2025-07-10 09:15:04,546 - INFO - Marked events as emailed for case_id 107766
+2025-07-10 09:15:04,548 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-10 09:15:04'} ---
+2025-07-10 10:20:00,313 - INFO - Running case update for case_id 107352
+2025-07-10 10:20:01,634 - INFO - Marked events as emailed for case_id 107352
+2025-07-10 10:20:01,635 - INFO - Running case update for case_id 131838
+2025-07-10 10:20:02,999 - INFO - Marked events as emailed for case_id 131838
+2025-07-10 10:20:03,001 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-10 10:20:03'} ---
+2025-07-10 11:25:00,290 - INFO - Running case update for case_id 107766
+2025-07-10 11:25:01,578 - INFO - Marked events as emailed for case_id 107766
+2025-07-10 11:25:01,579 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-10 11:25:01'} ---
+2025-07-10 12:30:00,448 - INFO - Running case update for case_id 84388
+2025-07-10 12:30:02,237 - INFO - Marked events as emailed for case_id 84388
+2025-07-10 12:30:02,238 - INFO - Running case update for case_id 84392
+2025-07-10 12:30:03,619 - INFO - Marked events as emailed for case_id 84392
+2025-07-10 12:30:03,621 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-10 12:30:03'} ---
+2025-07-10 13:35:00,348 - INFO - Running case update for case_id 90990
+2025-07-10 13:35:01,792 - INFO - Marked events as emailed for case_id 90990
+2025-07-10 13:35:01,793 - INFO - Running case update for case_id 131838
+2025-07-10 13:35:03,123 - INFO - Marked events as emailed for case_id 131838
+2025-07-10 13:35:03,124 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-10 13:35:03'} ---
+2025-07-10 14:40:00,319 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-10 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-10 14:40:00'} ---
+2025-07-10 15:45:00,286 - INFO - Running case update for case_id 131828
+2025-07-10 15:45:01,799 - INFO - Marked events as emailed for case_id 131828
+2025-07-10 15:45:01,801 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-10 15:45:01'} ---
+2025-07-10 16:50:00,352 - INFO - Running case update for case_id 107767
+2025-07-10 16:50:02,133 - INFO - Marked events as emailed for case_id 107767
+2025-07-10 16:50:02,135 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-10 16:50:02'} ---
+2025-07-10 17:55:00,321 - INFO - Running case update for case_id 131829
+2025-07-10 17:55:01,527 - INFO - Marked events as emailed for case_id 131829
+2025-07-10 17:55:01,528 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-10 17:55:01'} ---
+2025-07-10 19:00:00,338 - INFO - Running case update for case_id 131829
+2025-07-10 19:00:01,943 - INFO - Marked events as emailed for case_id 131829
+2025-07-10 19:00:01,944 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-10 19:00:01'} ---
+2025-07-10 20:05:00,405 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-10 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-10 20:05:00'} ---
+2025-07-10 21:10:00,333 - INFO - Running case update for case_id 131817
+2025-07-10 21:10:02,087 - INFO - Marked events as emailed for case_id 131817
+2025-07-10 21:10:02,089 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-10 21:10:02'} ---
+2025-07-10 22:15:00,282 - INFO - Running case update for case_id 84394
+2025-07-10 22:15:01,619 - INFO - Marked events as emailed for case_id 84394
+2025-07-10 22:15:01,624 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-10 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-10 22:15:01'} ---
+2025-07-10 23:20:00,382 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-10 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-10 23:20:00'} ---
+2025-07-11 06:00:00,303 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 06:00:00'} ---
+2025-07-11 07:05:00,274 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 07:05:00'} ---
+2025-07-11 08:10:00,277 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 08:10:00'} ---
+2025-07-11 09:15:00,269 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 09:15:00'} ---
+2025-07-11 10:20:00,346 - INFO - Running case update for case_id 84390
+2025-07-11 10:20:02,076 - INFO - Marked events as emailed for case_id 84390
+2025-07-11 10:20:02,077 - INFO - Running case update for case_id 84392
+2025-07-11 10:20:03,604 - INFO - Marked events as emailed for case_id 84392
+2025-07-11 10:20:03,604 - INFO - Running case update for case_id 107767
+2025-07-11 10:20:04,812 - INFO - Marked events as emailed for case_id 107767
+2025-07-11 10:20:04,813 - INFO - Running case update for case_id 107769
+2025-07-11 10:20:06,050 - INFO - Marked events as emailed for case_id 107769
+2025-07-11 10:20:06,052 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-07-11 10:20:06'} ---
+2025-07-11 11:25:00,283 - INFO - Running case update for case_id 98198
+2025-07-11 11:25:01,734 - INFO - Marked events as emailed for case_id 98198
+2025-07-11 11:25:01,736 - INFO - Running case update for case_id 131805
+2025-07-11 11:25:03,123 - INFO - Marked events as emailed for case_id 131805
+2025-07-11 11:25:03,126 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-11 11:25:03'} ---
+2025-07-11 12:30:00,453 - INFO - Running case update for case_id 84388
+2025-07-11 12:30:02,301 - INFO - Marked events as emailed for case_id 84388
+2025-07-11 12:30:02,302 - INFO - Running case update for case_id 84392
+2025-07-11 12:30:03,478 - INFO - Marked events as emailed for case_id 84392
+2025-07-11 12:30:03,478 - INFO - Running case update for case_id 84394
+2025-07-11 12:30:04,656 - INFO - Marked events as emailed for case_id 84394
+2025-07-11 12:30:04,657 - INFO - Running case update for case_id 90991
+2025-07-11 12:30:06,010 - INFO - Marked events as emailed for case_id 90991
+2025-07-11 12:30:06,010 - INFO - Running case update for case_id 107740
+2025-07-11 12:30:07,120 - INFO - Marked events as emailed for case_id 107740
+2025-07-11 12:30:07,125 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 7 seconds
+--- Task Completed: {ts '2025-07-11 12:30:07'} ---
+2025-07-11 13:35:00,339 - INFO - Running case update for case_id 107766
+2025-07-11 13:35:01,974 - INFO - Marked events as emailed for case_id 107766
+2025-07-11 13:35:01,975 - INFO - Running case update for case_id 131805
+2025-07-11 13:35:03,265 - INFO - Marked events as emailed for case_id 131805
+2025-07-11 13:35:03,268 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-11 13:35:03'} ---
+2025-07-11 14:40:00,411 - INFO - Running case update for case_id 84390
+2025-07-11 14:40:01,968 - INFO - Marked events as emailed for case_id 84390
+2025-07-11 14:40:01,968 - INFO - Running case update for case_id 107736
+2025-07-11 14:40:03,297 - INFO - Marked events as emailed for case_id 107736
+2025-07-11 14:40:03,298 - INFO - Running case update for case_id 107761
+2025-07-11 14:40:04,593 - INFO - Marked events as emailed for case_id 107761
+2025-07-11 14:40:04,594 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-11 14:40:04'} ---
+2025-07-11 15:45:00,305 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 15:45:00'} ---
+2025-07-11 16:50:00,342 - INFO - Running case update for case_id 84390
+2025-07-11 16:50:01,729 - INFO - Marked events as emailed for case_id 84390
+2025-07-11 16:50:01,735 - INFO - Running case update for case_id 84392
+2025-07-11 16:50:03,418 - INFO - Marked events as emailed for case_id 84392
+2025-07-11 16:50:03,419 - INFO - Running case update for case_id 107759
+2025-07-11 16:50:04,928 - INFO - Marked events as emailed for case_id 107759
+2025-07-11 16:50:04,929 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 4 seconds
+--- Task Completed: {ts '2025-07-11 16:50:04'} ---
+2025-07-11 17:55:00,280 - INFO - Running case update for case_id 107313
+2025-07-11 17:55:01,766 - INFO - Marked events as emailed for case_id 107313
+2025-07-11 17:55:01,768 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-11 17:55:01'} ---
+2025-07-11 19:00:00,306 - INFO - Running case update for case_id 98171
+2025-07-11 19:00:01,804 - INFO - Marked events as emailed for case_id 98171
+2025-07-11 19:00:01,806 - INFO - Running case update for case_id 131817
+2025-07-11 19:00:03,477 - INFO - Marked events as emailed for case_id 131817
+2025-07-11 19:00:03,478 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-11 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 3 seconds
+--- Task Completed: {ts '2025-07-11 19:00:03'} ---
+2025-07-11 20:05:00,287 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 20:05:00'} ---
+2025-07-11 21:10:00,416 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 21:10:00'} ---
+2025-07-11 22:15:00,305 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 22:15:00'} ---
+2025-07-11 23:20:00,437 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-11 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-11 23:20:00'} ---
+2025-07-12 06:00:00,326 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 06:00:00'} ---
+2025-07-12 07:05:00,311 - INFO - Running case update for case_id 84392
+2025-07-12 07:05:02,000 - INFO - Marked events as emailed for case_id 84392
+2025-07-12 07:05:02,002 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-12 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-12 07:05:02'} ---
+2025-07-12 08:10:00,399 - INFO - Running case update for case_id 107313
+2025-07-12 08:10:01,833 - INFO - Marked events as emailed for case_id 107313
+2025-07-12 08:10:01,836 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-12 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-12 08:10:01'} ---
+2025-07-12 09:15:00,322 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 09:15:00'} ---
+2025-07-12 10:20:00,301 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 10:20:00'} ---
+2025-07-12 11:25:00,286 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 11:25:00'} ---
+2025-07-12 12:30:00,392 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 12:30:00'} ---
+2025-07-12 13:35:00,382 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 13:35:00'} ---
+2025-07-12 14:40:00,314 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 14:40:00'} ---
+2025-07-12 15:45:00,283 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 15:45:00'} ---
+2025-07-12 16:50:00,337 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 16:50:00'} ---
+2025-07-12 17:55:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 17:55:00'} ---
+2025-07-12 19:00:00,346 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 19:00:00'} ---
+2025-07-12 20:05:00,356 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 20:05:00'} ---
+2025-07-12 21:10:00,298 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 21:10:00'} ---
+2025-07-12 22:15:00,338 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 22:15:00'} ---
+2025-07-12 23:20:00,340 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-12 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-12 23:20:00'} ---
+2025-07-13 06:00:00,345 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 06:00:00'} ---
+2025-07-13 07:05:00,376 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 07:05:00'} ---
+2025-07-13 08:10:00,335 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 08:10:00'} ---
+2025-07-13 09:15:00,373 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 09:15:00'} ---
+2025-07-13 10:20:00,352 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 10:20:00'} ---
+2025-07-13 11:25:00,276 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 11:25:00'} ---
+2025-07-13 12:30:00,341 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 12:30:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 12:30:00'} ---
+2025-07-13 13:35:00,279 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 13:35:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 13:35:00'} ---
+2025-07-13 14:40:00,328 - INFO - Running case update for case_id 84392
+2025-07-13 14:40:02,036 - INFO - Marked events as emailed for case_id 84392
+2025-07-13 14:40:02,037 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-13 14:40:00'} ---
+Output: (No output from script)
+Execution Time: 2 seconds
+--- Task Completed: {ts '2025-07-13 14:40:02'} ---
+2025-07-13 15:45:00,283 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 15:45:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 15:45:00'} ---
+2025-07-13 16:50:00,365 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 16:50:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 16:50:00'} ---
+2025-07-13 17:55:00,281 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 17:55:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 17:55:00'} ---
+2025-07-13 19:00:00,303 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 19:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 19:00:00'} ---
+2025-07-13 20:05:00,275 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 20:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 20:05:00'} ---
+2025-07-13 21:10:00,441 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 21:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 21:10:00'} ---
+2025-07-13 22:15:00,286 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 22:15:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 22:15:00'} ---
+2025-07-13 23:20:00,368 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-13 23:20:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-13 23:20:00'} ---
+2025-07-14 06:00:00,456 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-14 06:00:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-14 06:00:00'} ---
+2025-07-14 07:05:00,315 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-14 07:05:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-14 07:05:00'} ---
+2025-07-14 08:10:00,279 - INFO - No unemailed case events today.
+--- Task Started: {ts '2025-07-14 08:10:00'} ---
+Output: (No output from script)
+Execution Time: 0 seconds
+--- Task Completed: {ts '2025-07-14 08:10:00'} ---
+2025-07-14 09:15:00,286 - INFO - Running case update for case_id 107769
+2025-07-14 09:15:05,451 - INFO - Marked events as emailed for case_id 107769
+2025-07-14 09:15:05,453 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-14 09:15:00'} ---
+Output: (No output from script)
+Execution Time: 5 seconds
+--- Task Completed: {ts '2025-07-14 09:15:05'} ---
+2025-07-14 10:20:00,320 - INFO - Running case update for case_id 84392
+2025-07-14 10:20:01,999 - INFO - Marked events as emailed for case_id 84392
+2025-07-14 10:20:02,001 - INFO - Running case update for case_id 107762
+2025-07-14 10:20:03,439 - INFO - Marked events as emailed for case_id 107762
+2025-07-14 10:20:03,440 - INFO - Running case update for case_id 131817
+2025-07-14 10:20:04,886 - INFO - Marked events as emailed for case_id 131817
+2025-07-14 10:20:04,887 - INFO - Running case update for case_id 131829
+2025-07-14 10:20:06,191 - INFO - Marked events as emailed for case_id 131829
+2025-07-14 10:20:06,192 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-14 10:20:00'} ---
+Output: (No output from script)
+Execution Time: 6 seconds
+--- Task Completed: {ts '2025-07-14 10:20:06'} ---
+2025-07-14 11:25:00,270 - INFO - Running case update for case_id 131829
+2025-07-14 11:25:01,755 - INFO - Marked events as emailed for case_id 131829
+2025-07-14 11:25:01,757 - INFO - All case updates processed.
+--- Task Started: {ts '2025-07-14 11:25:00'} ---
+Output: (No output from script)
+Execution Time: 1 seconds
+--- Task Completed: {ts '2025-07-14 11:25:01'} ---

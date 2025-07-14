@@ -1,0 +1,1 @@
+"C:\Program Files\Python312\python.exe" u:\DOCKETWATCH\python\docketwatch_map_scraper.py

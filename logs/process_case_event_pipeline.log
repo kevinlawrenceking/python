@@ -1,0 +1,15 @@
+2025-06-28 18:50:23,542 - INFO - Found 0 case events to process.
+2025-06-28 18:50:23,544 - INFO - All case events processed.
+2025-07-01 13:36:12,446 - INFO - Found 1 case events to process.
+2025-07-01 13:36:12,466 - INFO - Processing case_event_id: 3B9EB3BF-8483-428C-8448-8D75A95B385B
+2025-07-01 13:36:12,467 - INFO - No new documents to insert for event 3B9EB3BF-8483-428C-8448-8D75A95B385B
+2025-07-01 13:36:12,481 - INFO - Downloaded 1 PDF(s) for event 3B9EB3BF-8483-428C-8448-8D75A95B385B
+2025-07-01 13:36:12,486 - INFO - Failed to extract embedded text for cases\131838\E31145261730.pdf: EOF marker not found
+2025-07-01 13:36:12,536 - INFO - Unreadable PDF (PDFPageCountError): cases\131838\E31145261730.pdf — Unable to get page count.
+Syntax Error: Couldn't find trailer dictionary
+Syntax Error: Couldn't find trailer dictionary
+Syntax Error: Couldn't read xref table
+
+2025-07-01 13:36:12,537 - INFO - No OCR needed for event 3B9EB3BF-8483-428C-8448-8D75A95B385B
+2025-07-01 13:36:12,539 - INFO - No AI summaries needed for event 3B9EB3BF-8483-428C-8448-8D75A95B385B
+2025-07-01 13:36:12,540 - INFO - All case events processed.

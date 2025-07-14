@@ -1,0 +1,187 @@
+START: Fri 04/11/2025 12:37:35.97 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 2, in <module>
+    import openai
+ModuleNotFoundError: No module named 'openai'
+START: Fri 04/11/2025 12:38:26.27 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 2, in <module>
+    import openai
+ModuleNotFoundError: No module named 'openai'
+START: Fri 04/11/2025 12:43:05.07 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 13, in <module>
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 2118, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\python\\logs\\case_update_alert.log'
+START: Fri 04/11/2025 12:47:03.65 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 13, in <module>
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 2118, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\python\\logs\\case_update_alert.log'
+START: Fri 04/11/2025 12:48:02.32 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 13, in <module>
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 2118, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\python\\logs\\case_update_alert.log'
+START: Fri 04/11/2025 12:48:17.10 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 13, in <module>
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 2118, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\python\\logs\\case_update_alert.log'
+START: Fri 04/11/2025 12:51:17.51 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 156, in <module>
+    main(case_id)
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 118, in main
+    cursor.execute("""
+pyodbc.ProgrammingError: ('42S22', "[42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Invalid column name 'url'. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 18 for SQL Server][SQL Server]Statement(s) could not be prepared. (8180)")
+START: Fri 04/11/2025 12:55:46.89 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 11, in <module>
+    print(f"Starting case event alert for case_id {case_id}...")
+                                                   ^^^^^^^
+NameError: name 'case_id' is not defined
+START: Fri 04/11/2025 12:56:17.14 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 11, in <module>
+    print(f"Starting case event alert for case_id {case_id}...")
+                                                   ^^^^^^^
+NameError: name 'case_id' is not defined
+START: Fri 04/11/2025 13:10:52.99 
+Starting case event alert for case_id 84392...
+START: Fri 04/11/2025 13:13:15.31 
+Starting case event alert for case_id 84392...
+START: Fri 04/11/2025 13:18:54.61 
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 35
+    {"role": "system", "content": "You are a TMZ reporter writing for a mass audience. Make legal filings fun, bold, and gossipy without being inaccurate. Keep it short, punchy, and written in the TMZ voice. Prioritize drama, celebrities, and juicy tension. DO NOT explain legal jargon�just tell the story in tabloid-style terms. You are NOT a lawyer or journalist. You are a pop culture news writer breaking gossip in a fast, fun tone."}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+START: Fri 04/11/2025 13:21:46.62 
+Traceback (most recent call last):
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 13, in <module>
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 2118, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\python\\logs\\case_update_alert.log'
+START: Fri 04/11/2025 13:25:14.96 
+Starting case event alert for case_id 84392...
+Email sent for case 84392.
+START: Fri 04/11/2025 13:28:14.33 
+Starting case event alert for case_id 84395...
+Email sent for case 84395.
+START: Fri 04/11/2025 13:34:33.14 
+  File "u:\docketwatch\python\docketwatch_case_events_alert_plus.py", line 127
+    """, (case_id,))
+    ^
+SyntaxError: unterminated triple-quoted string literal (detected at line 163)
+START: Fri 04/11/2025 13:35:23.20 
+Starting case event alert for case_id 84395...
+Email sent for case 84395.
+START: Fri 04/11/2025 13:40:25.06 
+Starting case event alert for case_id 84395...
+Email sent for case 84395.
+START: Fri 04/11/2025 13:48:14.95 
+Starting case event alert for case_id 84395...
+Email sent for case 84395.
+START: Fri 04/11/2025 13:49:45.14 
+Starting case event alert for case_id 84392...
+Email sent for case 84392.
+START: Fri 04/11/2025 13:55:14.92 
+Starting case event alert for case_id 84392...
+Email sent for case 84392.
+START: Fri 04/11/2025 13:59:20.66 
+Starting case event alert for case_id 97488...
+Email sent for case 97488.
+START: Fri 04/11/2025 14:38:50.21 
+Starting case event alert for case_id 90989...
+Email sent for case 90989.
+START: Fri 04/11/2025 14:41:24.07 
+Starting case event alert for case_id 90989...
+Email sent for case 90989.
+START: Fri 04/11/2025 14:59:56.54 
+Starting case event alert for case_id 90989...
+Email sent for case 90989.
+START: Fri 04/11/2025 15:01:08.52 
+Starting case event alert for case_id 90989...
+Email sent for case 90989.
+START: Fri 04/11/2025 15:02:47.74 
+Starting case event alert for case_id 90989...
+Email sent for case 90989.
+START: Fri 04/11/2025 15:04:37.54 
+Starting case event alert for case_id 84395...
+Email sent for case 84395.
+START: Fri 04/11/2025 15:10:01.72 
+Starting case event alert for case_id 97488...
+Email sent for case 97488.
+START: Fri 04/11/2025 15:14:19.90 
+Starting case event alert for case_id 84392...
+Email sent for case 84392.
+START: Fri 04/11/2025 15:17:25.92 
+Starting case event alert for case_id 84392...
+Email sent for case 84392.
+START: Fri 04/11/2025 15:30:53.07 
+Starting case event alert for case_id 84390...
+Email sent for case 84390.
+START: Fri 04/11/2025 15:33:26.70 
+Starting case event alert for case_id 84393...
+Email sent for case 84393.
+START: Tue 04/15/2025 18:03:04.07 
+Starting case event alert for case_id 105949...
+No new case events today for case 105949.
+START: Thu 04/24/2025 12:39:28.50 
+Starting case event alert for case_id 105949...
+START: Tue 04/29/2025  9:39:15.67 
+Starting case event alert for case_id 105949...
+START: Fri 05/30/2025  9:30:22.32 
+Starting case event alert for case_id 105949...
+START: Mon 06/02/2025  9:23:55.23 
+Starting case event alert for case_id 105949...
+START: Mon 06/02/2025  9:54:58.96 
+Starting case event alert for case_id 105949...
+START: Sun 06/15/2025 14:33:40.08 
+Starting case event alert for case_id 105949...
+START: Sun 06/15/2025 14:37:05.13 
+Starting case event alert for case_id 105949...

@@ -1,0 +1,1 @@
+"C:\Program Files\Python312\python.exe" u:\docketwatch\python\docketwatch_celebrity_insert.py
