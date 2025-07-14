@@ -6877,3 +6877,34 @@
 2025-07-14 06:01:38,540 - INFO - Updated case_name and case_number for case ID 131830
 2025-07-14 06:01:38,544 - INFO - 0 existing dockets for case USA v. Grant
 2025-07-14 06:01:38,601 - INFO - PACER Scraper Completed Successfully
+2025-07-14 12:00:03,339 - INFO - Database Connection Established
+2025-07-14 12:00:03,344 - INFO - === PACER Scraper Started (Priority 1) ===
+2025-07-14 12:00:03,356 - INFO - PACER credentials retrieved successfully
+2025-07-14 12:00:04,583 - INFO - ChromeDriver Initialized Successfully
+2025-07-14 12:00:13,523 - INFO - Client Code 'DocketWatch' entered successfully.
+2025-07-14 12:00:17,483 - INFO - PACER login successful.
+2025-07-14 12:00:17,492 - INFO - Queried 5 case(s) to review
+2025-07-14 12:00:17,496 - INFO - Reviewing case: 1:19-cr-00297-ELR-JSA-1
+2025-07-14 12:00:29,108 - INFO - Setting date range: FROM 07/09/2025 TO 07/19/2025
+2025-07-14 12:00:29,383 - INFO - Unchecked checkbox: list_of_parties_and_counsel
+2025-07-14 12:00:29,452 - INFO - Unchecked checkbox: terminated_parties
+2025-07-14 12:00:35,613 - INFO - Billing reference (datetime): 07/14/2025 15:00:31
+2025-07-14 12:00:35,620 - INFO - Parsed billing data: PACER Login = TMZFEDPACER
+2025-07-14 12:00:35,624 - INFO - Parsed billing data: Client Code = DocketWatch
+2025-07-14 12:00:35,628 - INFO - Parsed billing data: Description = Docket Report
+2025-07-14 12:00:35,632 - INFO - Parsed billing data: Search Criteria = 1:19-cr-00297-ELR-JSA Start date: 7/9/2025  End date: 7/19/2025
+2025-07-14 12:00:35,635 - INFO - Parsed billing data: Billable Pages = 2
+2025-07-14 12:00:35,640 - INFO - Parsed billing data: Cost = 0.20
+2025-07-14 12:00:35,646 - INFO - PACER billing: 2 pages / $0.20 – Docket Report
+2025-07-14 12:00:35,651 - INFO - Found <h3> tag: U.S. District CourtNorthern District of Georgia (Atlanta)CRIMINAL DOCKET FOR CASE #: 1:19-cr-00297-ELR-JSA-1...
+2025-07-14 12:00:35,654 - INFO - h3_lines parsed: ['U.S. District Court', 'Northern District of Georgia (Atlanta)', 'CRIMINAL DOCKET FOR CASE #: 1:19-cr-00297-ELR-JSA-1']
+2025-07-14 12:00:35,657 - INFO - Extracted court: Northern District of Georgia (Atlanta)
+2025-07-14 12:00:35,662 - INFO - Extracted case number: 1:19-cr-00297-ELR-JSA-1
+2025-07-14 12:00:35,666 - INFO - No match found for court name: Northern District of Georgia (Atlanta). Skipping court assignment.
+2025-07-14 12:00:35,669 - INFO - Inspecting <td>: Case title: USA v. Chrisley et al...
+2025-07-14 12:00:35,672 - INFO - Case title fallback used via regex: USA v. Chrisley et al
+2025-07-14 12:00:35,677 - INFO - Scraped Name/Number: USA v. Chrisley et al / 1:19-cr-00297-ELR-JSA-1
+2025-07-14 12:00:35,682 - INFO - Updated case_name and case_number for case ID 107770
+2025-07-14 12:00:35,685 - INFO - 367 existing dockets for case USA v. Chrisley et al
+2025-07-14 12:00:35,756 - INFO - Reviewing case: 1:19-cr-00297-ELR-JSA-2
+2025-07-14 12:00:44,280 - INFO - Setting date range: FROM 07/09/2025 TO 07/19/2025
