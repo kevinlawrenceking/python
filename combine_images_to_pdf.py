@@ -28,21 +28,41 @@ if not files:
 
 print(f"Creating PDF: {output_pdf}")
 c = canvas.Canvas(output_pdf, pagesize=letter)
+page_width, page_height = letter
 
 for filename in files:
     path = os.path.join(input_dir, filename)
-    img = Image.open(path)
-    width, height = img.size
-
-    # Convert pixel dimensions to points (1 pt = 1/72 inch)
-    c.setPageSize((width, height))
-    c.drawImage(ImageReader(img), 0, 0, width=width, height=height)
-    c.showPage()
+    try:
+        img = Image.open(path)
+        img_width, img_height = img.size
+        
+        # Calculate scaling to fit letter size while maintaining aspect ratio
+        scale_x = page_width / img_width
+        scale_y = page_height / img_height
+        scale = min(scale_x, scale_y)
+        
+        # Calculate centered position
+        scaled_width = img_width * scale
+        scaled_height = img_height * scale
+        x = (page_width - scaled_width) / 2
+        y = (page_height - scaled_height) / 2
+        
+        # Create new page with letter size
+        c.setPageSize(letter)
+        c.drawImage(ImageReader(img), x, y, width=scaled_width, height=scaled_height)
+        c.showPage()
+        
+    except Exception as e:
+        print(f"Error processing {filename}: {e}")
+        continue
 
 c.save()
 print(f"PDF saved to: {output_pdf}")
 
 # === Cleanup ===
 for filename in files:
-    os.remove(os.path.join(input_dir, filename))
+    try:
+        os.remove(os.path.join(input_dir, filename))
+    except Exception as e:
+        print(f"Error deleting {filename}: {e}")
 print("PNGs deleted.")
