@@ -38,7 +38,7 @@ console_handler.setLevel(logging.DEBUG)
 FROM_EMAIL = "it@tmz.com"
 SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
-INTERNAL_URL_BASE = "http://tmztools.tmz.local/court/docketwatch/case_details.cfm?id="
+INTERNAL_URL_BASE = "http://docketwatch/court/docketwatch/case_details.cfm?id="
 
 conn = None
 cursor = None

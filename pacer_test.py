@@ -40,7 +40,7 @@ def download_pdf_with_session(session, base_url, doc_url, save_path):
     try:
         print("Requesting CSRF warning page...")
         response = session.get(doc_url)
-        with open("U:/tmztools/python/billing_page_debug.html", "w", encoding="utf-8") as f:
+        with open("U:/docketwatch/python/billing_page_debug.html", "w", encoding="utf-8") as f:
             f.write(response.text)
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     pacer_username = "TMZFEDPACER"
     pacer_password = "Courtpacer19D!"
     doc_url = "https://ecf.ilnd.uscourts.gov/doc1/067132647218"
-    save_path = os.path.join("U:/tmztools/python", "test_download.pdf")
+    save_path = os.path.join("U:/docketwatch/python", "test_download.pdf")
 
     session = get_pacer_authenticated_session(pacer_username, pacer_password)
     if session:

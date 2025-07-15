@@ -84,7 +84,7 @@ for case in cases:
             print(f"  [!] Missing file data for case {case_id}. Skipping.")
             continue
 
-        print("[+] Launching Puppeteer/Node for download...")
+        print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
         env = {
             "FILE_NAME": filename,
             "KEY": key,
@@ -92,10 +92,32 @@ for case in cases:
             "COOKIE": auth_cookie,
             "COURT_CASE_NUMBER": str(case_id),
         }
-        subprocess.run(
+        
+        # Capture subprocess output for debugging
+        result = subprocess.run(
            ["node", "\\\\10.146.176.84\\general\\docketwatch\\python\\download_map_filing.js"],
             env={**env, **dict(os.environ)},
+            capture_output=True,
+            text=True
         )
+        
+        # Check subprocess result
+        if result.returncode != 0:
+            print(f"  [!] Node.js script failed with return code {result.returncode}")
+            print(f"  [!] STDOUT: {result.stdout}")
+            print(f"  [!] STDERR: {result.stderr}")
+        else:
+            print(f"  [+] Node.js script completed successfully")
+            if result.stdout:
+                print(f"  [+] STDOUT: {result.stdout}")
+        
+        # Check if PDF was actually downloaded (adjust path as needed)
+        expected_pdf_path = f"u:\\docketwatch\\python\\pdfs\\{filename}"
+        if os.path.exists(expected_pdf_path):
+            print(f"  [+] PDF successfully saved: {expected_pdf_path}")
+        else:
+            print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
+        
         print(f"  [*] Finished {case_id} / {lead_document_id}")
 
     except Exception as ex:

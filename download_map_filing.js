@@ -126,13 +126,53 @@ fs.ensureDirSync(SAVE_DIR);
     cwd: __dirname
   });
 
-  py.stdout.on('data', data => process.stdout.write(data));
-  py.stderr.on('data', data => process.stderr.write(data));
+  let pythonOutput = '';
+  let pythonError = '';
+
+  py.stdout.on('data', data => {
+    const output = data.toString();
+    pythonOutput += output;
+    process.stdout.write(output);
+  });
+
+  py.stderr.on('data', data => {
+    const error = data.toString();
+    pythonError += error;
+    process.stderr.write(error);
+  });
+
   py.on('close', code => {
     if (code === 0) {
-      console.log(`[✓] PDF generated and saved under docs\\cases\\${FK_CASE}\\E<case_number>.pdf`);
+      console.log(`[✓] combine_images_to_pdf.py completed successfully`);
+      
+      // Check if PDF was actually created
+      const expectedPdfPath = path.join(__dirname, 'docs', 'cases', FK_CASE);
+      if (fs.existsSync(expectedPdfPath)) {
+        const pdfFiles = fs.readdirSync(expectedPdfPath).filter(f => f.endsWith('.pdf'));
+        if (pdfFiles.length > 0) {
+          console.log(`[✓] PDF generated and saved: ${path.join(expectedPdfPath, pdfFiles[0])}`);
+        } else {
+          console.error(`[×] No PDF files found in ${expectedPdfPath}`);
+        }
+      } else {
+        console.error(`[×] Expected PDF directory not found: ${expectedPdfPath}`);
+      }
     } else {
       console.error(`[×] combine_images_to_pdf.py exited with code ${code}`);
+      console.error(`[×] Python stderr: ${pythonError}`);
     }
+    
+    // Clean up temp files
+    try {
+      fs.removeSync(SAVE_DIR);
+      console.log(`[✓] Cleaned up temp directory: ${SAVE_DIR}`);
+    } catch (err) {
+      console.error(`[×] Failed to clean up temp directory: ${err.message}`);
+    }
+  });
+
+  py.on('error', (err) => {
+    console.error(`[×] Failed to start Python script: ${err.message}`);
+    process.exit(1);
   });
 })();

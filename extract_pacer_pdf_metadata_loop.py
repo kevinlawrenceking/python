@@ -8,7 +8,7 @@ cursor = conn.cursor()
 
 # --- Find case_event IDs that don't have matching documents yet ---
 cursor.execute("""
-    SELECT top 1 id AS case_id 
+    SELECT top 100 id AS case_id 
     FROM docketwatch.dbo.case_events 
     WHERE event_url IS NOT NULL 
       AND id NOT IN (

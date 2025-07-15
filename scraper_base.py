@@ -56,7 +56,7 @@ def send_case_update_alert(cursor, case_update_id):
 ]
     SMTP_SERVER = "mx0a-00195501.pphosted.com"
     SMTP_PORT = 25
-    INTERNAL_URL_BASE = "http://tmztools.tmz.local/court/docketwatch/case_details.cfm?id="
+    INTERNAL_URL_BASE = "http://docketwatch/court/docketwatch/case_details.cfm?id="
 
     # Pull update + case info
     cursor.execute("""
