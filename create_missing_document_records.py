@@ -66,13 +66,14 @@ def check_document_exists(cursor, case_id, filename):
     Returns True if exists, False otherwise.
     """
     # First check by doc_id if filename follows E{doc_id}.pdf pattern
+    # doc_id appears to be globally unique, so check across all cases
     doc_id = extract_doc_id_from_filename(filename)
     if doc_id is not None:
         cursor.execute("""
             SELECT COUNT(*) 
             FROM docketwatch.dbo.documents 
-            WHERE fk_case = ? AND doc_id = ?
-        """, (case_id, doc_id))
+            WHERE doc_id = ?
+        """, (doc_id,))
         
         if cursor.fetchone()[0] > 0:
             return True
@@ -164,16 +165,26 @@ def update_pending_document(cursor, case_id, filename, file_size, date_modified,
         return False
     
     if dry_run:
-        print(f"[DRY-RUN] Would update pending document record for case {case_id}, file {filename}")
-        return True
+        # Check if there's a pending document to update
+        cursor.execute("""
+            SELECT COUNT(*) 
+            FROM docketwatch.dbo.documents 
+            WHERE doc_id = ? AND rel_path = 'pending'
+        """, (doc_id,))
+        
+        if cursor.fetchone()[0] > 0:
+            print(f"[DRY-RUN] Would update pending document record for case {case_id}, file {filename}")
+            return True
+        else:
+            return False
     
     rel_path = f"cases\\{case_id}\\{filename}"
     
     try:
         cursor.execute("""
             UPDATE docketwatch.dbo.documents 
-            SET rel_path = ?, file_size = ?, date_downloaded = ?
-            WHERE fk_case = ? AND doc_id = ? AND rel_path = 'pending'
+            SET rel_path = ?, file_size = ?, date_downloaded = ?, fk_case = ?
+            WHERE doc_id = ? AND rel_path = 'pending'
         """, (rel_path, file_size, date_modified, case_id, doc_id))
         
         # Check if any rows were updated
@@ -264,13 +275,20 @@ def main():
                 continue
             
             # Try to update existing pending document first
-            if update_pending_document(cursor, case_id, filename, file_size, date_modified, args.dry_run):
+            updated = update_pending_document(cursor, case_id, filename, file_size, date_modified, args.dry_run)
+            if updated:
                 files_updated_for_case += 1
                 total_records_created += 1
                 if args.verbose:
                     action = "Would update" if args.dry_run else "Updated"
                     print(f"  {action}: {filename} (pending → full path)")
             else:
+                # Check again if document exists after potential update
+                if check_document_exists(cursor, case_id, filename):
+                    if args.verbose:
+                        print(f"  SKIP: {filename} (record exists after pending check)")
+                    continue
+                
                 # Create new document record
                 doc_uid = create_document_record(
                     cursor, case_id, filename, file_size, date_modified, 
