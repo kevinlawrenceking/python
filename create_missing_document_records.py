@@ -65,11 +65,12 @@ def check_document_exists(cursor, case_id, filename):
     Check if a document record already exists for this case and filename.
     Returns True if exists, False otherwise.
     """
+    rel_path = f"cases\\{case_id}\\{filename}"
     cursor.execute("""
         SELECT COUNT(*) 
         FROM docketwatch.dbo.documents 
-        WHERE fk_case = ? AND file_name = ?
-    """, (case_id, filename))
+        WHERE fk_case = ? AND rel_path = ?
+    """, (case_id, rel_path))
     
     count = cursor.fetchone()[0]
     return count > 0
@@ -127,11 +128,11 @@ def create_document_record(cursor, case_id, filename, file_size, date_modified, 
     try:
         cursor.execute("""
             INSERT INTO docketwatch.dbo.documents (
-                doc_uid, fk_case, fk_tool, doc_id, rel_path, file_name,
+                doc_uid, fk_case, fk_tool, doc_id, rel_path, 
                 file_size, date_downloaded, pdf_title, pdf_type, pdf_no
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
-            doc_uid, case_id, tool_id, doc_id, rel_path, filename,
+            doc_uid, case_id, tool_id, doc_id, rel_path,
             file_size, date_modified, filename, 'Document', 0
         ))
         
