@@ -99,6 +99,7 @@ for case in cases:
                 continue
 
         print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
+        print(f"[DEBUG] Case ID: {case_id}, Expected filename: E{case_id}.pdf")
         env = {
             "FILE_NAME": filename,
             "KEY": key,
