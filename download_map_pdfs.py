@@ -77,36 +77,42 @@ for case in cases:
     try:
         # Check if this is an unfiled case (no courtCaseNumber)
         if court_case_number is None:
-            # Unfiled case - generate filename as "E" + case_id + ".pdf"
-            filename = f"E{case_id}.pdf"
-            print(f"[+] Unfiled case detected. Generated filename: {filename}")
-            
-            # For unfiled cases, we don't have API key or end time, so use empty values
-            key = ""
-            end = ""
+            print(f"  [!] Unfiled case with no courtCaseNumber. Skipping case {case_id}.")
+            continue
         else:
-            # Filed case - get document info from API
-            view_url = f"https://media.lacourt.org/api/AzureApi/ViewEcourtDocument/{court_case_number}"
-            response = requests.get(view_url, headers=headers)
-            view_data = response.json().get("ResultList", [])[0]
+            # Check if this looks like an unfiled case (no API data available)
+            try:
+                # Filed case - get document info from API
+                view_url = f"https://media.lacourt.org/api/AzureApi/ViewEcourtDocument/{court_case_number}"
+                response = requests.get(view_url, headers=headers)
+                view_data = response.json().get("ResultList", [])[0]
 
-            filename = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'FileName'), None)
-            key = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'ApiKey'), None)
-            end = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'EndtimeTicks'), None)
+                filename = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'FileName'), None)
+                key = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'ApiKey'), None)
+                end = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'EndtimeTicks'), None)
 
-            if not (filename and key and end):
-                print(f"  [!] Missing file data for case {case_id}. Skipping.")
-                continue
+                if not (filename and key and end):
+                    # Treat as unfiled case
+                    filename = f"E{court_case_number}.pdf"
+                    print(f"[+] Unfiled case detected. Generated filename: {filename}")
+                    key = ""
+                    end = ""
+            except:
+                # If API call fails, treat as unfiled case
+                filename = f"E{court_case_number}.pdf"
+                print(f"[+] API call failed, treating as unfiled case. Generated filename: {filename}")
+                key = ""
+                end = ""
 
         print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
-        print(f"[DEBUG] Case ID: {case_id}, Expected filename: E{case_id}.pdf")
+        print(f"[DEBUG] Case ID: {case_id}, Court Case Number: {court_case_number}")
         env = {
             "FILE_NAME": filename,
             "KEY": key,
             "END": end,
             "COOKIE": auth_cookie,
             "COURT_CASE_NUMBER": str(case_id),
-            "IS_UNFILED": "true" if court_case_number is None else "false",
+            "IS_UNFILED": "true" if (not key and not end) else "false",
         }
         
         # Capture subprocess output for debugging
