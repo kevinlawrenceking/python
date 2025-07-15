@@ -65,6 +65,19 @@ def check_document_exists(cursor, case_id, filename):
     Check if a document record already exists for this case and filename.
     Returns True if exists, False otherwise.
     """
+    # First check by doc_id if filename follows E{doc_id}.pdf pattern
+    doc_id = extract_doc_id_from_filename(filename)
+    if doc_id is not None:
+        cursor.execute("""
+            SELECT COUNT(*) 
+            FROM docketwatch.dbo.documents 
+            WHERE fk_case = ? AND doc_id = ?
+        """, (case_id, doc_id))
+        
+        if cursor.fetchone()[0] > 0:
+            return True
+    
+    # Also check by rel_path for files that don't follow the pattern
     rel_path = f"cases\\{case_id}\\{filename}"
     cursor.execute("""
         SELECT COUNT(*) 
@@ -141,6 +154,37 @@ def create_document_record(cursor, case_id, filename, file_size, date_modified, 
         print(f"Error creating document record for {filename}: {e}")
         return None
 
+def update_pending_document(cursor, case_id, filename, file_size, date_modified, dry_run=False):
+    """
+    Update an existing document record that has rel_path = 'pending' with the correct path.
+    Returns True if updated, False otherwise.
+    """
+    doc_id = extract_doc_id_from_filename(filename)
+    if doc_id is None:
+        return False
+    
+    if dry_run:
+        print(f"[DRY-RUN] Would update pending document record for case {case_id}, file {filename}")
+        return True
+    
+    rel_path = f"cases\\{case_id}\\{filename}"
+    
+    try:
+        cursor.execute("""
+            UPDATE docketwatch.dbo.documents 
+            SET rel_path = ?, file_size = ?, date_downloaded = ?
+            WHERE fk_case = ? AND doc_id = ? AND rel_path = 'pending'
+        """, (rel_path, file_size, date_modified, case_id, doc_id))
+        
+        # Check if any rows were updated
+        if cursor.rowcount > 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Error updating pending document record for {filename}: {e}")
+        return False
+
 def main():
     parser = argparse.ArgumentParser(description="Create missing document records from files in docs/cases/*")
     parser.add_argument('--dry-run', action='store_true', help='Show what would be created without actually inserting')
@@ -211,6 +255,7 @@ def main():
         
         # Check each PDF file
         files_created_for_case = 0
+        files_updated_for_case = 0
         for case_id, filename, full_path, file_size, date_modified in pdf_files:
             # Check if document record already exists
             if check_document_exists(cursor, case_id, filename):
@@ -218,21 +263,29 @@ def main():
                     print(f"  SKIP: {filename} (record already exists)")
                 continue
             
-            # Create document record
-            doc_uid = create_document_record(
-                cursor, case_id, filename, file_size, date_modified, 
-                case_info['fk_tool'], args.dry_run
-            )
-            
-            if doc_uid:
-                files_created_for_case += 1
+            # Try to update existing pending document first
+            if update_pending_document(cursor, case_id, filename, file_size, date_modified, args.dry_run):
+                files_updated_for_case += 1
                 total_records_created += 1
                 if args.verbose:
-                    action = "Would create" if args.dry_run else "Created"
-                    print(f"  {action}: {filename} (size: {file_size:,} bytes)")
+                    action = "Would update" if args.dry_run else "Updated"
+                    print(f"  {action}: {filename} (pending → full path)")
+            else:
+                # Create new document record
+                doc_uid = create_document_record(
+                    cursor, case_id, filename, file_size, date_modified, 
+                    case_info['fk_tool'], args.dry_run
+                )
+                
+                if doc_uid:
+                    files_created_for_case += 1
+                    total_records_created += 1
+                    if args.verbose:
+                        action = "Would create" if args.dry_run else "Created"
+                        print(f"  {action}: {filename} (size: {file_size:,} bytes)")
         
-        if files_created_for_case > 0:
-            print(f"Case {case_id} ({case_info['case_number']}): {files_created_for_case} records created")
+        if files_created_for_case > 0 or files_updated_for_case > 0:
+            print(f"Case {case_id} ({case_info['case_number']}): {files_created_for_case} records created, {files_updated_for_case} records updated")
         
         cases_processed += 1
     
@@ -240,7 +293,7 @@ def main():
     if not args.dry_run and total_records_created > 0:
         try:
             conn.commit()
-            print(f"\nCommitted {total_records_created} new document records to database")
+            print(f"\nCommitted {total_records_created} document record changes to database")
         except Exception as e:
             print(f"Error committing changes: {e}")
             conn.rollback()
@@ -251,11 +304,11 @@ def main():
     print(f"{'='*60}")
     print(f"Cases processed: {cases_processed}")
     print(f"Total PDF files found: {total_files_found}")
-    print(f"Document records created: {total_records_created}")
+    print(f"Document records created/updated: {total_records_created}")
     
     if args.dry_run:
         print("\nThis was a dry run - no actual database changes were made")
-        print("Run without --dry-run to actually create the records")
+        print("Run without --dry-run to actually create/update the records")
     
     # Close database connection
     cursor.close()
