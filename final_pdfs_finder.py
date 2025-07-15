@@ -1,3 +1,49 @@
+"""
+MAP Court System PDF Processing and OCR Script
+
+PURPOSE:
+This script processes PDF files that have been downloaded from the MAP (Metropolitan 
+Accountability Program) court system and performs OCR (Optical Character Recognition) 
+on them to extract text content. It then inserts the processed documents into the 
+database for further analysis and AI processing.
+
+WORKFLOW:
+1. Queries the database for all MAP cases (tool ID 26) that have court case numbers
+2. For each case, looks for the corresponding PDF file in the file system
+3. Checks if the document already exists in the documents table to avoid duplicates
+4. Performs OCR on the PDF to extract text content
+5. Cleans and processes the OCR text to fix encoding issues
+6. Inserts document metadata and OCR text into the documents table
+
+FILE STRUCTURE:
+- Expected PDF location: \\10.146.176.84\general\docketwatch\cases\[case_id]\E[court_case_number].pdf
+- File naming convention: E[court_case_number].pdf (e.g., E2024-CV-001234.pdf)
+- Database table: docketwatch.dbo.documents
+
+OCR PROCESSING:
+- Uses Poppler for PDF to image conversion
+- Uses Tesseract OCR for text extraction
+- Applies text cleaning to fix common encoding issues (smart quotes, em dashes, etc.)
+- Removes excessive line breaks and trailing whitespace
+
+DATABASE INTEGRATION:
+- Generates unique document UIDs for each processed file
+- Stores file metadata (size, download date, path)
+- Stores both raw and cleaned OCR text
+- Prepared for AI processing pipeline (summary fields)
+
+ERROR HANDLING:
+- Continues processing if OCR fails for individual files
+- Skips files that don't exist or are already processed
+- Logs OCR failures with specific error messages
+
+DEPENDENCIES:
+- Poppler (PDF processing): C:\Poppler\bin
+- Tesseract OCR: C:\Program Files\Tesseract-OCR\tesseract.exe
+- Network access to shared storage: \\10.146.176.84\general\docketwatch\cases
+- Database: SQL Server via pyodbc
+"""
+
 import os
 import re
 import uuid
