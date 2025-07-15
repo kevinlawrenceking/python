@@ -225,73 +225,111 @@ def main():
                         failed_downloads += 1
                         continue
                 
-                # Now get the page source to check if we have PDF content
+                # Now get the current page info
                 current_url = driver.current_url
                 log_message(cursor, fk_task_run, "INFO", f"Current URL after navigation: {current_url}")
                 
-                # Use requests with proper headers to download the PDF
-                headers = {
-                    'User-Agent': driver.execute_script("return navigator.userAgent;"),
-                    'Referer': pdf_url,
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.5',
-                    'Accept-Encoding': 'gzip, deflate',
-                    'Connection': 'keep-alive',
-                    'Upgrade-Insecure-Requests': '1'
-                }
+                # Check if we're on a PDF page or if we need to wait for PDF download
+                page_source = driver.page_source
                 
-                # Get updated cookies from driver
-                cookies = driver.get_cookies()
-                session = requests.Session()
-                for cookie in cookies:
-                    session.cookies.set(cookie['name'], cookie['value'], domain=cookie['domain'])
-                
-                # Download the PDF from the current URL
-                response = session.get(current_url, headers=headers, timeout=30)
-                response.raise_for_status()
-                
-                # Check if response is actually a PDF
-                content_type = response.headers.get('content-type', '').lower()
-                if 'pdf' in content_type or response.content.startswith(b'%PDF'):
-                    # Save PDF content to file
-                    with open(dest_path, 'wb') as f:
-                        f.write(response.content)
+                # If we're still on an HTML page, it might be a PDF loading page
+                if "<!DOCTYPE html>" in page_source or "<html>" in page_source:
+                    log_message(cursor, fk_task_run, "INFO", "Still on HTML page, checking for PDF content or download")
                     
-                    file_size = len(response.content)
-                    log_message(cursor, fk_task_run, "INFO", f"PDF saved successfully: {filename} ({file_size} bytes)")
+                    # Wait a bit more for potential PDF load
+                    time.sleep(5)
                     
-                    # Verify file was written correctly
-                    if os.path.exists(dest_path) and os.path.getsize(dest_path) > 0:
-                        log_message(cursor, fk_task_run, "INFO", f"PDF file confirmed on disk: {filename}")
+                    # Try to get PDF content via page source or check for PDF iframe
+                    try:
+                        # Check if there's a PDF iframe or object
+                        pdf_elements = driver.find_elements(By.XPATH, "//iframe | //object[@type='application/pdf'] | //embed[@type='application/pdf']")
+                        if pdf_elements:
+                            log_message(cursor, fk_task_run, "INFO", "Found PDF element on page")
+                            # Try to get the PDF src
+                            for element in pdf_elements:
+                                src = element.get_attribute('src') or element.get_attribute('data')
+                                if src:
+                                    log_message(cursor, fk_task_run, "INFO", f"Found PDF source: {src}")
+                                    current_url = src
+                                    break
+                    except:
+                        pass
+                
+                # Use current driver context to get PDF content
+                try:
+                    # Navigate to current URL to ensure we have the latest content
+                    if current_url != driver.current_url:
+                        driver.get(current_url)
+                        time.sleep(3)
+                    
+                    # Get page source - if it's a PDF, this should be binary content
+                    page_source = driver.page_source
+                    
+                    # Check if we actually got a PDF by looking at the page
+                    if "<!DOCTYPE html>" not in page_source and "<html>" not in page_source:
+                        log_message(cursor, fk_task_run, "INFO", "Page appears to be PDF content")
                         
-                        rel_path = f"cases\\{fk_case}\\{filename}"
-                        cursor.execute("""
-                            UPDATE docketwatch.dbo.documents
-                            SET rel_path = ?, date_downloaded = GETDATE()
-                            WHERE doc_uid = ?
-                        """, (rel_path, doc_uid))
-                        conn.commit()
-                        log_message(cursor, fk_task_run, "INFO", f"Database updated - marked PDF as downloaded: {filename}")
-                        successful_downloads += 1
+                        # Use requests to get the actual PDF binary data
+                        cookies = driver.get_cookies()
+                        session = requests.Session()
+                        for cookie in cookies:
+                            session.cookies.set(cookie['name'], cookie['value'], domain=cookie['domain'])
+                        
+                        headers = {
+                            'User-Agent': driver.execute_script("return navigator.userAgent;"),
+                            'Referer': pdf_url,
+                            'Accept': 'application/pdf,text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                        }
+                        
+                        response = session.get(current_url, headers=headers, timeout=30)
+                        response.raise_for_status()
+                        
+                        # Check if response is actually a PDF
+                        content_type = response.headers.get('content-type', '').lower()
+                        if 'pdf' in content_type or response.content.startswith(b'%PDF'):
+                            # Save PDF content to file
+                            with open(dest_path, 'wb') as f:
+                                f.write(response.content)
+                            
+                            file_size = len(response.content)
+                            log_message(cursor, fk_task_run, "INFO", f"PDF saved successfully: {filename} ({file_size} bytes)")
+                            
+                            # Verify file was written correctly
+                            if os.path.exists(dest_path) and os.path.getsize(dest_path) > 0:
+                                log_message(cursor, fk_task_run, "INFO", f"PDF file confirmed on disk: {filename}")
+                                
+                                rel_path = f"cases\\{fk_case}\\{filename}"
+                                cursor.execute("""
+                                    UPDATE docketwatch.dbo.documents
+                                    SET rel_path = ?, date_downloaded = GETDATE()
+                                    WHERE doc_uid = ?
+                                """, (rel_path, doc_uid))
+                                conn.commit()
+                                log_message(cursor, fk_task_run, "INFO", f"Database updated - marked PDF as downloaded: {filename}")
+                                successful_downloads += 1
+                            else:
+                                log_message(cursor, fk_task_run, "ERROR", f"PDF file not properly saved: {dest_path}")
+                                failed_downloads += 1
+                        else:
+                            log_message(cursor, fk_task_run, "ERROR", f"Response is not a PDF. Content-Type: {content_type}")
+                            # Save response content for debugging
+                            debug_path = dest_path.replace('.pdf', '_debug.html')
+                            with open(debug_path, 'wb') as f:
+                                f.write(response.content)
+                            log_message(cursor, fk_task_run, "INFO", f"Saved debug content to: {debug_path}")
+                            failed_downloads += 1
                     else:
-                        log_message(cursor, fk_task_run, "ERROR", f"PDF file not properly saved: {dest_path}")
+                        log_message(cursor, fk_task_run, "ERROR", "Still getting HTML page instead of PDF")
+                        # Save page source for debugging
+                        debug_path = dest_path.replace('.pdf', '_debug.html')
+                        with open(debug_path, 'w', encoding='utf-8') as f:
+                            f.write(page_source)
+                        log_message(cursor, fk_task_run, "INFO", f"Saved debug content to: {debug_path}")
                         failed_downloads += 1
-                else:
-                    log_message(cursor, fk_task_run, "ERROR", f"Response is not a PDF. Content-Type: {content_type}")
-                    log_message(cursor, fk_task_run, "INFO", f"Response length: {len(response.content)} bytes")
-                    # Save response content for debugging
-                    debug_path = dest_path.replace('.pdf', '_debug.html')
-                    with open(debug_path, 'wb') as f:
-                        f.write(response.content)
-                    log_message(cursor, fk_task_run, "INFO", f"Saved debug content to: {debug_path}")
+                        
+                except Exception as e:
+                    log_message(cursor, fk_task_run, "ERROR", f"Error processing PDF content: {str(e)}")
                     failed_downloads += 1
-
-            except requests.exceptions.RequestException as ex:
-                log_message(cursor, fk_task_run, "ERROR", f"Network error downloading {filename}: {str(ex)}")
-                failed_downloads += 1
-            except Exception as ex:
-                log_message(cursor, fk_task_run, "ERROR", f"Download failed for {filename}: {str(ex)}")
-                failed_downloads += 1
 
         log_message(cursor, fk_task_run, "INFO", 
             f"Download process completed. Success: {successful_downloads}, Failed: {failed_downloads}")
