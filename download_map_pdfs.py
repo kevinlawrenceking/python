@@ -11,6 +11,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+# Import from scraper_base
+from scraper_base import insert_documents_for_event
+
 # === CONFIG ===
 CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
 TOOL_ID = 6
@@ -30,10 +33,11 @@ login_url, username, password = row
 cursor.execute("""
     SELECT [id], [courtCaseNumber]
     FROM [docketwatch].[dbo].[cases]
-    WHERE id NOT IN (SELECT fk_case FROM docketwatch.dbo.documents)
+    WHERE id NOT IN (SELECT fk_case FROM docketwatch.dbo.documents WHERE fk_case IS NOT NULL)
       AND courtCaseNumber IS NOT NULL
       AND fk_tool = 26
       AND status <> 'Removed'
+      AND (status IS NULL OR status NOT IN ('Completed', 'Downloaded', 'Processed'))
 """)
 cases = cursor.fetchall()
 
@@ -115,6 +119,44 @@ for case in cases:
         expected_pdf_path = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}\\{filename}"
         if os.path.exists(expected_pdf_path):
             print(f"  [+] PDF successfully saved: {expected_pdf_path}")
+            
+            # Create or find case_event for this case
+            cursor.execute("""
+                SELECT TOP 1 id FROM docketwatch.dbo.case_events
+                WHERE fk_cases = ? AND event_description = 'MAP Document Download'
+                ORDER BY created_at DESC
+            """, (case_id,))
+            event_row = cursor.fetchone()
+            
+            if not event_row:
+                # Create new case_event
+                cursor.execute("""
+                    INSERT INTO docketwatch.dbo.case_events (
+                        fk_cases, event_date, event_description, created_at
+                    )
+                    OUTPUT INSERTED.id
+                    VALUES (?, GETDATE(), 'MAP Document Download', GETDATE())
+                """, (case_id,))
+                case_event_id = cursor.fetchone()[0]
+                conn.commit()
+                print(f"  [+] Created new case_event {case_event_id}")
+            else:
+                case_event_id = event_row[0]
+                print(f"  [+] Using existing case_event {case_event_id}")
+            
+            # Create document record
+            docs_created = insert_documents_for_event(cursor, case_event_id, tool_id=26)
+            if docs_created > 0:
+                print(f"  [+] Created {docs_created} document record(s)")
+            
+            # Mark case as completed
+            cursor.execute("""
+                UPDATE [docketwatch].[dbo].[cases]
+                SET status = 'Downloaded'
+                WHERE id = ?
+            """, (case_id,))
+            conn.commit()
+            print(f"  [+] Case {case_id} marked as Downloaded")
         else:
             print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
         
