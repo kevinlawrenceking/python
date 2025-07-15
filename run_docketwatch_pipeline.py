@@ -22,7 +22,7 @@ logging.basicConfig(
 
 def process_all_case_events(cursor, fk_task_run=None):
     cursor.execute("""
-        SELECT TOP 100 e.id
+        SELECT TOP 10 e.id
         FROM docketwatch.dbo.case_events e
         JOIN docketwatch.dbo.cases c ON e.fk_cases = c.id
         WHERE c.fk_tool = 2 AND e.stage_completed < 5 
