@@ -34,7 +34,6 @@ cursor.execute("""
     SELECT [id], [courtCaseNumber]
     FROM [docketwatch].[dbo].[cases]
     WHERE id NOT IN (SELECT fk_case FROM docketwatch.dbo.documents WHERE fk_case IS NOT NULL)
-      AND courtCaseNumber IS NOT NULL
       AND fk_tool = 26
       AND status <> 'Removed'
       AND (status IS NULL OR status NOT IN ('Completed', 'Downloaded', 'Processed'))
@@ -73,20 +72,31 @@ headers = {"cookie": f".AspNetCore.Cookies={auth_cookie}"}
 
 # === Step 4: Process each case ===
 for case in cases:
-    case_id, lead_document_id = case
-    print(f"[+] Processing case {case_id} / courtCaseNumber {lead_document_id}...")
+    case_id, court_case_number = case
+    print(f"[+] Processing case {case_id} / courtCaseNumber {court_case_number}...")
     try:
-        view_url = f"https://media.lacourt.org/api/AzureApi/ViewEcourtDocument/{lead_document_id}"
-        response = requests.get(view_url, headers=headers)
-        view_data = response.json().get("ResultList", [])[0]
+        # Check if this is an unfiled case (no courtCaseNumber)
+        if court_case_number is None:
+            # Unfiled case - generate filename as "E" + case_id + ".pdf"
+            filename = f"E{case_id}.pdf"
+            print(f"[+] Unfiled case detected. Generated filename: {filename}")
+            
+            # For unfiled cases, we don't have API key or end time, so use empty values
+            key = ""
+            end = ""
+        else:
+            # Filed case - get document info from API
+            view_url = f"https://media.lacourt.org/api/AzureApi/ViewEcourtDocument/{court_case_number}"
+            response = requests.get(view_url, headers=headers)
+            view_data = response.json().get("ResultList", [])[0]
 
-        filename = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'FileName'), None)
-        key = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'ApiKey'), None)
-        end = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'EndtimeTicks'), None)
+            filename = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'FileName'), None)
+            key = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'ApiKey'), None)
+            end = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'EndtimeTicks'), None)
 
-        if not (filename and key and end):
-            print(f"  [!] Missing file data for case {case_id}. Skipping.")
-            continue
+            if not (filename and key and end):
+                print(f"  [!] Missing file data for case {case_id}. Skipping.")
+                continue
 
         print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
         env = {
@@ -160,7 +170,7 @@ for case in cases:
         else:
             print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
         
-        print(f"  [*] Finished {case_id} / {lead_document_id}")
+        print(f"  [*] Finished {case_id} / {court_case_number}")
 
     except Exception as ex:
         print(f"  [!] Exception for case {case_id}: {ex}")

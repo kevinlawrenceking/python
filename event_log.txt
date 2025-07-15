@@ -5946,3 +5946,51 @@ END: Tue 07/15/2025 14:20:15.92
 START: Tue 07/15/2025 14:35:00.10 
 END: Tue 07/15/2025 14:35:15.15 
  
+=============================== 
+START: Tue 07/15/2025 14:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: probably user data directory is already in use, please specify a unique value for --user-data-dir argument, or don't use --user-data-dir
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208489]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Tue 07/15/2025 14:50:09.96 
+ 
+=============================== 
+START: Tue 07/15/2025 15:05:00.10 
+END: Tue 07/15/2025 15:05:16.54 
+ 
