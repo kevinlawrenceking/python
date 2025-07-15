@@ -105,6 +105,7 @@ for case in cases:
             "END": end,
             "COOKIE": auth_cookie,
             "COURT_CASE_NUMBER": str(case_id),
+            "IS_UNFILED": "true" if court_case_number is None else "false",
         }
         
         # Capture subprocess output for debugging
@@ -127,6 +128,16 @@ for case in cases:
         
         # Check if PDF was actually downloaded (adjust path as needed)
         expected_pdf_path = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}\\{filename}"
+        print(f"  [DEBUG] Checking for PDF at: {expected_pdf_path}")
+        
+        # Also check if the directory exists
+        case_dir = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}"
+        print(f"  [DEBUG] Case directory exists: {os.path.exists(case_dir)}")
+        
+        if os.path.exists(case_dir):
+            files_in_dir = os.listdir(case_dir)
+            print(f"  [DEBUG] Files in case directory: {files_in_dir}")
+        
         if os.path.exists(expected_pdf_path):
             print(f"  [+] PDF successfully saved: {expected_pdf_path}")
             
@@ -169,6 +180,7 @@ for case in cases:
             print(f"  [+] Case {case_id} marked as Downloaded")
         else:
             print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
+            # Don't mark as completed if PDF wasn't found
         
         print(f"  [*] Finished {case_id} / {court_case_number}")
 
