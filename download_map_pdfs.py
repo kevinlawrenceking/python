@@ -112,7 +112,7 @@ for case in cases:
                 print(f"  [+] STDOUT: {result.stdout}")
         
         # Check if PDF was actually downloaded (adjust path as needed)
-        expected_pdf_path = f"u:\\docketwatch\\python\\pdfs\\{filename}"
+        expected_pdf_path = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}\\{filename}"
         if os.path.exists(expected_pdf_path):
             print(f"  [+] PDF successfully saved: {expected_pdf_path}")
         else:
