@@ -2,12 +2,12 @@
 fix_document_filenames.py
 
 This script scans the docs/cases/* directory structure to find PDF files that have
-incorrect filenames using case_id instead of court case number. It renames files
-from "E{case_id}.pdf" to "E{courtcasenumber}.pdf" pattern.
+incorrect filenames using case_id instead of court case number, or are named "EUnfiled.pdf".
+It renames files from "E{case_id}.pdf" or "EUnfiled.pdf" to "E{courtcasenumber}.pdf" pattern.
 
 The script will:
 1. Walk through all subdirectories in docs/cases/
-2. For each PDF file found, check if it follows the pattern E{case_id}.pdf
+2. For each PDF file found, check if it follows the pattern E{case_id}.pdf or is named "EUnfiled.pdf"
 3. If it does, rename it to E{courtcasenumber}.pdf using the case's court case number
 4. Update the corresponding database record's rel_path if it exists
 
@@ -42,7 +42,7 @@ def get_case_info(cursor, case_id):
     Returns dict with case info or None if case doesn't exist.
     """
     cursor.execute("""
-        SELECT id, case_number, case_name, fk_tool, status
+        SELECT id, courtcasenumber, case_name, fk_tool, status
         FROM docketwatch.dbo.cases
         WHERE id = ?
     """, (case_id,))
@@ -51,7 +51,7 @@ def get_case_info(cursor, case_id):
     if row:
         return {
             'id': row.id,
-            'case_number': row.case_number,
+            'courtcasenumber': row.courtcasenumber,
             'case_name': row.case_name,
             'fk_tool': row.fk_tool,
             'status': row.status
@@ -86,7 +86,12 @@ def scan_case_directory(case_dir_path):
                 if os.path.isfile(full_path):
                     # Check if this file follows the E{case_id}.pdf pattern
                     extracted_case_id = extract_case_id_from_filename(filename)
-                    needs_rename = extracted_case_id is not None and str(extracted_case_id) == case_id
+                    case_id_match = extracted_case_id is not None and str(extracted_case_id) == case_id
+                    
+                    # Also check if filename is "EUnfiled.pdf" (case insensitive)
+                    unfiled_match = filename.lower() == "eunfiled.pdf"
+                    
+                    needs_rename = case_id_match or unfiled_match
                     
                     pdf_files.append((case_id, filename, full_path, needs_rename))
     except Exception as e:
@@ -99,8 +104,9 @@ def generate_new_filename(court_case_number):
     Generate the new filename using court case number.
     Returns new filename in format E{courtcasenumber}.pdf
     """
-    # Remove any spaces or special characters from court case number
-    clean_case_number = re.sub(r'[^\w\-]', '', court_case_number)
+    # Only remove spaces and characters that can't be in filenames
+    # Keep colons, dashes, and other valid case number characters
+    clean_case_number = re.sub(r'[<>:"/\\|?*\s]', '', court_case_number)
     return f"E{clean_case_number}.pdf"
 
 def update_document_record_path(cursor, case_id, old_filename, new_filename, dry_run=False):
@@ -163,7 +169,7 @@ def rename_file(old_path, new_path, dry_run=False):
         return False
 
 def main():
-    parser = argparse.ArgumentParser(description="Fix document filenames from E{case_id}.pdf to E{courtcasenumber}.pdf")
+    parser = argparse.ArgumentParser(description="Fix document filenames from E{case_id}.pdf or EUnfiled.pdf to E{courtcasenumber}.pdf")
     parser.add_argument('--dry-run', action='store_true', help='Show what would be renamed without actually renaming')
     parser.add_argument('--case-id', type=int, help='Only process files for specific case ID')
     parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose output')
@@ -223,7 +229,7 @@ def main():
             print(f"Warning: Case {case_id} not found in database, skipping directory")
             continue
         
-        court_case_number = case_info['case_number']
+        court_case_number = case_info['courtcasenumber']
         if not court_case_number:
             print(f"Warning: Case {case_id} has no court case number, skipping")
             continue
