@@ -8,6 +8,7 @@ const KEY = process.env.KEY;
 const END = process.env.END;
 const COOKIE = process.env.COOKIE;
 const FK_CASE = process.env.COURT_CASE_NUMBER || 'Unfiled';  // This is now the fk_case GUID
+const COURT_CASE_NUMBER = process.env.ACTUAL_COURT_CASE_NUMBER || 'Unfiled';  // This is the actual courtCaseNumber
 
 if (!FILE_NAME || !KEY || !END || !COOKIE) {
   console.error('[×] Missing one or more required environment variables.');
@@ -121,7 +122,8 @@ fs.ensureDirSync(SAVE_DIR);
   const py = spawn('python', ['combine_images_to_pdf.py'], {
     env: {
       ...process.env,
-      COURT_CASE_NUMBER: FK_CASE  // this is now a GUID
+      COURT_CASE_NUMBER: COURT_CASE_NUMBER,  // Use actual court case number for filename
+      FK_CASE: FK_CASE  // Pass case ID separately for directory structure
     },
     cwd: __dirname
   });
