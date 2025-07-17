@@ -180,10 +180,28 @@ for case in cases:
                 print(f"  [+] Using existing case_event {case_event_id}")
             
             # Create document record
+            print(f"  [DEBUG] About to call insert_documents_for_event with:")
+            print(f"  [DEBUG] case_event_id: {case_event_id}")
+            print(f"  [DEBUG] tool_id: 26")
+            print(f"  [DEBUG] Expected case directory: {case_dir}")
+            
+            # List all files in the case directory before calling insert function
+            if os.path.exists(case_dir):
+                all_files = os.listdir(case_dir)
+                pdf_files = [f for f in all_files if f.endswith('.pdf')]
+                print(f"  [DEBUG] All files in case dir: {all_files}")
+                print(f"  [DEBUG] PDF files found: {pdf_files}")
+            
             docs_created = insert_documents_for_event(cursor, case_event_id, tool_id=26)
+            print(f"  [DEBUG] insert_documents_for_event returned: {docs_created}")
             if docs_created > 0:
                 print(f"  [+] Created {docs_created} document record(s)")
-            
+            else:
+                print(f"  [!] No document records were created")
+                
+                # Check if the function is looking in the right place
+                print(f"  [DEBUG] Checking if insert_documents_for_event can find files...")
+                
             # Mark case as completed
             cursor.execute("""
                 UPDATE [docketwatch].[dbo].[cases]
