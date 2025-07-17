@@ -97,6 +97,10 @@ for case in cases:
                     print(f"[+] Unfiled case detected. Generated filename: {filename}")
                     key = ""
                     end = ""
+                elif filename and not filename.endswith('.pdf'):
+                    # Ensure API filename has .pdf extension
+                    filename = f"{filename}.pdf"
+                    print(f"[+] Added .pdf extension to API filename: {filename}")
             except:
                 # If API call fails, treat as unfiled case
                 filename = f"E{court_case_number}.pdf"
