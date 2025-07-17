@@ -20,7 +20,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 input_dir = os.path.join(base_dir, "temp_pages")
 output_dir = os.path.join("U:\\docketwatch\\docs\\cases", case_id)  # Use case_id for folder
 os.makedirs(output_dir, exist_ok=True)
-output_pdf = os.path.join(output_dir, file_name)  # Use the original FILE_NAME
+output_pdf = os.path.join(output_dir, f"{file_name}.pdf" if not file_name.endswith('.pdf') else file_name)  # Ensure .pdf extension
 
 # Ensure output folder exists
 os.makedirs(output_dir, exist_ok=True)
