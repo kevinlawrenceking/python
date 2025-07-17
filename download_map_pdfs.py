@@ -37,6 +37,7 @@ cursor.execute("""
       AND fk_tool = 26
       AND status <> 'Removed'
       AND (status IS NULL OR status NOT IN ('Completed', 'Downloaded', 'Processed'))
+      and id = 184633
 """)
 cases = cursor.fetchall()
 
