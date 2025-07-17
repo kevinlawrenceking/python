@@ -163,7 +163,6 @@ for case in cases:
         if os.path.exists(expected_pdf_path):
             print(f"  [+] PDF successfully saved: {expected_pdf_path}")
             
-            # Create or find case_event for this case
             cursor.execute("""
                 SELECT TOP 1 id FROM docketwatch.dbo.case_events
                 WHERE fk_cases = ? AND event_description = 'MAP Document Download'
