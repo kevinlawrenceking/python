@@ -7,16 +7,16 @@ const FILE_NAME = process.env.FILE_NAME;
 const KEY = process.env.KEY;
 const END = process.env.END;
 const COOKIE = process.env.COOKIE;
-const FK_CASE = process.env.FK_CASE || 'Unfiled';  // This should be the case ID
-const COURT_CASE_NUMBER = process.env.COURT_CASE_NUMBER || 'Unfiled';  // This should be court case number
+const FK_CASE = process.env.FK_CASE || 'Unfiled';
+const COURT_CASE_NUMBER = process.env.COURT_CASE_NUMBER || 'Unfiled';
 const IS_UNFILED = process.env.IS_UNFILED === "true";
 
-if (!FILE_NAME || !COOKIE || (!IS_UNFILED && (!KEY || !END))) {
+if (!FILE_NAME || !COOKIE) {
   console.error('[×] Missing one or more required environment variables.');
   process.exit(1);
 }
 
-const VIEWER_URL = `https://ww2.lacourt.org/documentviewer/v1/?name=${FILE_NAME}&key=${KEY}&end=${END}`;
+const VIEWER_URL = `https://ww2.lacourt.org/documentviewer/v1/?name=${FILE_NAME}&key=${KEY || ''}&end=${END || ''}`;
 const SAVE_DIR = path.resolve(__dirname, 'temp_pages');
 fs.ensureDirSync(SAVE_DIR);
 
@@ -141,6 +141,78 @@ fs.ensureDirSync(SAVE_DIR);
         window.scrollTo(0, document.body.scrollHeight);
       });
       await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+
+  if (iteration >= maxIterations) {
+    console.log('[!] Reached maximum iterations, stopping page navigation');
+  }
+
+  console.log(`[→] Total pages detected: ${seen.size}`);
+  console.log(`[!] Final wait before closing...`);
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  await browser.close();
+
+  console.log(`[+] Generating PDF for case ID: ${FK_CASE}`);
+  const py = spawn('python', ['combine_images_to_pdf.py'], {
+    env: {
+      ...process.env,
+      COURT_CASE_NUMBER: COURT_CASE_NUMBER,
+      FK_CASE: FK_CASE
+    },
+    cwd: __dirname
+  });
+
+  let pythonOutput = '';
+  let pythonError = '';
+
+  py.stdout.on('data', data => {
+    const output = data.toString();
+    pythonOutput += output;
+    process.stdout.write(output);
+  });
+
+  py.stderr.on('data', data => {
+    const error = data.toString();
+    pythonError += error;
+    process.stderr.write(error);
+  });
+
+  py.on('close', code => {
+    if (code === 0) {
+      console.log(`[✓] combine_images_to_pdf.py completed successfully`);
+      
+      // Check if PDF was actually created
+      const expectedPdfPath = path.join(__dirname, 'docs', 'cases', FK_CASE);
+      if (fs.existsSync(expectedPdfPath)) {
+        const pdfFiles = fs.readdirSync(expectedPdfPath).filter(f => f.endsWith('.pdf'));
+        if (pdfFiles.length > 0) {
+          console.log(`[✓] PDF generated and saved: ${path.join(expectedPdfPath, pdfFiles[0])}`);
+        } else {
+          console.error(`[×] No PDF files found in ${expectedPdfPath}`);
+        }
+      } else {
+        console.error(`[×] Expected PDF directory not found: ${expectedPdfPath}`);
+      }
+    } else {
+      console.error(`[×] combine_images_to_pdf.py exited with code ${code}`);
+      console.error(`[×] Python stderr: ${pythonError}`);
+    }
+    
+    // Clean up temp files
+    try {
+      fs.removeSync(SAVE_DIR);
+      console.log(`[✓] Cleaned up temp directory: ${SAVE_DIR}`);
+    } catch (err) {
+      console.error(`[×] Failed to clean up temp directory: ${err.message}`);
+    }
+  });
+
+  py.on('error', (err) => {
+    console.error(`[×] Failed to start Python script: ${err.message}`);
+    process.exit(1);
+  });
+})();
     }
   }
 

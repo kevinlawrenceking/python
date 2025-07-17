@@ -47,7 +47,7 @@ if not cases:
 # === Step 3: Login once via Selenium to get cookie ===
 chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
-###chrome_options.add_argument("--headless=new")
+chrome_options.add_argument("--headless=new")
 chrome_options.add_argument("--disable-dev-shm-usage")
 service = Service(CHROMEDRIVER_PATH)
 driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -117,8 +117,8 @@ for case in cases:
         print(f"[DEBUG] File filename (with extension): {filename_for_file}")
         env = {
             "FILE_NAME": filename_for_url,  # Pass filename without extension for URL
-            "KEY": key if key else "UNFILED",
-            "END": end if end else "UNFILED",
+            "KEY": key,  # Pass empty string for unfiled cases
+            "END": end,  # Pass empty string for unfiled cases  
             "COOKIE": auth_cookie,
             "COURT_CASE_NUMBER": str(court_case_number),
             "FK_CASE": str(case_id),
