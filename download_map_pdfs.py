@@ -181,32 +181,32 @@ for case in cases:
                     VALUES (?, GETDATE(), 'MAP Document Download', GETDATE())
                 """, (case_id,))
                 case_event_id = cursor.fetchone()[0]
-                conn.commit()cord
-                print(f"  [+] Created new case_event {case_event_id}")id, tool_id=26)
-            else:if docs_created > 0:
-                case_event_id = event_row[0]d {docs_created} document record(s)")
+                conn.commit()
+                print(f"  [+] Created new case_event {case_event_id}")
+            else:
+                case_event_id = event_row[0]
                 print(f"  [+] Using existing case_event {case_event_id}")
             
+            # Create document record
+            docs_created = insert_documents_for_event(cursor, case_event_id, tool_id=26)
             if docs_created > 0:
-                print(f"  [+] Created {docs_created} document record(s)")etwatch].[dbo].[cases]
-             'Downloaded'
-            # Mark case as completed= ?
+                print(f"  [+] Created {docs_created} document record(s)")
+            
+            # Mark case as completed
             cursor.execute("""
-                UPDATE [docketwatch].[dbo].[cases]onn.commit()
+                UPDATE [docketwatch].[dbo].[cases]
                 SET status = 'Downloaded'
                 WHERE id = ?
-            """, (case_id,))    print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
+            """, (case_id,))
             conn.commit()
-            print(f"  [+] Case {case_id} marked as Downloaded")        
-        else:hed {case_id} / {court_case_number}")
+            print(f"  [+] Case {case_id} marked as Downloaded")
+        else:
             print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
-            # Don't mark as completed if PDF wasn't found    except Exception as ex:
-        {case_id}: {ex}")
+            # Don't mark as completed if PDF wasn't found
+        
         print(f"  [*] Finished {case_id} / {court_case_number}")
 
+    except Exception as ex:
+        print(f"  [!] Exception for case {case_id}: {ex}")
 
-
-
-
-
-print("All pending MAP cases processed.")        print(f"  [!] Exception for case {case_id}: {ex}")    except Exception as ex:print("All pending MAP cases processed.")
+print("All pending MAP cases processed.")
