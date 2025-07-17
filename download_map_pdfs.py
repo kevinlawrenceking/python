@@ -93,31 +93,35 @@ for case in cases:
 
                 if not (filename and key and end):
                     # Treat as unfiled case
-                    filename = f"E{court_case_number}.pdf"
-                    print(f"[+] Unfiled case detected. Generated filename: {filename}")
+                    filename_for_url = f"E{court_case_number}"  # No extension for URL
+                    filename_for_file = f"E{court_case_number}.pdf"  # With extension for file
+                    print(f"[+] Unfiled case detected. Generated filename: {filename_for_file}")
                     key = ""
                     end = ""
-                elif filename and not filename.endswith('.pdf'):
-                    # Ensure API filename has .pdf extension
-                    filename = f"{filename}.pdf"
-                    print(f"[+] Added .pdf extension to API filename: {filename}")
+                else:
+                    # Filed case - use API filename as-is for URL, ensure .pdf for file
+                    filename_for_url = filename
+                    filename_for_file = f"{filename}.pdf" if not filename.endswith('.pdf') else filename
+                    print(f"[+] Filed case. URL filename: {filename_for_url}, File filename: {filename_for_file}")
             except:
                 # If API call fails, treat as unfiled case
-                filename = f"E{court_case_number}.pdf"
-                print(f"[+] API call failed, treating as unfiled case. Generated filename: {filename}")
+                filename_for_url = f"E{court_case_number}"  # No extension for URL
+                filename_for_file = f"E{court_case_number}.pdf"  # With extension for file
+                print(f"[+] API call failed, treating as unfiled case. Generated filename: {filename_for_file}")
                 key = ""
                 end = ""
 
-        print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
+        print(f"[+] Launching Puppeteer/Node for download... File: {filename_for_file}")
         print(f"[DEBUG] Case ID: {case_id}, Court Case Number: {court_case_number}")
-        print(f"[DEBUG] Final filename with extension: {filename}")
+        print(f"[DEBUG] URL filename (no extension): {filename_for_url}")
+        print(f"[DEBUG] File filename (with extension): {filename_for_file}")
         env = {
-            "FILE_NAME": filename,
-            "KEY": key if key else "UNFILED",  # Provide placeholder for unfiled cases
-            "END": end if end else "UNFILED",  # Provide placeholder for unfiled cases
+            "FILE_NAME": filename_for_url,  # Pass filename without extension for URL
+            "KEY": key if key else "UNFILED",
+            "END": end if end else "UNFILED",
             "COOKIE": auth_cookie,
-            "COURT_CASE_NUMBER": str(court_case_number),  # Pass actual court case number for PDF filename
-            "FK_CASE": str(case_id),  # Pass case ID for folder structure
+            "COURT_CASE_NUMBER": str(court_case_number),
+            "FK_CASE": str(case_id),
             "IS_UNFILED": "true" if (not key and not end) else "false",
         }
         
@@ -145,8 +149,8 @@ for case in cases:
             if result.stdout:
                 print(f"  [+] STDOUT: {result.stdout}")
         
-        # Check if PDF was actually downloaded (adjust path as needed)
-        expected_pdf_path = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}\\{filename}"
+        # Check if PDF was actually downloaded (use filename WITH extension)
+        expected_pdf_path = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}\\{filename_for_file}"
         print(f"  [DEBUG] Checking for PDF at: {expected_pdf_path}")
         
         # Also check if the directory exists
