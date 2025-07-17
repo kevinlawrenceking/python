@@ -91,18 +91,12 @@ for case in cases:
                 key = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'ApiKey'), None)
                 end = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'EndtimeTicks'), None)
 
-                print(f"[DEBUG] API returned - filename: {filename}, key: {key}, end: {end}")
-
                 if not (filename and key and end):
                     # Treat as unfiled case
                     filename = f"E{court_case_number}.pdf"
                     print(f"[+] Unfiled case detected. Generated filename: {filename}")
                     key = ""
                     end = ""
-                elif filename and not filename.endswith('.pdf'):
-                    # Ensure filename has .pdf extension
-                    filename = f"{filename}.pdf"
-                    print(f"[+] Added .pdf extension. Final filename: {filename}")
             except:
                 # If API call fails, treat as unfiled case
                 filename = f"E{court_case_number}.pdf"
@@ -112,8 +106,6 @@ for case in cases:
 
         print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
         print(f"[DEBUG] Case ID: {case_id}, Court Case Number: {court_case_number}")
-        print(f"[DEBUG] Generated filename: {filename}")
-        
         env = {
             "FILE_NAME": filename,
             "KEY": key,
@@ -163,6 +155,7 @@ for case in cases:
         if os.path.exists(expected_pdf_path):
             print(f"  [+] PDF successfully saved: {expected_pdf_path}")
             
+            # Create or find case_event for this case
             cursor.execute("""
                 SELECT TOP 1 id FROM docketwatch.dbo.case_events
                 WHERE fk_cases = ? AND event_description = 'MAP Document Download'
