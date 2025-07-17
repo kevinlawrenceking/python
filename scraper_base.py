@@ -417,6 +417,7 @@ def send_not_found_email(case_id, fail_count, level, last_checked=None):
 import random
 
 def insert_documents_for_event(cursor, case_event_id, tool_id=2):
+    # Check if documents already exist for this event
     cursor.execute("""
         SELECT COUNT(*) 
         FROM docketwatch.dbo.documents 
@@ -425,18 +426,51 @@ def insert_documents_for_event(cursor, case_event_id, tool_id=2):
     if cursor.fetchone()[0] > 0:
         return 0  # already has documents
 
-    # Generate a fake but unique doc_id based on timestamp and randomness
-    cursor.execute("SELECT GETDATE()")
-    timestamp = cursor.fetchone()[0]
-    unique_doc_id = int(timestamp.timestamp() * 1000) + random.randint(1, 999)
-
+    # Get the case ID to find the directory
     cursor.execute("""
-        INSERT INTO docketwatch.dbo.documents (
-            fk_case_event, fk_tool, pdf_title, rel_path, pdf_type, pdf_no, doc_id, date_downloaded
-        ) VALUES (?, ?, 'Placeholder PDF Title', 'pending', 'Docket', 0, ?, GETDATE())
-    """, (case_event_id, tool_id, unique_doc_id))
+        SELECT fk_cases 
+        FROM docketwatch.dbo.case_events 
+        WHERE id = ?
+    """, (case_event_id,))
+    case_row = cursor.fetchone()
+    if not case_row:
+        return 0
+    
+    case_id = case_row[0]
+    
+    # Look for PDF files in the case directory
+    case_dir = f"\\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\{case_id}"
+    
+    if not os.path.exists(case_dir):
+        return 0
+    
+    pdf_files = [f for f in os.listdir(case_dir) if f.endswith('.pdf')]
+    
+    if not pdf_files:
+        return 0
+    
+    documents_created = 0
+    
+    for pdf_file in pdf_files:
+        # Generate a unique doc_id based on timestamp and randomness
+        cursor.execute("SELECT GETDATE()")
+        timestamp = cursor.fetchone()[0]
+        unique_doc_id = int(timestamp.timestamp() * 1000) + random.randint(1, 999)
+        
+        # Create relative path
+        rel_path = f"cases\\{case_id}\\{pdf_file}"
+        
+        cursor.execute("""
+            INSERT INTO docketwatch.dbo.documents (
+                fk_case_event, fk_case, fk_tool, pdf_title, rel_path, 
+                pdf_type, pdf_no, doc_id, date_downloaded
+            ) VALUES (?, ?, ?, ?, ?, 'Filing', 0, ?, GETDATE())
+        """, (case_event_id, case_id, tool_id, pdf_file, rel_path, unique_doc_id))
+        
+        documents_created += 1
+    
     cursor.connection.commit()
-    return 1
+    return documents_created
 
 
 def mark_case_not_found(cursor, case_id, fk_task_run=None, threshold=3):
