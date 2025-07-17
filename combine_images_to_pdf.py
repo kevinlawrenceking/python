@@ -7,20 +7,30 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.utils import ImageReader
 
 # === CONFIG ===
-case_number = os.environ.get("COURT_CASE_NUMBER", "Unfiled")
+case_number = os.environ.get("COURT_CASE_NUMBER", "Unfiled")  # This is now the actual court case number for filename
+case_id = os.environ.get("FK_CASE", "Unfiled")  # This is the case ID for folder structure
 file_name = os.environ.get("FILE_NAME", "")
+
+print(f"[DEBUG] Environment variables received:")
+print(f"[DEBUG] COURT_CASE_NUMBER: {case_number}")
+print(f"[DEBUG] FK_CASE: {case_id}")
+print(f"[DEBUG] FILE_NAME: {file_name}")
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
 input_dir = os.path.join(base_dir, "temp_pages")
-output_dir = os.path.join("U:\\docketwatch\\docs\\cases", case_number)
+output_dir = os.path.join("U:\\docketwatch\\docs\\cases", case_id)  # Use case_id for folder
 os.makedirs(output_dir, exist_ok=True)
-output_pdf = os.path.join(output_dir, f"E{case_number}.pdf")
+output_pdf = os.path.join(output_dir, file_name)  # Use the original FILE_NAME
 
 # Ensure output folder exists
 os.makedirs(output_dir, exist_ok=True)
 
 print(f"Looking for images in: {input_dir}")
-print(f"Case number: {case_number}")
+print(f"Case ID (folder): {case_id}")
+print(f"Court case number (filename): {case_number}")
 print(f"File name: {file_name}")
+print(f"[DEBUG] Full output directory path: {output_dir}")
+print(f"[DEBUG] Full PDF path: {output_pdf}")
 
 # === Collect and sort all page images ===
 if not os.path.exists(input_dir):

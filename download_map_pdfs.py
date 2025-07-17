@@ -111,9 +111,16 @@ for case in cases:
             "KEY": key,
             "END": end,
             "COOKIE": auth_cookie,
-            "COURT_CASE_NUMBER": str(case_id),
+            "COURT_CASE_NUMBER": str(court_case_number),  # Pass actual court case number for PDF filename
+            "FK_CASE": str(case_id),  # Pass case ID for folder structure
             "IS_UNFILED": "true" if (not key and not end) else "false",
         }
+        
+        print(f"[DEBUG] Environment variables being passed to Node.js:")
+        print(f"[DEBUG] FILE_NAME: {env['FILE_NAME']}")
+        print(f"[DEBUG] COURT_CASE_NUMBER: {env['COURT_CASE_NUMBER']}")
+        print(f"[DEBUG] FK_CASE: {env['FK_CASE']}")
+        print(f"[DEBUG] IS_UNFILED: {env['IS_UNFILED']}")
         
         # Capture subprocess output for debugging
         result = subprocess.run(
