@@ -91,12 +91,18 @@ for case in cases:
                 key = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'ApiKey'), None)
                 end = next((x['Value'] for x in view_data['OtherInformation'] if x['Key'] == 'EndtimeTicks'), None)
 
+                print(f"[DEBUG] API returned - filename: {filename}, key: {key}, end: {end}")
+
                 if not (filename and key and end):
                     # Treat as unfiled case
                     filename = f"E{court_case_number}.pdf"
                     print(f"[+] Unfiled case detected. Generated filename: {filename}")
                     key = ""
                     end = ""
+                elif filename and not filename.endswith('.pdf'):
+                    # Ensure filename has .pdf extension
+                    filename = f"{filename}.pdf"
+                    print(f"[+] Added .pdf extension. Final filename: {filename}")
             except:
                 # If API call fails, treat as unfiled case
                 filename = f"E{court_case_number}.pdf"
@@ -106,6 +112,8 @@ for case in cases:
 
         print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
         print(f"[DEBUG] Case ID: {case_id}, Court Case Number: {court_case_number}")
+        print(f"[DEBUG] Generated filename: {filename}")
+        
         env = {
             "FILE_NAME": filename,
             "KEY": key,
@@ -173,32 +181,32 @@ for case in cases:
                     VALUES (?, GETDATE(), 'MAP Document Download', GETDATE())
                 """, (case_id,))
                 case_event_id = cursor.fetchone()[0]
-                conn.commit()
-                print(f"  [+] Created new case_event {case_event_id}")
-            else:
-                case_event_id = event_row[0]
+                conn.commit()cord
+                print(f"  [+] Created new case_event {case_event_id}")id, tool_id=26)
+            else:if docs_created > 0:
+                case_event_id = event_row[0]d {docs_created} document record(s)")
                 print(f"  [+] Using existing case_event {case_event_id}")
             
-            # Create document record
-            docs_created = insert_documents_for_event(cursor, case_event_id, tool_id=26)
             if docs_created > 0:
-                print(f"  [+] Created {docs_created} document record(s)")
-            
-            # Mark case as completed
+                print(f"  [+] Created {docs_created} document record(s)")etwatch].[dbo].[cases]
+             'Downloaded'
+            # Mark case as completed= ?
             cursor.execute("""
-                UPDATE [docketwatch].[dbo].[cases]
+                UPDATE [docketwatch].[dbo].[cases]onn.commit()
                 SET status = 'Downloaded'
                 WHERE id = ?
-            """, (case_id,))
+            """, (case_id,))    print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
             conn.commit()
-            print(f"  [+] Case {case_id} marked as Downloaded")
-        else:
+            print(f"  [+] Case {case_id} marked as Downloaded")        
+        else:hed {case_id} / {court_case_number}")
             print(f"  [!] PDF not found at expected location: {expected_pdf_path}")
-            # Don't mark as completed if PDF wasn't found
-        
+            # Don't mark as completed if PDF wasn't found    except Exception as ex:
+        {case_id}: {ex}")
         print(f"  [*] Finished {case_id} / {court_case_number}")
 
-    except Exception as ex:
-        print(f"  [!] Exception for case {case_id}: {ex}")
 
-print("All pending MAP cases processed.")
+
+
+
+
+print("All pending MAP cases processed.")        print(f"  [!] Exception for case {case_id}: {ex}")    except Exception as ex:print("All pending MAP cases processed.")
