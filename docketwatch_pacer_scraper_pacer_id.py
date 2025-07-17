@@ -29,7 +29,7 @@ FROM_EMAIL = "it@tmz.com"
 TO_EMAILS = [
     "Jennifer.Delgado@tmz.com",
     "Kevin.King@tmz.com",
-    "Marlee.Goodman@tmz.com",
+    "marlee.chartash@tmz.com",
     "Priscilla.Hwang@tmz.com",
     "Shirley.Troche@tmz.com"
 ]

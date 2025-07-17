@@ -26,7 +26,7 @@ DOCS_BASE_URL = "http://docketwatch/dwdocs/cases"
 EMAIL_RECIPIENTS = [
     "Jennifer.Delgado@tmz.com",
     "Kevin.King@tmz.com",
-    "Marlee.Goodman@tmz.com",
+    "marlee.chartash@tmz.com",
     "Priscilla.Hwang@tmz.com",
     "Shirley.Troche@tmz.com"
 ]

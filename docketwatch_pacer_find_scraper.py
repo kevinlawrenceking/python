@@ -17,7 +17,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 FROM_EMAIL = "it@tmz.com"
-TO_EMAIL = "Jennifer.Delgado@tmz.com","Kevin.King@tmz.com","Marlee.Goodman@tmz.com","Priscilla.Hwang@tmz.com","Shirley.Troche@tmz.com"
+TO_EMAIL = "Jennifer.Delgado@tmz.com","Kevin.King@tmz.com","marlee.chartash@tmz.com","Priscilla.Hwang@tmz.com","Shirley.Troche@tmz.com"
 SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
 

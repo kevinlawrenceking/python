@@ -47,7 +47,7 @@ def send_case_update_alert(cursor, case_update_id):
     TO_EMAILSx = [
         "Kevin.King@tmz.com",
         "Jennifer.Delgado@tmz.com",
-        "Marlee.Goodman@tmz.com",
+        "marlee.chartash@tmz.com",
         "Priscilla.Hwang@tmz.com",
         "Shirley.Troche@tmz.com"
     ]

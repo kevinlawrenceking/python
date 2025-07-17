@@ -6114,3 +6114,301 @@ END: Wed 07/16/2025 11:06:51.11
 START: Wed 07/16/2025 11:20:00.17 
 END: Wed 07/16/2025 11:21:11.35 
  
+=============================== 
+START: Wed 07/16/2025 11:35:00.14 
+END: Wed 07/16/2025 11:36:55.96 
+ 
+=============================== 
+START: Wed 07/16/2025 11:50:00.21 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 82, in <module>
+    driver.get(SITE_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: net::ERR_CONNECTION_RESET
+  (Session info: chrome=138.0.7204.101)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c1c6ba5]
+	(No symbol) [0x0x7ff79c1b7879]
+	(No symbol) [0x0x7ff79c1b9631]
+	(No symbol) [0x0x7ff79c1b7b96]
+	(No symbol) [0x0x7ff79c1b75f6]
+	(No symbol) [0x0x7ff79c1b72ba]
+	(No symbol) [0x0x7ff79c1b4e8b]
+	(No symbol) [0x0x7ff79c1b570c]
+	(No symbol) [0x0x7ff79c1cdd9a]
+	(No symbol) [0x0x7ff79c27143e]
+	(No symbol) [0x0x7ff79c24846a]
+	(No symbol) [0x0x7ff79c27065c]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Wed 07/16/2025 11:50:06.54 
+ 
+=============================== 
+START: Wed 07/16/2025 12:05:00.14 
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connection.py", line 516, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 82, in <module>
+    driver.get(SITE_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 427, in execute
+    response = self.command_executor.execute(driver_command, params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\remote_connection.py", line 404, in execute
+    return self._request(command_info[0], url, body=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\remote_connection.py", line 428, in _request
+    response = self._conn.request(method, url, body=body, headers=headers, timeout=self._client_config.timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 143, in request
+    return self.request_encode_body(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 278, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='localhost', port=64542): Read timed out. (read timeout=120)
+END: Wed 07/16/2025 12:07:14.90 
+ 
+=============================== 
+START: Wed 07/16/2025 12:20:02.25 
+END: Wed 07/16/2025 12:21:39.64 
+ 
+=============================== 
+START: Wed 07/16/2025 13:05:01.37 
+END: Wed 07/16/2025 13:07:36.24 
+ 
+=============================== 
+START: Wed 07/16/2025 14:05:00.16 
+END: Wed 07/16/2025 14:08:58.86 
+ 
+=============================== 
+START: Wed 07/16/2025 15:05:00.19 
+END: Wed 07/16/2025 15:05:52.18 
+ 
+=============================== 
+START: Wed 07/16/2025 15:20:02.13 
+END: Wed 07/16/2025 15:20:23.86 
+ 
+=============================== 
+START: Wed 07/16/2025 15:35:00.15 
+END: Wed 07/16/2025 15:35:22.04 
+ 
+=============================== 
+START: Wed 07/16/2025 15:50:04.43 
+END: Wed 07/16/2025 15:50:19.18 
+ 
+=============================== 
+START: Wed 07/16/2025 16:05:00.16 
+END: Wed 07/16/2025 16:05:16.66 
+ 
+=============================== 
+START: Wed 07/16/2025 16:20:00.59 
+END: Wed 07/16/2025 16:20:16.17 
+ 
+=============================== 
+START: Wed 07/16/2025 16:35:01.06 
+END: Wed 07/16/2025 16:35:15.74 
+ 
+=============================== 
+START: Wed 07/16/2025 17:05:01.02 
+END: Wed 07/16/2025 17:05:15.41 
+ 
+=============================== 
+START: Wed 07/16/2025 17:35:02.52 
+END: Wed 07/16/2025 17:35:17.64 
+ 
+=============================== 
+START: Wed 07/16/2025 17:50:11.18 
+END: Wed 07/16/2025 17:50:25.92 
+ 
+=============================== 
+START: Wed 07/16/2025 18:05:00.17 
+END: Wed 07/16/2025 18:05:14.95 
+ 
+=============================== 
+START: Wed 07/16/2025 18:20:00.64 
+END: Wed 07/16/2025 18:20:15.70 
+ 
+=============================== 
+START: Wed 07/16/2025 18:35:01.44 
+END: Wed 07/16/2025 18:35:16.33 
+ 
+=============================== 
+START: Wed 07/16/2025 18:50:02.41 
+END: Wed 07/16/2025 18:50:17.51 
+ 
+=============================== 
+START: Wed 07/16/2025 19:05:00.13 
+END: Wed 07/16/2025 19:05:15.49 
+ 
+=============================== 
+START: Wed 07/16/2025 19:20:02.13 
+END: Wed 07/16/2025 19:20:18.52 
+ 
+=============================== 
+START: Wed 07/16/2025 19:35:00.11 
+END: Wed 07/16/2025 19:35:15.09 
+ 
+=============================== 
+START: Wed 07/16/2025 19:50:00.66 
+END: Wed 07/16/2025 19:50:16.34 
+ 
+=============================== 
+START: Wed 07/16/2025 20:05:00.14 
+END: Wed 07/16/2025 20:05:15.15 
+ 
+=============================== 
+START: Wed 07/16/2025 20:20:00.77 
+END: Wed 07/16/2025 20:20:16.45 
+ 
+=============================== 
+START: Wed 07/16/2025 20:35:00.15 
+END: Wed 07/16/2025 20:35:15.69 
+ 
+=============================== 
+START: Wed 07/16/2025 20:50:02.30 
+END: Wed 07/16/2025 20:50:17.37 
+ 
+=============================== 
+START: Wed 07/16/2025 21:35:00.13 
+END: Wed 07/16/2025 21:35:15.15 
+ 
+=============================== 
+START: Wed 07/16/2025 22:05:00.13 
+END: Wed 07/16/2025 22:05:14.86 
+ 
+=============================== 
+START: Wed 07/16/2025 22:20:22.92 
+END: Wed 07/16/2025 22:20:37.18 
+ 
+=============================== 
+START: Wed 07/16/2025 22:50:02.37 
+END: Wed 07/16/2025 22:50:17.49 
+ 
+=============================== 
+START: Wed 07/16/2025 23:05:00.14 
+END: Wed 07/16/2025 23:05:16.06 
+ 
+=============================== 
+START: Wed 07/16/2025 23:35:00.14 
+END: Wed 07/16/2025 23:35:15.27 
+ 
+=============================== 
+START: Wed 07/16/2025 23:50:00.59 
+END: Wed 07/16/2025 23:50:15.56 
+ 
+=============================== 
+START: Thu 07/17/2025  7:20:00.42 
+END: Thu 07/17/2025  7:20:17.13 
+ 
+=============================== 
+START: Thu 07/17/2025  7:35:00.13 
+END: Thu 07/17/2025  7:35:15.81 
+ 
+=============================== 
+START: Thu 07/17/2025  7:50:00.28 
+END: Thu 07/17/2025  7:50:15.98 
+ 
+=============================== 
+START: Thu 07/17/2025  8:20:00.18 
+END: Thu 07/17/2025  8:20:15.50 
+ 
+=============================== 
+START: Thu 07/17/2025  8:35:01.30 
+END: Thu 07/17/2025  8:35:17.09 
+ 
+=============================== 
+START: Thu 07/17/2025  8:50:00.12 
+END: Thu 07/17/2025  8:50:15.34 
+ 
+=============================== 
+START: Thu 07/17/2025  9:05:00.25 
+END: Thu 07/17/2025  9:05:15.14 
+ 
+=============================== 
+START: Thu 07/17/2025  9:20:28.06 
+END: Thu 07/17/2025  9:20:43.23 
+ 
+=============================== 
+START: Thu 07/17/2025  9:35:01.24 
+END: Thu 07/17/2025  9:35:16.54 
+ 
+=============================== 
+START: Thu 07/17/2025  9:50:00.20 
+END: Thu 07/17/2025  9:50:15.53 
+ 
+=============================== 
+START: Thu 07/17/2025 10:05:00.13 
+END: Thu 07/17/2025 10:05:15.88 
+ 
+=============================== 
+START: Thu 07/17/2025 10:20:00.14 
+END: Thu 07/17/2025 10:20:15.46 
+ 
+=============================== 
+START: Thu 07/17/2025 10:35:00.14 
+END: Thu 07/17/2025 10:35:16.10 
+ 
+=============================== 
+START: Thu 07/17/2025 10:50:00.30 
+END: Thu 07/17/2025 10:50:16.72 
+ 
