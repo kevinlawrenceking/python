@@ -97,6 +97,10 @@ for case in cases:
                     print(f"[+] Unfiled case detected. Generated filename: {filename}")
                     key = ""
                     end = ""
+                elif filename and not filename.endswith('.pdf'):
+                    # Ensure API filename has .pdf extension
+                    filename = f"{filename}.pdf"
+                    print(f"[+] Added .pdf extension to API filename: {filename}")
             except:
                 # If API call fails, treat as unfiled case
                 filename = f"E{court_case_number}.pdf"
@@ -106,6 +110,7 @@ for case in cases:
 
         print(f"[+] Launching Puppeteer/Node for download... File: {filename}")
         print(f"[DEBUG] Case ID: {case_id}, Court Case Number: {court_case_number}")
+        print(f"[DEBUG] Final filename with extension: {filename}")
         env = {
             "FILE_NAME": filename,
             "KEY": key if key else "UNFILED",  # Provide placeholder for unfiled cases
