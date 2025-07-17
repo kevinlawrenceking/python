@@ -133,7 +133,7 @@ for case in cases:
         
         # Capture subprocess output for debugging
         result = subprocess.run(
-           ["node", "\\\\10.146.176.84\\general\\docketwatch\\python\\download_map_filing.js"],
+           ["node", "download_map_filing.js"],
             env={**env, **dict(os.environ)},
             capture_output=True,
             text=True
