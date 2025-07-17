@@ -80,8 +80,15 @@ fs.ensureDirSync(SAVE_DIR);
   console.log(`[→] Clicking 'Next Page' until all pages load...`);
   let lastSeen = 0;
   let stableCount = 0;
+  let maxIterations = 100; // Prevent infinite loops
+  let iteration = 0;
 
-  while (stableCount < 3) {
+  while (stableCount < 5 && iteration < maxIterations) { // Increased stability threshold
+    iteration++;
+    
+    // Wait longer for page to load
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     const newUrls = await page.evaluate(() =>
       Array.from(document.images).map(img => img.src).filter(u => u.includes('page='))
     );
@@ -89,29 +96,56 @@ fs.ensureDirSync(SAVE_DIR);
     const fresh = newUrls.filter(u => !seen.has(u));
     fresh.forEach(u => seen.add(u));
 
+    console.log(`[→] Iteration ${iteration}: Found ${newUrls.length} total images, ${fresh.length} new images`);
+
     if (seen.size === lastSeen) {
       stableCount++;
+      console.log(`[→] No new images found. Stable count: ${stableCount}/5`);
     } else {
       stableCount = 0;
       lastSeen = seen.size;
+      console.log(`[→] Total unique images: ${seen.size}`);
     }
 
+    // Try multiple ways to navigate to next page
     const clicked = await page.evaluate(() => {
-      const nextBtn = Array.from(document.querySelectorAll('span.ui-button-text'))
+      // Method 1: Look for "Next Page" button
+      let nextBtn = Array.from(document.querySelectorAll('span.ui-button-text'))
         .find(el => el.innerText.trim().toLowerCase() === 'next page');
-      if (nextBtn) {
+      
+      if (nextBtn && !nextBtn.closest('button').disabled) {
         nextBtn.click();
-        return true;
+        return 'next_button';
       }
-      return false;
+      
+      // Method 2: Look for arrow buttons or page navigation
+      const arrows = document.querySelectorAll('[title*="Next"], [aria-label*="Next"], .ui-icon-seek-next, .ui-icon-triangle-1-e');
+      for (let arrow of arrows) {
+        if (arrow.offsetParent !== null && !arrow.closest('button')?.disabled) {
+          arrow.click();
+          return 'arrow_button';
+        }
+      }
+      
+      // Method 3: Try keyboard navigation
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+      return 'keyboard_right';
     });
 
+    console.log(`[→] Navigation attempt: ${clicked || 'none_found'}`);
+    
     if (!clicked) {
-      console.log('[!] "Next Page" button not found — exiting.');
-      break;
+      console.log('[→] No navigation method worked, trying to scroll or check if we reached the end');
+      // Try scrolling down to load more content
+      await page.evaluate(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
+  }
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  if (iteration >= maxIterations) {
+    console.log('[!] Reached maximum iterations, stopping page navigation');
   }
 
   console.log(`[→] Total pages detected: ${seen.size}`);
