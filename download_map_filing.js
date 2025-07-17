@@ -9,8 +9,9 @@ const END = process.env.END;
 const COOKIE = process.env.COOKIE;
 const FK_CASE = process.env.FK_CASE || 'Unfiled';  // This should be the case ID
 const COURT_CASE_NUMBER = process.env.COURT_CASE_NUMBER || 'Unfiled';  // This should be court case number
+const IS_UNFILED = process.env.IS_UNFILED === "true";
 
-if (!FILE_NAME || !KEY || !END || !COOKIE) {
+if (!FILE_NAME || !COOKIE || (!IS_UNFILED && (!KEY || !END))) {
   console.error('[×] Missing one or more required environment variables.');
   process.exit(1);
 }

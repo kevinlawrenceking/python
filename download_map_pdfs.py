@@ -108,8 +108,8 @@ for case in cases:
         print(f"[DEBUG] Case ID: {case_id}, Court Case Number: {court_case_number}")
         env = {
             "FILE_NAME": filename,
-            "KEY": key,
-            "END": end,
+            "KEY": key if key else "UNFILED",  # Provide placeholder for unfiled cases
+            "END": end if end else "UNFILED",  # Provide placeholder for unfiled cases
             "COOKIE": auth_cookie,
             "COURT_CASE_NUMBER": str(court_case_number),  # Pass actual court case number for PDF filename
             "FK_CASE": str(case_id),  # Pass case ID for folder structure
