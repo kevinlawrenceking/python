@@ -8,8 +8,7 @@ import os
 import concurrent.futures
 
 # Setup Logging
-log_dir = r"\\10.146.176.84\general\docketwatch\python\
-logs"
+log_dir = r"\\10.146.176.84\general\docketwatch\python\logs"
 os.makedirs(log_dir, exist_ok=True)
 LOG_FILE = os.path.join(log_dir, "docketwatch_celebrity_wikidata.log")
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO,
