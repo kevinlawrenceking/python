@@ -177,10 +177,10 @@ for case in cases:
                 # Create new case_event
                 cursor.execute("""
                     INSERT INTO docketwatch.dbo.case_events (
-                        fk_cases, event_date, event_description, created_at
+                        fk_cases, event_date, event_description, created_at, emailed
                     )
                     OUTPUT INSERTED.id
-                    VALUES (?, GETDATE(), 'MAP Document Download', GETDATE())
+                    VALUES (?, GETDATE(), 'MAP Document Download', GETDATE(),1)
                 """, (case_id,))
                 case_event_id = cursor.fetchone()[0]
                 conn.commit()

@@ -33,7 +33,7 @@ def main():
             FROM docketwatch.dbo.case_events e
             INNER JOIN docketwatch.dbo.cases c ON c.id = e.fk_cases
             WHERE CONVERT(date, e.event_date) >= CONVERT(date, DATEADD(day, -7, GETDATE()))
-            AND e.emailed = 0 
+            AND e.emailed = 0 and c.case_number <> 'Unfiled'
         """)
         case_ids = [row.case_id for row in cursor.fetchall()]
 
