@@ -41,6 +41,7 @@ except Exception as e:
 #          AND m.celebrity_in_photo IS NOT NULL 
 #          AND m.celebrity_in_photo <> '[]' 
 #          AND m.celebrity_in_photo <> '["Not Applicable"]'
+#          AND p.id not in (select id from docketwatch.dbo.celebrities)
 #        GROUP BY p.id, m.celebrity_in_photo
 #        HAVING COUNT(*) > 1
 #    """

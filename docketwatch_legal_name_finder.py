@@ -1,14 +1,15 @@
 import os
 import pyodbc
-import requests
 import json
 import time
 from datetime import datetime
+import google.generativeai as genai
 
 # === CONFIG ===
 DSN = "Docketwatch"
 script_filename = os.path.splitext(os.path.basename(__file__))[0]  # no .py
 LOG_FILE = rf"\\10.146.176.84\general\docketwatch\python\logs\{script_filename}.log"
+GEMINI_MODEL_NAME = "gemini-1.5-flash"  # Or use "gemini-1.5-pro" if needed
 
 # === Logging Setup ===
 import logging
@@ -45,29 +46,45 @@ def log_message(log_type, message):
 
 log_message("INFO", "=== Legal Name Finder Script Started ===")
 
-# === OpenAI API CONFIG ===
-def get_api_key():
-    cursor.execute("SELECT chatgpt_api FROM docketwatch.dbo.utilities")
-    api_key = cursor.fetchone()
-    return api_key[0] if api_key else None
-
-HEADERS = {
-    "Authorization": f"Bearer {get_api_key()}",
-    "Content-Type": "application/json"
-}
-API_URL = "https://api.openai.com/v1/chat/completions"
+# === Gemini API CONFIG ===
+def get_gemini_key(cursor):
+    """Retrieves the Gemini API key from the database."""
+    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
+    row = cursor.fetchone()
+    return row[0] if row and row[0] else None
 
 # === Fetch Celebrities to Process ===
 def get_celebrities():
     cursor.execute("""
         SELECT TOP 300 id, name
         FROM docketwatch.dbo.celebrities
-        WHERE legal_name_found = 0 AND legal_alias_name_checked = 0
+        WHERE legal_name_found = 0 AND legal_name_checked = 0
         ORDER BY priority_score DESC
     """)
     return cursor.fetchall()
 
-# === Call OpenAI to Get Legal Name ===
+# === Helper function to extract JSON from potentially problematic responses ===
+def extract_json_from_response(text):
+    """
+    Tries to extract valid JSON from a text response that might contain markdown or other elements.
+    """
+    # First, try to find content between JSON brackets
+    if '{' in text and '}' in text:
+        try:
+            start_idx = text.find('{')
+            end_idx = text.rfind('}') + 1
+            json_str = text[start_idx:end_idx]
+            return json.loads(json_str)
+        except json.JSONDecodeError:
+            pass  # Try other methods
+    
+    # Fallback to a default response if extraction fails
+    return {
+        "legal_name": "Legal name not confidently found",
+        "source": "Could not extract valid JSON from response"
+    }
+
+# === Call Gemini to Get Legal Name ===
 def get_legal_name(celebrity_name):
     prompt = f"""
     I need to determine the current legal name of a celebrity for court case tracking. 
@@ -89,17 +106,41 @@ def get_legal_name(celebrity_name):
         "legal_name": "Legal name not confidently found",
         "source": "No verified legal records available"
     }}
+    
+    IMPORTANT: Respond with raw JSON only. Do not include markdown formatting, code blocks, backticks, explanations, or any non-JSON content.
     """
-    data = {
-        "model": "gpt-4o-mini",
-        "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.1
-    }
-    response = requests.post(API_URL, headers=HEADERS, json=data)
-    if response.status_code == 200:
-        return response.json().get("choices", [{}])[0].get("message", {}).get("content", "")
-    else:
-        log_message("ERROR", f"OpenAI API error for {celebrity_name}: {response.status_code}")
+    try:
+        gemini_api_key = get_gemini_key(cursor)
+        if not gemini_api_key:
+            log_message("ERROR", "Gemini API key not found")
+            return None
+
+        genai.configure(api_key=gemini_api_key)
+        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+        generation_config = {"temperature": 0.1, "max_output_tokens": 400}
+        
+        log_message("DEBUG", f"Sending prompt to Gemini for {celebrity_name}")
+        response = model.generate_content(prompt, generation_config=generation_config)
+        
+        if response:
+            result = response.text.strip()
+            log_message("DEBUG", f"Gemini response received for {celebrity_name}")
+            
+            # Remove markdown code block if present
+            if result.startswith("```") and "```" in result:
+                # Extract content between code block markers
+                result = result.split("```", 2)[1]
+                if result.startswith("json"):
+                    result = result[4:].strip()  # Remove 'json' and any whitespace
+                result = result.strip()
+                log_message("DEBUG", f"Stripped code block markers from response")
+            
+            return result
+        else:
+            log_message("ERROR", f"Empty response from Gemini for {celebrity_name}")
+            return None
+    except Exception as e:
+        log_message("ERROR", f"Gemini API error for {celebrity_name}: {str(e)}")
         return None
 
 # === Update DB with Result ===
@@ -152,11 +193,35 @@ def process_celebrities():
         try:
             result = get_legal_name(celeb_name)
             if result:
-                response_data = json.loads(result)
-                legal_name = response_data.get("legal_name", "")
-                source = response_data.get("source", "")
-                update_database(celeb_id, legal_name, source)
-                log_message("INFO", f"Updated {celeb_name}: {legal_name}")
+                try:
+                    # Try to clean up the response further if needed
+                    cleaned_result = result
+                    
+                    # Check if there are any trailing backticks or other common issues
+                    if "```" in cleaned_result:
+                        # Get everything up to the last closing backtick
+                        cleaned_result = cleaned_result.split("```")[0]
+                    
+                    # Handle potential extra characters at beginning or end
+                    cleaned_result = cleaned_result.strip()
+                    
+                    log_message("DEBUG", f"Attempting to parse JSON: {cleaned_result[:100]}...")
+                    
+                    try:
+                        response_data = json.loads(cleaned_result)
+                    except json.JSONDecodeError:
+                        # Try our fallback extractor if standard parsing fails
+                        log_message("WARNING", f"Standard JSON parsing failed, trying extraction method")
+                        response_data = extract_json_from_response(result)
+                    
+                    legal_name = response_data.get("legal_name", "")
+                    source = response_data.get("source", "")
+                    update_database(celeb_id, legal_name, source)
+                    log_message("INFO", f"Updated {celeb_name}: {legal_name}")
+                except Exception as je:
+                    log_message("ERROR", f"Failed to process response for {celeb_name}: {je}")
+                    log_message("DEBUG", f"Raw response: {result[:200]}...")
+                    update_database(celeb_id, "Legal name not confidently found", "Invalid response format")
             else:
                 update_database(celeb_id, "Legal name not confidently found", "No verified legal records available")
                 log_message("WARNING", f"No valid legal name found for {celeb_name}")
@@ -165,7 +230,16 @@ def process_celebrities():
         time.sleep(1.5)
 
 if __name__ == "__main__":
-    process_celebrities()
-    log_message("INFO", "=== Legal Name Finder Script Completed ===")
-    cursor.close()
-    conn.close()
+    try:
+        # Check that Gemini SDK is properly installed
+        if not hasattr(genai, 'GenerativeModel'):
+            log_message("ERROR", "Google Generative AI SDK not properly installed. Please run 'pip install google-generativeai'")
+            exit(1)
+            
+        process_celebrities()
+        log_message("INFO", "=== Legal Name Finder Script Completed ===")
+    except Exception as e:
+        log_message("CRITICAL", f"Script failed with error: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()
