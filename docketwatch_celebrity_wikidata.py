@@ -1,8 +1,11 @@
 import pyodbc
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import time
 import logging
 import os
+import concurrent.futures
 
 # Setup Logging
 log_dir = r"\\10.146.176.84\general\docketwatch\python\
@@ -85,7 +88,7 @@ except Exception as e:
 
 # Query to fetch celebrities that need processing
 query = """
-SELECT TOP 1000 id, name as celeb_name, wikidata_checked, birth_alias_name_checked, legal_alias_name_checked, alias_name_checked, wiki_processed
+SELECT TOP 1000 id, name as celeb_name, wikidata_checked, birth_name_checked, legal_name_checked, alias_name_checked, wiki_processed
 FROM docketwatch.dbo.celebrities
 WHERE wiki_processed = 0 AND wikidata_checked = 0 AND wikidata_found = 0 and verified = 0
 ORDER BY appearances DESC
@@ -103,41 +106,107 @@ except Exception as e:
 # Wikidata API Endpoint
 WIKIDATA_API_URL = "https://www.wikidata.org/w/api.php"
 
+# Create a session with retry logic for more robust API calls
+def create_session():
+    session = requests.Session()
+    retries = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["GET"]
+    )
+    adapter = HTTPAdapter(max_retries=retries)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    session.headers.update({"User-Agent": "DocketWatch Celebrity Data Collection/1.0"})
+    return session
+
+# Create a global session to reuse
+session = create_session()
+
 def get_wikidata_id(celeb_name):
+    """Get Wikidata entity ID for a celebrity name with improved matching"""
     try:
+        # Parameters for entity search
         params = {
             "action": "wbsearchentities",
             "search": celeb_name,
             "language": "en",
-            "format": "json"
+            "format": "json",
+            "limit": 5,  # Get multiple results to filter
+            "type": "item"
         }
-        response = requests.get(WIKIDATA_API_URL, params=params).json()
+        
+        response = session.get(WIKIDATA_API_URL, params=params).json()
         
         if "search" in response and response["search"]:
+            # First pass - look for exact matches
+            for item in response["search"]:
+                if item.get("label", "").lower() == celeb_name.lower() or celeb_name.lower() in [alias.lower() for alias in item.get("aliases", [])]:
+                    return item["id"]
+            
+            # If no exact match, check if "human" appears in description or look for common celebrity descriptors
+            for item in response["search"]:
+                description = item.get("description", "").lower()
+                if any(term in description for term in ["actor", "actress", "singer", "performer", "celebrity", "musician", "athlete", "player", "human"]):
+                    return item["id"]
+            
+            # If still no match, just return the first result
             return response["search"][0]["id"]
+            
     except Exception as e:
         logging.error(f"Error fetching Wikidata ID for {celeb_name}: {e}")
+    
     return None
 
-def get_aliases(wikidata_id):
-    url = f"{WIKIDATA_API_URL}?action=wbgetentities&ids={wikidata_id}&props=aliases&languages=en&format=json"
-    response = requests.get(url).json()
+def get_aliases_and_birth_name(wikidata_id):
+    """Get both aliases and birth name in a single API call to reduce requests"""
+    if not wikidata_id:
+        return [], None
     
     try:
-        aliases = response["entities"][wikidata_id]["aliases"]["en"]
-        return [alias["value"].strip() for alias in aliases]
-    except (KeyError, IndexError):
-        return []  # No aliases found
+        params = {
+            "action": "wbgetentities",
+            "ids": wikidata_id,
+            "props": "aliases|claims",
+            "languages": "en",
+            "format": "json"
+        }
+        
+        response = session.get(WIKIDATA_API_URL, params=params).json()
+        
+        # Process data if available
+        if "entities" in response and wikidata_id in response["entities"]:
+            entity_data = response["entities"][wikidata_id]
+            
+            # Extract aliases
+            aliases = []
+            if "aliases" in entity_data and "en" in entity_data["aliases"]:
+                aliases = [alias["value"].strip() for alias in entity_data["aliases"]["en"]]
+            
+            # Extract birth name (P1477 is the property for birth name)
+            birth_name = None
+            if "claims" in entity_data and "P1477" in entity_data["claims"]:
+                try:
+                    birth_name = entity_data["claims"]["P1477"][0]["mainsnak"]["datavalue"]["value"]["text"].strip()
+                except (KeyError, IndexError):
+                    pass
+            
+            return aliases, birth_name
+            
+    except Exception as e:
+        logging.error(f"Error fetching data from Wikidata for ID {wikidata_id}: {e}")
+    
+    return [], None
+
+# Legacy functions for backward compatibility
+def get_aliases(wikidata_id):
+    aliases, _ = get_aliases_and_birth_name(wikidata_id)
+    return aliases
 
 def get_birth_name(wikidata_id):
-    url = f"{WIKIDATA_API_URL}?action=wbgetentities&ids={wikidata_id}&format=json&props=claims"
-    response = requests.get(url).json()
-    
-    try:
-        birth_name = response["entities"][wikidata_id]["claims"]["P1477"][0]["mainsnak"]["datavalue"]["value"]["text"]
-        return birth_name.strip()
-    except (KeyError, IndexError):
-        return None  # No birth name found
+    _, birth_name = get_aliases_and_birth_name(wikidata_id)
+    return birth_name
 
 def insert_aliases(celebrity_id, aliases):
     if not aliases:
@@ -177,44 +246,129 @@ def insert_birth_name(celebrity_id, birth_name):
 def mark_aliases_checked(celebrity_id):
     cursor.execute("""
         UPDATE docketwatch.dbo.celebrities
-        SET alias_name_checked = 1, birth_alias_name_checked = 1
+        SET alias_name_checked = 1, birth_name_checked = 1
         WHERE id = ?
     """, (celebrity_id,))
     conn.commit()
 
-for celeb in celebrities:
+# Process celebrities in batches with configurable parameters
+MAX_WORKERS = 5  # Parallel API requests
+BATCH_SIZE = 20  # How many celebrities to process before committing
+RATE_LIMIT_DELAY = 0.5  # Delay between API calls in seconds
+
+def process_celebrity(celeb):
+    """Process a single celebrity - can be run in parallel"""
+    celeb_id, celeb_name, *_ = celeb
+    
     try:
-        celeb_id, celeb_name, wikidata_checked, birth_alias_name_checked, legal_alias_name_checked, alias_name_checked, wiki_processed = celeb
-        logging.info(f"Processing {celeb_name} ({celeb_id})")
-        
         wikidata_id = get_wikidata_id(celeb_name)
+        results = {"id": celeb_id, "name": celeb_name, "wikidata_id": wikidata_id, 
+                  "aliases": [], "birth_name": None, "success": False}
         
         if wikidata_id:
-            aliases = get_aliases(wikidata_id)
-            birth_name = get_birth_name(wikidata_id)
+            # Get both aliases and birth name in one API call
+            aliases, birth_name = get_aliases_and_birth_name(wikidata_id)
+            results["aliases"] = aliases
+            results["birth_name"] = birth_name
+            results["success"] = True
+            logging.info(f"Found Wikidata ID for {celeb_name}: {wikidata_id}")
             
             if aliases:
-                logging.info(f"Found aliases for {celeb_name}: {', '.join(aliases)}")
-                insert_aliases(celeb_id, aliases)
+                logging.info(f"Found {len(aliases)} aliases for {celeb_name}")
             if birth_name:
                 logging.info(f"Found birth name for {celeb_name}: {birth_name}")
-                insert_birth_name(celeb_id, birth_name)
-            
-            mark_aliases_checked(celeb_id)
-        
-        cursor.execute("""
-            UPDATE docketwatch.dbo.celebrities
-            SET wikidata_checked = 1, wiki_processed = 1, wiki_update = GETDATE()
-            WHERE id = ?
-        """, (celeb_id,))
-        conn.commit()
-        
-        logging.info(f"Processed {celeb_name}: Wikidata ID {wikidata_id}")
-    except Exception as e:
-        logging.error(f"Error processing {celeb_name}: {e}")
-        cursor.execute("UPDATE docketwatch.dbo.celebrities SET wiki_processed = 1, wiki_update = GETDATE() WHERE id = ?", celeb_id)
-        conn.commit()
+                
+        time.sleep(RATE_LIMIT_DELAY)  # Respect rate limits
+        return results
     
-    time.sleep(1)
+    except Exception as e:
+        logging.error(f"Error in worker processing {celeb_name}: {e}")
+        return {"id": celeb_id, "name": celeb_name, "success": False, "error": str(e)}
 
-logging.info("Celebrity Wikidata processing complete.")
+# Main processing function with batching
+def process_celebrity_batch():
+    logging.info(f"Starting batch processing of {len(celebrities)} celebrities with {MAX_WORKERS} workers")
+    results = []
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        # Submit all tasks and collect futures
+        future_to_celeb = {executor.submit(process_celebrity, celeb): celeb for celeb in celebrities}
+        
+        # Process results as they complete
+        for i, future in enumerate(concurrent.futures.as_completed(future_to_celeb)):
+            celeb = future_to_celeb[future]
+            celeb_id, celeb_name = celeb[0], celeb[1]
+            
+            try:
+                # Get the result from the future
+                result = future.result()
+                results.append(result)
+                
+                # Update the database with the results
+                if result["success"]:
+                    if result["aliases"]:
+                        insert_aliases(celeb_id, result["aliases"])
+                    if result["birth_name"]:
+                        insert_birth_name(celeb_id, result["birth_name"])
+                    mark_aliases_checked(celeb_id)
+                
+                # Always mark as processed even if no data found
+                cursor.execute("""
+                    UPDATE docketwatch.dbo.celebrities
+                    SET wikidata_checked = 1, wiki_processed = 1, wiki_update = GETDATE(),
+                        wikidata_found = ?
+                    WHERE id = ?
+                """, (1 if result["wikidata_id"] else 0, celeb_id))
+                
+                # Commit in batches to avoid excessive commits
+                if (i + 1) % BATCH_SIZE == 0:
+                    conn.commit()
+                    logging.info(f"Batch committed - processed {i+1}/{len(celebrities)} celebrities")
+                
+            except Exception as e:
+                logging.error(f"Error processing results for {celeb_name}: {e}")
+                cursor.execute("""
+                    UPDATE docketwatch.dbo.celebrities 
+                    SET wiki_processed = 1, wiki_update = GETDATE() 
+                    WHERE id = ?
+                """, (celeb_id,))
+    
+    # Final commit for any remaining records
+    conn.commit()
+    logging.info(f"Completed processing {len(results)} celebrities")
+    return results
+
+# Execute the batch processing
+process_celebrity_batch()
+
+# Add summary statistics
+def log_summary(results):
+    if not results:
+        logging.info("No results to summarize")
+        return
+        
+    total = len(results)
+    successful = sum(1 for r in results if r.get("success", False))
+    with_aliases = sum(1 for r in results if r.get("aliases", []))
+    with_birth_names = sum(1 for r in results if r.get("birth_name"))
+    
+    logging.info("=== Celebrity Wikidata Processing Summary ===")
+    logging.info(f"Total processed: {total}")
+    logging.info(f"Successfully found Wikidata IDs: {successful} ({successful/total*100:.1f}%)")
+    logging.info(f"Found aliases: {with_aliases} ({with_aliases/total*100:.1f}%)")
+    logging.info(f"Found birth names: {with_birth_names} ({with_birth_names/total*100:.1f}%)")
+    logging.info("=== Processing complete ===")
+
+# Close connection properly
+try:
+    log_summary(process_celebrity_batch())
+except Exception as e:
+    logging.error(f"Fatal error during processing: {e}")
+finally:
+    if conn:
+        try:
+            cursor.close()
+            conn.close()
+            logging.info("Database connection closed")
+        except:
+            pass
