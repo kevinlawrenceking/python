@@ -25,6 +25,7 @@ fs.ensureDirSync(SAVE_DIR);
   const browser = await puppeteer.launch({
     headless: true,
     defaultViewport: null,
+    protocolTimeout: 60000, // Increase protocol timeout to 60 seconds
     args: [
       '--start-maximized',
       '--no-sandbox',
@@ -35,6 +36,31 @@ fs.ensureDirSync(SAVE_DIR);
   });
 
   const page = await browser.newPage();
+  
+  // Configure page for better performance with large documents
+  await page.setDefaultNavigationTimeout(120000); // 2 minute navigation timeout
+  await page.setDefaultTimeout(60000); // 1 minute timeout for other operations
+  
+  // Optimize for memory usage (especially helpful for large documents)
+  await page.setRequestInterception(true);
+  page.on('request', (request) => {
+    // Block non-essential resources to improve performance
+    const resourceType = request.resourceType();
+    if (['media', 'font', 'stylesheet'].includes(resourceType)) {
+      request.abort();
+    } else {
+      request.continue();
+    }
+  });
+  
+  // Set up error handler
+  page.on('error', err => {
+    console.error(`[!] Page crashed: ${err}`);
+  });
+  
+  page.on('pageerror', err => {
+    console.error(`[!] Error in page: ${err}`);
+  });
 
   await page.setCookie({
     name: '.AspNetCore.Cookies',
@@ -86,8 +112,14 @@ fs.ensureDirSync(SAVE_DIR);
   while (stableCount < 15 && iteration < maxIterations) { // Increased from 5 to 15
     iteration++;
     
-    // Wait longer for page to load
-    await new Promise(resolve => setTimeout(resolve, 3000)); // Increased from 2000 to 3000
+    // Dynamic wait time based on document size and iteration count
+    // For larger documents or later iterations, wait longer
+    const baseWaitTime = 3000;
+    const additionalWait = Math.min(iteration * 500, 7000); // Increase wait time as we progress, up to 7s additional
+    const waitTime = baseWaitTime + additionalWait;
+    
+    console.log(`[→] Waiting ${waitTime/1000}s for page to stabilize...`);
+    await new Promise(resolve => setTimeout(resolve, waitTime));
     
     const newUrls = await page.evaluate(() =>
       Array.from(document.images).map(img => img.src).filter(u => u.includes('page='))
@@ -107,63 +139,144 @@ fs.ensureDirSync(SAVE_DIR);
       console.log(`[→] Total unique images: ${seen.size}`);
     }
 
-    // Try multiple ways to navigate to next page
-    const clicked = await page.evaluate(() => {
+    // Try multiple ways to navigate to next page - with improved error handling
+    let clicked;
+    try {
+      // Split the complex evaluate calls into smaller, more focused ones
+      // to help prevent timeouts
+      
       // Method 1: Look for "Next Page" button
-      let nextBtn = Array.from(document.querySelectorAll('span.ui-button-text'))
-        .find(el => el.innerText.trim().toLowerCase() === 'next page');
-      
-      if (nextBtn && !nextBtn.closest('button').disabled) {
-        nextBtn.click();
-        return 'next_button';
-      }
-      
-      // Method 2: Look for arrow buttons or page navigation
-      const arrows = document.querySelectorAll('[title*="Next"], [aria-label*="Next"], .ui-icon-seek-next, .ui-icon-triangle-1-e');
-      for (let arrow of arrows) {
-        if (arrow.offsetParent !== null && !arrow.closest('button')?.disabled) {
-          arrow.click();
-          return 'arrow_button';
+      clicked = await page.evaluate(() => {
+        try {
+          let nextBtn = Array.from(document.querySelectorAll('span.ui-button-text'))
+            .find(el => el && el.innerText && el.innerText.trim().toLowerCase() === 'next page');
+          
+          if (nextBtn && !nextBtn.closest('button').disabled) {
+            nextBtn.click();
+            return 'next_button';
+          }
+          return null;
+        } catch (e) {
+          console.error("Error in Method 1:", e);
+          return null;
         }
+      });
+      
+      if (!clicked) {
+        // Method 2: Look for arrow buttons or page navigation
+        clicked = await page.evaluate(() => {
+          try {
+            const arrows = document.querySelectorAll('[title*="Next"], [aria-label*="Next"], .ui-icon-seek-next, .ui-icon-triangle-1-e');
+            for (let arrow of arrows) {
+              if (arrow && arrow.offsetParent !== null && !arrow.closest('button')?.disabled) {
+                arrow.click();
+                return 'arrow_button';
+              }
+            }
+            return null;
+          } catch (e) {
+            console.error("Error in Method 2:", e);
+            return null;
+          }
+        });
       }
       
-      // Method 3: Look for any clickable elements with right arrow or next text
-      const nextElements = document.querySelectorAll('*');
-      for (let el of nextElements) {
-        const text = el.textContent?.toLowerCase() || '';
-        const title = el.title?.toLowerCase() || '';
-        const ariaLabel = el.getAttribute('aria-label')?.toLowerCase() || '';
-        
-        if ((text.includes('next') || text.includes('→') || text.includes('>') || 
-             title.includes('next') || ariaLabel.includes('next')) && 
-            el.offsetParent !== null && !el.disabled) {
-          el.click();
-          return 'text_based_next';
-        }
+      if (!clicked) {
+        // Method 3: Look for common navigation elements by selector
+        clicked = await page.evaluate(() => {
+          try {
+            // Common selectors for pagination
+            const selectors = [
+              '.next', 
+              '.next-page', 
+              '[aria-label="Next"]', 
+              '.pagination-next',
+              '.pagination .next',
+              '.page-item:not(.disabled) .page-link[aria-label="Next"]'
+            ];
+            
+            for (const selector of selectors) {
+              const element = document.querySelector(selector);
+              if (element && element.offsetParent !== null && !element.disabled) {
+                element.click();
+                return 'selector_based_next';
+              }
+            }
+            return null;
+          } catch (e) {
+            console.error("Error in Method 3:", e);
+            return null;
+          }
+        });
       }
       
-      // Method 4: Try keyboard navigation
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
-      return 'keyboard_right';
-    });
+      if (!clicked) {
+        // Method 4: Try keyboard navigation as last resort
+        clicked = await page.evaluate(() => {
+          try {
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+            return 'keyboard_right';
+          } catch (e) {
+            console.error("Error in Method 4:", e);
+            return null;
+          }
+        });
+      }
+    } catch (err) {
+      console.error(`[!] Error during navigation evaluation: ${err.message}`);
+      clicked = 'navigation_error';
+    }
 
     console.log(`[→] Navigation attempt: ${clicked || 'none_found'}`);
     
-    if (!clicked) {
-      console.log('[→] No navigation method worked, trying to scroll or check if we reached the end');
-      // Try scrolling down to load more content
-      await page.evaluate(() => {
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Increased wait time
+    if (!clicked || clicked === 'navigation_error') {
+      console.log('[→] Navigation unsuccessful, trying alternative methods');
       
-      // Try clicking anywhere on the right side of the page
-      await page.evaluate(() => {
-        const rect = document.body.getBoundingClientRect();
-        const x = rect.width * 0.8; // Right side
-        const y = rect.height / 2; // Middle height
-        document.elementFromPoint(x, y)?.click();
+      // Check if we've reached the end by looking for disabled next buttons or "last page" indicators
+      const isLastPage = await page.evaluate(() => {
+        try {
+          // Check for disabled next buttons
+          const disabledNextBtn = document.querySelector('.ui-button-text-only[disabled], .page-link.next.disabled, .ui-state-disabled .ui-icon-seek-next');
+          if (disabledNextBtn) return true;
+          
+          // Check for text indicating last page
+          const pageText = document.body.innerText.toLowerCase();
+          const lastPageIndicators = ['last page', 'end of document', 'no more pages'];
+          if (lastPageIndicators.some(text => pageText.includes(text))) return true;
+          
+          return false;
+        } catch (e) {
+          return false;
+        }
       });
+      
+      if (isLastPage) {
+        console.log('[→] Detected last page indicators, likely reached the end of document');
+        stableCount = 15; // Force exit from the loop
+      } else {
+        // Try scrolling down to load more content
+        await page.evaluate(() => {
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+        await new Promise(resolve => setTimeout(resolve, 3000)); // Increased wait time
+        
+        // Try clicking anywhere on the right side of the page
+        try {
+          await page.evaluate(() => {
+            const rect = document.body.getBoundingClientRect();
+            const x = rect.width * 0.8; // Right side
+            const y = rect.height / 2; // Middle height
+            const element = document.elementFromPoint(x, y);
+            if (element) {
+              element.click();
+              return true;
+            }
+            return false;
+          });
+        } catch (err) {
+          console.error(`[!] Error during right-side click: ${err.message}`);
+        }
+      }
     }
   }
 
