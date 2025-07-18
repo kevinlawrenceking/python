@@ -80,14 +80,14 @@ fs.ensureDirSync(SAVE_DIR);
   console.log(`[→] Clicking 'Next Page' until all pages load...`);
   let lastSeen = 0;
   let stableCount = 0;
-  let maxIterations = 100; // Prevent infinite loops
+  let maxIterations = 200; // Increased from 100
   let iteration = 0;
 
-  while (stableCount < 5 && iteration < maxIterations) { // Increased stability threshold
+  while (stableCount < 15 && iteration < maxIterations) { // Increased from 5 to 15
     iteration++;
     
     // Wait longer for page to load
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000)); // Increased from 2000 to 3000
     
     const newUrls = await page.evaluate(() =>
       Array.from(document.images).map(img => img.src).filter(u => u.includes('page='))
@@ -100,7 +100,7 @@ fs.ensureDirSync(SAVE_DIR);
 
     if (seen.size === lastSeen) {
       stableCount++;
-      console.log(`[→] No new images found. Stable count: ${stableCount}/5`);
+      console.log(`[→] No new images found. Stable count: ${stableCount}/15`);
     } else {
       stableCount = 0;
       lastSeen = seen.size;
@@ -127,7 +127,22 @@ fs.ensureDirSync(SAVE_DIR);
         }
       }
       
-      // Method 3: Try keyboard navigation
+      // Method 3: Look for any clickable elements with right arrow or next text
+      const nextElements = document.querySelectorAll('*');
+      for (let el of nextElements) {
+        const text = el.textContent?.toLowerCase() || '';
+        const title = el.title?.toLowerCase() || '';
+        const ariaLabel = el.getAttribute('aria-label')?.toLowerCase() || '';
+        
+        if ((text.includes('next') || text.includes('→') || text.includes('>') || 
+             title.includes('next') || ariaLabel.includes('next')) && 
+            el.offsetParent !== null && !el.disabled) {
+          el.click();
+          return 'text_based_next';
+        }
+      }
+      
+      // Method 4: Try keyboard navigation
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
       return 'keyboard_right';
     });
@@ -140,7 +155,15 @@ fs.ensureDirSync(SAVE_DIR);
       await page.evaluate(() => {
         window.scrollTo(0, document.body.scrollHeight);
       });
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Increased wait time
+      
+      // Try clicking anywhere on the right side of the page
+      await page.evaluate(() => {
+        const rect = document.body.getBoundingClientRect();
+        const x = rect.width * 0.8; // Right side
+        const y = rect.height / 2; // Middle height
+        document.elementFromPoint(x, y)?.click();
+      });
     }
   }
 
