@@ -3,3 +3,4 @@ logs/
 .gitignore
 */
 event_log.txt
+event_log.txt
