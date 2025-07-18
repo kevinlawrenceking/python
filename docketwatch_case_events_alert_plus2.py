@@ -21,8 +21,8 @@ logger = logging.getLogger()
 FROM_EMAIL = "it@tmz.com"
 SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
-INTERNAL_URL_BASE = "http://docketwatch/court/docketwatch/case_details.cfm?id="
-DOCS_BASE_URL = "http://docketwatch/dwdocs/cases"
+INTERNAL_URL_BASE = "http://docketwatch.tmz.local/court/docketwatch/case_details.cfm?id="
+DOCS_BASE_URL = "http://docketwatch.tmz.local/docs/cases"
 EMAIL_RECIPIENTS = [
     "Jennifer.Delgado@tmz.com",
     "Kevin.King@tmz.com",
