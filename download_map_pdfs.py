@@ -124,7 +124,7 @@ for case in cases:
             "FK_CASE": str(case_id),
             "IS_UNFILED": "true" if (not key and not end) else "false",
         }
-        
+
         print(f"[DEBUG] Environment variables being passed to Node.js:")
         print(f"[DEBUG] FILE_NAME: {env['FILE_NAME']}")
         print(f"[DEBUG] COURT_CASE_NUMBER: {env['COURT_CASE_NUMBER']}")
@@ -136,7 +136,8 @@ for case in cases:
            ["node", "download_map_filing.js"],
             env={**env, **dict(os.environ)},
             capture_output=True,
-            text=True
+            text=True,
+            cwd="u:\\docketwatch\\python"
         )
         
         # Check subprocess result
