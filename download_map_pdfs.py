@@ -36,6 +36,7 @@ cursor.execute("""
     WHERE id NOT IN (SELECT fk_case FROM docketwatch.dbo.documents WHERE fk_case IS NOT NULL)
       AND fk_tool = 26
       AND status <> 'Removed'
+               and id <> 185883
 
 """)
 cases = cursor.fetchall()
