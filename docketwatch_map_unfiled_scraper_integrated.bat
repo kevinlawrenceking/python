@@ -33,14 +33,14 @@ python docketwatch_map_unfiled_scraper.py %current_date%
 
 if %errorlevel% equ 0 (
     echo.
-    echo ✓ Integrated scraper completed successfully
+    echo   Integrated scraper completed successfully
     echo   - New unfiled records have been processed
     echo   - PDFs have been downloaded and saved
     echo   - Document records have been created
     echo   - Records are ready for user access
 ) else (
     echo.
-    echo ✗ Integrated scraper failed with error code %errorlevel%
+    echo   Integrated scraper failed with error code %errorlevel%
     echo   - Check logs for details
     echo   - Some records may not have been processed
 )

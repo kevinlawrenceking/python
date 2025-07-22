@@ -22,20 +22,25 @@ fs.ensureDirSync(SAVE_DIR);
 
 (async () => {
   console.log(`[+] Launching Chromium...`);
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null,
-    protocolTimeout: 60000, // Increase protocol timeout to 60 seconds
-    args: [
-      '--start-maximized',
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-gpu',
-      '--disable-dev-shm-usage'
-    ]
-  });
+  
+  try {
+    const browser = await puppeteer.launch({
+      executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+      headless: true,
+      defaultViewport: null,
+      protocolTimeout: 60000, // Increase protocol timeout to 60 seconds
+      args: [
+        '--start-maximized',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-gpu',
+        '--disable-dev-shm-usage'
+      ]
+    });
+    
+    console.log(`[+] Chrome launched successfully`);
 
-  const page = await browser.newPage();
+    const page = await browser.newPage();
   
   // Configure page for better performance with large documents
   await page.setDefaultNavigationTimeout(120000); // 2 minute navigation timeout
@@ -348,4 +353,9 @@ fs.ensureDirSync(SAVE_DIR);
     console.error(`[×] Failed to start Python script: ${err.message}`);
     process.exit(1);
   });
+
+  } catch (error) {
+    console.error(`[×] Fatal error in PDF download: ${error.message}`);
+    process.exit(1);
+  }
 })();
