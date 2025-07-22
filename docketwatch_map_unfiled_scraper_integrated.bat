@@ -6,7 +6,7 @@ REM ensuring users only see records when PDFs are available.
 REM Set working directory
 cd /d "U:\docketwatch\python"
 
-REM Get current date in YYYY-MM-DD format
+REM Get current date in MM-DD-YYYY format
 for /f "tokens=1-3 delims=/" %%a in ("%date%") do (
     set month=%%a
     set day=%%b
@@ -19,7 +19,7 @@ set month=%month:~-2%
 set day=0%day%
 set day=%day:~-2%
 
-set current_date=%year%-%month%-%day%
+set current_date=%month%-%day%-%year%
 
 echo ============================================
 echo DocketWatch Integrated Unfiled Scraper
