@@ -180,63 +180,98 @@ try:
     new_case_count = 0
 
     for filing in filings:
-        lead_doc = filing.get("LeadDocument", {})
-        court_case_number = lead_doc.get("LeadDocumentID")
-        case_type = lead_doc.get("DocumentDescriptionText", "").strip() or "Unknown"
+        try:
+            lead_doc = filing.get("LeadDocument", {})
+            court_case_number = lead_doc.get("LeadDocumentID")
+            case_type = lead_doc.get("DocumentDescriptionText", "").strip() or "Unknown"
 
-        # Clean party names
-        plaintiff = filing.get("PlaintiffName", "") or ""
-        defendant = filing.get("DefendantName", "") or ""
+            # Clean party names
+            plaintiff = filing.get("PlaintiffName", "") or ""
+            defendant = filing.get("DefendantName", "") or ""
 
-        removals = [
-            ", An Individual (Plaintiff)", "(Defendant)+", "(Plaintiff)+",
-            "(Defendant)", "(Plaintiff)", "(Petitioner)", "(Respondent)", "+"
-        ]
-        for term in removals:
-            plaintiff = plaintiff.replace(term, "")
-            defendant = defendant.replace(term, "")
-        plaintiff = re.sub(r'\s+', ' ', plaintiff).strip()
-        defendant = re.sub(r'\s+', ' ', defendant).strip()
+            removals = [
+                ", An Individual (Plaintiff)", "(Defendant)+", "(Plaintiff)+",
+                "(Defendant)", "(Plaintiff)", "(Petitioner)", "(Respondent)", "+"
+            ]
+            for term in removals:
+                plaintiff = plaintiff.replace(term, "")
+                defendant = defendant.replace(term, "")
+            plaintiff = re.sub(r'\s+', ' ', plaintiff).strip()
+            defendant = re.sub(r'\s+', ' ', defendant).strip()
 
-        case_name = f"{plaintiff} VS {defendant}" if defendant else plaintiff
-        case_number = "Unfiled"
+            # Truncate names to prevent database errors (based on actual database schema)
+            max_name_length = 255  # For general name fields
+            plaintiff = plaintiff[:max_name_length] if len(plaintiff) > max_name_length else plaintiff
+            defendant = defendant[:max_name_length] if len(defendant) > max_name_length else defendant
 
-        # Check if case already exists
-        cursor.execute("""
-            SELECT id FROM docketwatch.dbo.cases
-            WHERE case_number = ? AND case_name = ? 
-        """, (case_number, case_name))
-        row = cursor.fetchone()
-        
-        if not row:
-            # Case doesn't exist - we need to create it and download PDF
-            log_message(cursor, fk_task_run, "INFO", f"New case detected: {case_name} (LeadDocID: {court_case_number})")
+            case_name = f"{plaintiff} VS {defendant}" if defendant else plaintiff
             
-            # Insert the case first (but don't commit yet)
+            # Truncate case_name if it's too long (database limit: 500)
+            max_case_name_length = 500
+            if len(case_name) > max_case_name_length:
+                case_name = case_name[:max_case_name_length - 3] + "..."
+                log_message(cursor, fk_task_run, "WARNING", f"Case name truncated due to length: {case_name}")
+            
+            case_number = "Unfiled"
+
+            # Truncate case_type (database limit: 200)
+            max_case_type_length = 200
+            if len(case_type) > max_case_type_length:
+                case_type = case_type[:max_case_type_length]
+                
+            # CRITICAL: Truncate courtCaseNumber (database limit: 10 characters!)
+            court_case_number_str = str(court_case_number)
+            if len(court_case_number_str) > 10:
+                court_case_number_str = court_case_number_str[:10]
+                log_message(cursor, fk_task_run, "WARNING", f"Court case number truncated from {court_case_number} to {court_case_number_str}")
+
+            # Check if case already exists
             cursor.execute("""
-                INSERT INTO docketwatch.dbo.cases (
-                    courtCaseNumber, case_number, case_name, status, case_type, fk_tool
-                )
-                OUTPUT INSERTED.id
-                VALUES (?, ?, ?, ?, ?, ?)
-            """, (str(court_case_number), case_number, case_name, "Review", case_type, TOOL_ID))
-            fk_case = cursor.fetchone()[0]
+                SELECT id FROM docketwatch.dbo.cases
+                WHERE case_number = ? AND case_name = ? 
+            """, (case_number, case_name))
+            row = cursor.fetchone()
             
-            # Attempt to download PDF for this case
-            pdf_success = download_pdf_for_case(court_case_number, fk_case, auth_cookie, cursor, fk_task_run)
-            
-            if pdf_success:
-                # PDF downloaded successfully - commit the case and all related records
-                conn.commit()
-                new_case_count += 1
-                log_message(cursor, fk_task_run, "ALERT", f"Successfully inserted case with PDF: {case_name} (LeadDocID: {court_case_number})", fk_case=fk_case)
+            if not row:
+                # Case doesn't exist - we need to create it and download PDF
+                log_message(cursor, fk_task_run, "INFO", f"New case detected: {case_name} (LeadDocID: {court_case_number})")
+                
+                # Log field lengths for debugging
+                log_message(cursor, fk_task_run, "DEBUG", f"Field lengths - Court#: {len(court_case_number_str)}, CaseName: {len(case_name)}, CaseType: {len(case_type)}")
+                
+                # Insert the case first (but don't commit yet)
+                try:
+                    cursor.execute("""
+                        INSERT INTO docketwatch.dbo.cases (
+                            courtCaseNumber, case_number, case_name, status, case_type, fk_tool
+                        )
+                        OUTPUT INSERTED.id
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """, (court_case_number_str, case_number, case_name, "Review", case_type, TOOL_ID))
+                    fk_case = cursor.fetchone()[0]
+                except Exception as db_error:
+                    log_message(cursor, fk_task_run, "ERROR", f"Database insertion failed for case: {case_name[:100]}... Error: {db_error}")
+                    continue  # Skip this case and continue with next
+                
+                # Attempt to download PDF for this case (use original court_case_number for PDF naming)
+                pdf_success = download_pdf_for_case(court_case_number, fk_case, auth_cookie, cursor, fk_task_run)
+                
+                if pdf_success:
+                    # PDF downloaded successfully - commit the case and all related records
+                    conn.commit()
+                    new_case_count += 1
+                    log_message(cursor, fk_task_run, "ALERT", f"Successfully inserted case with PDF: {case_name} (LeadDocID: {court_case_number})", fk_case=fk_case)
+                else:
+                    # PDF download failed - rollback the case insertion
+                    conn.rollback()
+                    log_message(cursor, fk_task_run, "WARNING", f"PDF download failed - case not inserted: {case_name} (LeadDocID: {court_case_number})")
             else:
-                # PDF download failed - rollback the case insertion
-                conn.rollback()
-                log_message(cursor, fk_task_run, "WARNING", f"PDF download failed - case not inserted: {case_name} (LeadDocID: {court_case_number})")
-        else:
-            fk_case = row[0]
-            log_message(cursor, fk_task_run, "INFO", f"Case already exists: {case_name}", fk_case=fk_case)
+                fk_case = row[0]
+                log_message(cursor, fk_task_run, "INFO", f"Case already exists: {case_name}", fk_case=fk_case)
+        
+        except Exception as filing_error:
+            log_message(cursor, fk_task_run, "ERROR", f"Error processing filing: {filing_error}")
+            # Continue processing other filings
 
     log_message(cursor, fk_task_run, "INFO", f"Finished: {new_case_count} new cases inserted with PDFs for {input_date}")
 
