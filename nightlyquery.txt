@@ -1,0 +1,93 @@
+-- Step 1: Truncate the local snapshot table
+TRUNCATE TABLE docketwatch.dbo.damz_celeb_snapshot;
+
+-- Step 2: Populate local snapshot from DAMZ (legal topics only)
+INSERT INTO docketwatch.dbo.damz_celeb_snapshot (clean_celebrity_names, keywords)
+SELECT 
+    DISTINCT REPLACE(REPLACE(REPLACE(REPLACE(m.celebrity_in_photo, ' ', ''), '[', ''), ']', ''), '"', '') AS clean_celebrity_names,
+    m.keywords
+FROM damz.dbo.asset_metadata m WITH (NOLOCK)
+INNER JOIN damz.dbo.asset a WITH (NOLOCK) ON a.id = m.fk_asset
+WHERE m.celebrity_in_photo IS NOT NULL
+  AND m.celebrity_in_photo <> '[]'
+  AND m.celebrity_in_photo <> '["Not Applicable"]'
+  AND m.keywords <> '[]'
+  AND (
+      m.keywords LIKE '%criminal%' OR
+      m.keywords LIKE '%lawsuit%' OR
+      m.keywords LIKE '%arrest%' OR
+      m.keywords LIKE '%trial%' OR
+      m.keywords LIKE '%legal%' OR
+      m.keywords LIKE '%indictment%' OR
+      m.keywords LIKE '%fraud%'
+  );
+
+-- Step 3: Reset case_keywords
+UPDATE docketwatch.dbo.celebrities
+SET case_keywords = 0;
+
+-- Step 4: Update case_keywords = 1 from DAMZ keywords (space-stripped matching)
+UPDATE c
+SET c.case_keywords = 1
+FROM docketwatch.dbo.celebrities c
+WHERE EXISTS (
+    SELECT 1
+    FROM docketwatch.dbo.damz_celeb_snapshot t
+    WHERE t.clean_celebrity_names LIKE '%' + REPLACE(c.name, ' ', '') + '%'
+      AND (
+          (CASE WHEN t.keywords LIKE '%court%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%criminal%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%lawsuit%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%arrest%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%legal%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%trial%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%indictment%' THEN 1 ELSE 0 END) +
+          (CASE WHEN t.keywords LIKE '%fraud%' THEN 1 ELSE 0 END)
+      ) >= 2
+      AND (
+          t.keywords NOT LIKE '%basketball%'
+          AND t.keywords NOT LIKE '%tennis%'
+          AND t.keywords NOT LIKE '%volleyball%'
+          AND t.keywords NOT LIKE '%food%'
+          AND t.keywords NOT LIKE '%shopping%'
+          AND t.keywords NOT LIKE '%soccer%'
+          AND t.keywords NOT LIKE '%stadium%'
+          AND t.keywords NOT LIKE '%skateboard%'
+          AND t.keywords NOT LIKE '%baseball%'
+      )
+);
+
+-- Step 5: Update case_keywords = 1 for celebrities linked to Verified or Tracked cases
+UPDATE docketwatch.dbo.celebrities
+SET case_keywords = 1
+WHERE case_keywords = 0
+AND id IN (
+    SELECT fk_celebrity
+    FROM docketwatch.dbo.case_celebrity_matches
+    WHERE match_status IN ('Verified', 'Tracked')
+);
+
+-- Step 6: Update probability_score based on case_keywords, critical_case, and first_name commonality
+UPDATE cm
+SET cm.probability_score = 
+    (ISNULL(cm.probability_score, 0) - (ISNULL(fn.commonality_factor, 0) * 0.1)) +
+    (CASE WHEN c.case_keywords = 1 THEN 2.0 ELSE 0 END) +
+    (CASE WHEN cm.critical_case = 1 THEN 5 ELSE 0 END)
+FROM docketwatch.dbo.case_celebrity_matches cm
+LEFT JOIN docketwatch.dbo.first_name_freq fn ON LOWER(fn.first_name) = LOWER(cm.first_name)
+LEFT JOIN docketwatch.dbo.celebrities c ON cm.fk_celebrity = c.id;
+
+-- Step 7: Update priority_score (you may refine later — basic scoring assumed here)
+UPDATE cm
+SET cm.priority_score = 
+    CASE 
+        WHEN cm.critical_case = 1 THEN 100
+        ELSE ISNULL(cm.priority_score, 0)
+    END
+FROM docketwatch.dbo.case_celebrity_matches cm;
+
+-- Step 8: Update ranking_score (final combined score)
+UPDATE cm
+SET cm.ranking_score = 
+    CAST(ISNULL(cm.priority_score, 0) AS FLOAT) * 0.5 + 
+    CAST(ISNULL(cm.probability_score, 0) AS FLOAT) * 0.3;

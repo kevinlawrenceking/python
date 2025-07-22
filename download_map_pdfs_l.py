@@ -37,7 +37,7 @@ cursor.execute("""
       AND fk_tool = 26
       AND status <> 'Removed'
                and id <> 185883
-order by id
+order by id desc
 """)
 cases = cursor.fetchall()
 
