@@ -7748,3 +7748,700 @@ END: Tue 07/22/2025 12:20:15.42
 START: Tue 07/22/2025 12:35:00.14 
 END: Tue 07/22/2025 12:35:15.19 
  
+=============================== 
+START: Tue 07/22/2025 13:05:01.22 
+END: Tue 07/22/2025 13:05:16.22 
+ 
+=============================== 
+START: Tue 07/22/2025 14:05:00.23 
+END: Tue 07/22/2025 14:05:15.83 
+ 
+=============================== 
+START: Tue 07/22/2025 14:20:00.15 
+END: Tue 07/22/2025 14:20:15.34 
+ 
+=============================== 
+START: Tue 07/22/2025 14:35:00.26 
+END: Tue 07/22/2025 14:35:15.06 
+ 
+=============================== 
+START: Tue 07/22/2025 14:50:00.15 
+END: Tue 07/22/2025 14:50:15.53 
+ 
+=============================== 
+START: Tue 07/22/2025 15:05:00.15 
+END: Tue 07/22/2025 15:05:15.37 
+ 
+=============================== 
+START: Tue 07/22/2025 15:20:00.63 
+END: Tue 07/22/2025 15:20:16.24 
+ 
+=============================== 
+START: Tue 07/22/2025 15:35:00.15 
+END: Tue 07/22/2025 15:35:15.34 
+ 
+=============================== 
+START: Tue 07/22/2025 15:50:01.50 
+END: Tue 07/22/2025 15:50:16.22 
+ 
+=============================== 
+START: Tue 07/22/2025 16:05:00.93 
+END: Tue 07/22/2025 16:05:15.16 
+ 
+=============================== 
+START: Tue 07/22/2025 16:20:14.57 
+END: Tue 07/22/2025 16:20:29.38 
+ 
+=============================== 
+START: Tue 07/22/2025 17:05:00.17 
+END: Tue 07/22/2025 17:05:15.01 
+ 
+=============================== 
+START: Tue 07/22/2025 17:20:00.18 
+END: Tue 07/22/2025 17:20:16.32 
+ 
+=============================== 
+START: Tue 07/22/2025 17:35:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from chrome not reachable
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9c1c]
+	(No symbol) [0x0x7ff79c1bada1]
+	(No symbol) [0x0x7ff79c20cfd2]
+	(No symbol) [0x0x7ff79c206e2a]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Tue 07/22/2025 17:36:09.67 
+ 
+=============================== 
+START: Tue 07/22/2025 17:50:00.13 
+END: Tue 07/22/2025 17:50:14.87 
+ 
+=============================== 
+START: Tue 07/22/2025 18:05:00.16 
+END: Tue 07/22/2025 18:05:15.45 
+ 
+=============================== 
+START: Tue 07/22/2025 18:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Tue 07/22/2025 18:20:01.89 
+ 
+=============================== 
+START: Tue 07/22/2025 18:35:00.12 
+END: Tue 07/22/2025 18:35:15.77 
+ 
+=============================== 
+START: Tue 07/22/2025 18:50:00.16 
+END: Tue 07/22/2025 18:50:15.35 
+ 
+=============================== 
+START: Tue 07/22/2025 19:05:00.12 
+END: Tue 07/22/2025 19:05:14.87 
+ 
+=============================== 
+START: Tue 07/22/2025 19:20:00.19 
+END: Tue 07/22/2025 19:20:15.58 
+ 
+=============================== 
+START: Tue 07/22/2025 19:35:00.11 
+END: Tue 07/22/2025 19:35:14.77 
+ 
+=============================== 
+START: Tue 07/22/2025 19:50:00.15 
+END: Tue 07/22/2025 19:50:15.56 
+ 
+=============================== 
+START: Tue 07/22/2025 20:05:00.14 
+END: Tue 07/22/2025 20:05:33.31 
+ 
+=============================== 
+START: Tue 07/22/2025 20:35:00.12 
+END: Tue 07/22/2025 20:35:14.94 
+ 
+=============================== 
+START: Tue 07/22/2025 20:50:02.51 
+END: Tue 07/22/2025 21:06:27.59 
+ 
+=============================== 
+START: Tue 07/22/2025 21:20:00.16 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 4, in <module>
+    import pyodbc
+ImportError: DLL load failed while importing pyodbc: A dynamic link library (DLL) initialization routine failed.
+END: Tue 07/22/2025 21:20:00.93 
+ 
+=============================== 
+START: Tue 07/22/2025 21:35:00.11 
+END: Tue 07/22/2025 21:35:14.81 
+ 
+=============================== 
+START: Tue 07/22/2025 21:50:00.14 
+END: Tue 07/22/2025 21:50:15.00 
+ 
+=============================== 
+START: Tue 07/22/2025 22:05:00.13 
+END: Tue 07/22/2025 22:20:29.04 
+ 
+=============================== 
+START: Tue 07/22/2025 22:35:00.16 
+END: Tue 07/22/2025 22:35:15.41 
+ 
+=============================== 
+START: Tue 07/22/2025 22:50:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Tue 07/22/2025 22:50:01.54 
+ 
+=============================== 
+START: Tue 07/22/2025 23:05:00.21 
+END: Tue 07/22/2025 23:21:25.07 
+ 
+=============================== 
+START: Tue 07/22/2025 23:35:00.12 
+END: Tue 07/22/2025 23:35:15.09 
+ 
+=============================== 
+START: Tue 07/22/2025 23:50:00.17 
+END: Tue 07/22/2025 23:50:15.25 
+ 
+=============================== 
+START: Wed 07/23/2025  7:20:00.12 
+END: Wed 07/23/2025  7:20:15.01 
+ 
+=============================== 
+START: Wed 07/23/2025  7:35:00.13 
+END: Wed 07/23/2025  7:35:14.71 
+ 
+=============================== 
+START: Wed 07/23/2025  7:50:00.14 
+END: Wed 07/23/2025  7:50:14.87 
+ 
+=============================== 
+START: Wed 07/23/2025  8:05:00.11 
+END: Wed 07/23/2025  8:05:14.58 
+ 
+=============================== 
+START: Wed 07/23/2025  8:20:00.12 
+END: Wed 07/23/2025  8:20:14.73 
+ 
+=============================== 
+START: Wed 07/23/2025  8:35:00.11 
+END: Wed 07/23/2025  8:35:15.02 
+ 
+=============================== 
+START: Wed 07/23/2025  8:50:00.21 
+END: Wed 07/23/2025  8:50:14.74 
+ 
+=============================== 
+START: Wed 07/23/2025  9:05:00.13 
+END: Wed 07/23/2025  9:05:14.73 
+ 
+=============================== 
+START: Wed 07/23/2025  9:20:00.12 
+END: Wed 07/23/2025  9:20:14.75 
+ 
+=============================== 
+START: Wed 07/23/2025  9:35:00.11 
+END: Wed 07/23/2025  9:35:14.59 
+ 
+=============================== 
+START: Wed 07/23/2025  9:50:00.11 
+END: Wed 07/23/2025  9:50:14.47 
+ 
+=============================== 
+START: Wed 07/23/2025 10:05:00.12 
+END: Wed 07/23/2025 10:05:14.78 
+ 
+=============================== 
+START: Wed 07/23/2025 10:20:00.13 
+END: Wed 07/23/2025 10:20:14.89 
+ 
+=============================== 
+START: Wed 07/23/2025 10:35:00.20 
+END: Wed 07/23/2025 10:35:14.65 
+ 
+=============================== 
+START: Wed 07/23/2025 10:50:00.11 
+END: Wed 07/23/2025 10:50:15.81 
+ 
+=============================== 
+START: Wed 07/23/2025 11:05:00.14 
+END: Wed 07/23/2025 11:05:20.10 
+ 
+=============================== 
+START: Wed 07/23/2025 11:20:00.17 
+END: Wed 07/23/2025 11:20:15.00 
+ 
+=============================== 
+START: Wed 07/23/2025 11:35:00.12 
+END: Wed 07/23/2025 11:35:14.83 
+ 
+=============================== 
+START: Wed 07/23/2025 11:50:00.13 
+END: Wed 07/23/2025 11:50:14.72 
+ 
+=============================== 
+START: Wed 07/23/2025 12:05:00.11 
+END: Wed 07/23/2025 12:05:14.75 
+ 
+=============================== 
+START: Wed 07/23/2025 12:20:00.18 
+END: Wed 07/23/2025 12:20:15.12 
+ 
+=============================== 
+START: Wed 07/23/2025 12:35:00.20 
+END: Wed 07/23/2025 12:35:14.67 
+ 
+=============================== 
+START: Wed 07/23/2025 12:50:00.14 
+END: Wed 07/23/2025 12:50:14.93 
+ 
+=============================== 
+START: Wed 07/23/2025 13:05:00.12 
+END: Wed 07/23/2025 13:05:15.03 
+ 
+=============================== 
+START: Wed 07/23/2025 13:20:00.15 
+END: Wed 07/23/2025 13:20:15.37 
+ 
+=============================== 
+START: Wed 07/23/2025 13:35:00.15 
+END: Wed 07/23/2025 13:35:14.78 
+ 
+=============================== 
+START: Wed 07/23/2025 13:50:00.13 
+END: Wed 07/23/2025 13:50:15.18 
+ 
+=============================== 
+START: Wed 07/23/2025 14:05:00.12 
+END: Wed 07/23/2025 14:05:14.99 
+ 
+=============================== 
+START: Wed 07/23/2025 14:20:00.15 
+END: Wed 07/23/2025 14:20:15.00 
+ 
+=============================== 
+START: Wed 07/23/2025 14:35:00.16 
+END: Wed 07/23/2025 14:35:15.17 
+ 
+=============================== 
+START: Wed 07/23/2025 14:50:01.20 
+END: Wed 07/23/2025 14:50:15.99 
+ 
+=============================== 
+START: Wed 07/23/2025 15:05:00.12 
+END: Wed 07/23/2025 15:05:14.80 
+ 
+=============================== 
+START: Wed 07/23/2025 15:20:00.29 
+END: Wed 07/23/2025 15:20:15.87 
+ 
+=============================== 
+START: Wed 07/23/2025 15:35:00.12 
+END: Wed 07/23/2025 15:35:14.69 
+ 
+=============================== 
+START: Wed 07/23/2025 15:50:00.13 
+END: Wed 07/23/2025 15:50:14.91 
+ 
+=============================== 
+START: Wed 07/23/2025 16:05:00.12 
+END: Wed 07/23/2025 16:05:14.74 
+ 
+=============================== 
+START: Wed 07/23/2025 16:20:00.18 
+END: Wed 07/23/2025 16:20:15.30 
+ 
+=============================== 
+START: Wed 07/23/2025 16:35:00.12 
+END: Wed 07/23/2025 16:35:14.72 
+ 
+=============================== 
+START: Wed 07/23/2025 16:50:04.55 
+END: Wed 07/23/2025 16:50:18.87 
+ 
+=============================== 
+START: Wed 07/23/2025 17:05:00.38 
+END: Wed 07/23/2025 17:05:15.98 
+ 
+=============================== 
+START: Wed 07/23/2025 17:20:00.19 
+END: Wed 07/23/2025 17:20:15.04 
+ 
+=============================== 
+START: Wed 07/23/2025 17:35:00.16 
+END: Wed 07/23/2025 17:35:15.66 
+ 
+=============================== 
+START: Wed 07/23/2025 17:50:00.12 
+END: Wed 07/23/2025 17:50:15.16 
+ 
+=============================== 
+START: Wed 07/23/2025 18:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: DevToolsActivePort file doesn't exist
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c20c9d9]
+	(No symbol) [0x0x7ff79c206b3b]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Wed 07/23/2025 18:06:08.01 
+ 
+=============================== 
+START: Wed 07/23/2025 18:20:00.21 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 14, in <module>
+    from . import exceptions
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\exceptions.py", line 7, in <module>
+    from http.client import IncompleteRead as httplib_IncompleteRead
+  File "C:\Program Files\Python312\Lib\http\client.py", line 71, in <module>
+    import email.parser
+  File "C:\Program Files\Python312\Lib\email\parser.py", line 12, in <module>
+    from email.feedparser import FeedParser, BytesFeedParser
+  File "C:\Program Files\Python312\Lib\email\feedparser.py", line 27, in <module>
+    from email._policybase import compat32
+  File "C:\Program Files\Python312\Lib\email\_policybase.py", line 9, in <module>
+    from email.utils import _has_surrogates
+  File "C:\Program Files\Python312\Lib\email\utils.py", line 33, in <module>
+    from email._parseaddr import quote
+  File "C:\Program Files\Python312\Lib\email\_parseaddr.py", line 16, in <module>
+    import time, calendar
+  File "C:\Program Files\Python312\Lib\calendar.py", line 11, in <module>
+    import locale as _locale
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1124, in get_code
+  File "<frozen importlib._bootstrap_external>", line 753, in _compile_bytecode
+MemoryError
+END: Wed 07/23/2025 18:20:00.52 
+ 
+=============================== 
+START: Wed 07/23/2025 18:35:00.12 
+END: Wed 07/23/2025 18:35:15.17 
+ 
+=============================== 
+START: Wed 07/23/2025 18:50:00.15 
+END: Wed 07/23/2025 18:50:14.95 
+ 
+=============================== 
+START: Wed 07/23/2025 19:05:00.12 
+END: Wed 07/23/2025 19:05:14.92 
+ 
+=============================== 
+START: Wed 07/23/2025 19:20:00.16 
+END: Wed 07/23/2025 19:20:15.08 
+ 
+=============================== 
+START: Wed 07/23/2025 19:35:00.12 
+END: Wed 07/23/2025 19:35:14.77 
+ 
+=============================== 
+START: Wed 07/23/2025 19:50:00.20 
+END: Wed 07/23/2025 19:50:15.18 
+ 
+=============================== 
+START: Wed 07/23/2025 20:05:00.12 
+END: Wed 07/23/2025 20:05:14.84 
+ 
+=============================== 
+START: Wed 07/23/2025 20:20:00.15 
+END: Wed 07/23/2025 20:20:14.96 
+ 
+=============================== 
+START: Wed 07/23/2025 20:35:00.11 
+END: Wed 07/23/2025 20:35:14.87 
+ 
+=============================== 
+START: Wed 07/23/2025 20:50:00.14 
+END: Wed 07/23/2025 20:50:15.22 
+ 
+=============================== 
+START: Wed 07/23/2025 21:05:00.11 
+END: Wed 07/23/2025 21:05:14.85 
+ 
+=============================== 
+START: Wed 07/23/2025 21:20:00.23 
+END: Wed 07/23/2025 21:20:15.52 
+ 
+=============================== 
+START: Wed 07/23/2025 21:35:00.13 
+END: Wed 07/23/2025 21:35:14.76 
+ 
+=============================== 
+START: Wed 07/23/2025 21:50:00.13 
+END: Wed 07/23/2025 21:50:15.03 
+ 
+=============================== 
+START: Wed 07/23/2025 22:05:00.12 
+END: Wed 07/23/2025 22:05:14.88 
+ 
+=============================== 
+START: Wed 07/23/2025 22:20:00.12 
+END: Wed 07/23/2025 22:20:14.78 
+ 
+=============================== 
+START: Wed 07/23/2025 22:35:00.11 
+END: Wed 07/23/2025 22:35:14.56 
+ 
+=============================== 
+START: Wed 07/23/2025 22:50:00.14 
+END: Wed 07/23/2025 22:50:14.90 
+ 
+=============================== 
+START: Wed 07/23/2025 23:05:00.15 
+END: Wed 07/23/2025 23:21:24.57 
+ 
+=============================== 
+START: Wed 07/23/2025 23:35:00.13 
+END: Wed 07/23/2025 23:35:15.13 
+ 
+=============================== 
+START: Wed 07/23/2025 23:50:00.15 
+END: Wed 07/23/2025 23:50:14.70 
+ 
+=============================== 
+START: Thu 07/24/2025  7:20:00.13 
+END: Thu 07/24/2025  7:20:14.68 
+ 
+=============================== 
+START: Thu 07/24/2025  7:35:00.13 
+END: Thu 07/24/2025  7:35:14.75 
+ 
+=============================== 
+START: Thu 07/24/2025  7:50:00.12 
+END: Thu 07/24/2025  7:50:14.75 
+ 
+=============================== 
+START: Thu 07/24/2025  8:05:00.13 
+END: Thu 07/24/2025  8:05:14.71 
+ 
+=============================== 
+START: Thu 07/24/2025  8:20:00.11 
+END: Thu 07/24/2025  8:20:14.75 
+ 
+=============================== 
+START: Thu 07/24/2025  8:35:00.13 
+END: Thu 07/24/2025  8:35:14.50 
+ 
+=============================== 
+START: Thu 07/24/2025  8:50:00.12 
+END: Thu 07/24/2025  8:50:14.69 
+ 
+=============================== 
+START: Thu 07/24/2025  9:05:00.12 
+END: Thu 07/24/2025  9:05:14.52 
+ 
+=============================== 
+START: Thu 07/24/2025  9:20:00.14 
+END: Thu 07/24/2025  9:20:15.30 
+ 
+=============================== 
+START: Thu 07/24/2025  9:35:00.11 
+END: Thu 07/24/2025  9:35:14.55 
+ 
+=============================== 
+START: Thu 07/24/2025  9:50:00.12 
+END: Thu 07/24/2025  9:50:36.62 
+ 
+=============================== 
+START: Thu 07/24/2025 10:05:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 82, in <module>
+    driver.get(SITE_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: net::ERR_CONNECTION_TIMED_OUT
+  (Session info: chrome=138.0.7204.101)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c1c6ba5]
+	(No symbol) [0x0x7ff79c1b7879]
+	(No symbol) [0x0x7ff79c1b9631]
+	(No symbol) [0x0x7ff79c1b7b96]
+	(No symbol) [0x0x7ff79c1b75f6]
+	(No symbol) [0x0x7ff79c1b72ba]
+	(No symbol) [0x0x7ff79c1b4e8b]
+	(No symbol) [0x0x7ff79c1b570c]
+	(No symbol) [0x0x7ff79c1cdd9a]
+	(No symbol) [0x0x7ff79c27143e]
+	(No symbol) [0x0x7ff79c24846a]
+	(No symbol) [0x0x7ff79c27065c]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Thu 07/24/2025 10:05:47.75 
+ 
+=============================== 
+START: Thu 07/24/2025 10:20:00.12 
+END: Thu 07/24/2025 10:20:14.59 
+ 
+=============================== 
+START: Thu 07/24/2025 10:35:00.11 
+END: Thu 07/24/2025 10:35:14.60 
+ 
+=============================== 
+START: Thu 07/24/2025 10:50:00.12 
+END: Thu 07/24/2025 10:50:14.63 
+ 
+=============================== 
+START: Thu 07/24/2025 11:05:00.13 
+END: Thu 07/24/2025 11:05:14.59 
+ 
+=============================== 
+START: Thu 07/24/2025 11:20:00.20 
+END: Thu 07/24/2025 11:20:15.14 
+ 
+=============================== 
+START: Thu 07/24/2025 11:35:00.12 
+END: Thu 07/24/2025 11:35:14.73 
+ 
+=============================== 
+START: Thu 07/24/2025 11:50:00.15 
+END: Thu 07/24/2025 11:50:14.93 
+ 
+=============================== 
+START: Thu 07/24/2025 12:05:00.13 
+END: Thu 07/24/2025 12:05:14.64 
+ 
+=============================== 
+START: Thu 07/24/2025 12:20:00.14 
+END: Thu 07/24/2025 12:20:14.73 
+ 
+=============================== 
+START: Thu 07/24/2025 12:35:00.14 
+END: Thu 07/24/2025 12:35:15.90 
+ 
+=============================== 
+START: Thu 07/24/2025 12:50:00.13 
+END: Thu 07/24/2025 12:50:15.04 
+ 
+=============================== 
+START: Thu 07/24/2025 13:05:00.13 
+END: Thu 07/24/2025 13:05:16.43 
+ 
