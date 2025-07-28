@@ -8445,3 +8445,3190 @@ END: Thu 07/24/2025 12:50:15.04
 START: Thu 07/24/2025 13:05:00.13 
 END: Thu 07/24/2025 13:05:16.43 
  
+=============================== 
+START: Thu 07/24/2025 13:20:00.14 
+END: Thu 07/24/2025 13:20:15.23 
+ 
+=============================== 
+START: Thu 07/24/2025 13:35:00.12 
+END: Thu 07/24/2025 13:35:14.85 
+ 
+=============================== 
+START: Thu 07/24/2025 13:50:00.14 
+END: Thu 07/24/2025 13:50:15.00 
+ 
+=============================== 
+START: Thu 07/24/2025 14:05:00.20 
+END: Thu 07/24/2025 14:05:15.32 
+ 
+=============================== 
+START: Thu 07/24/2025 14:20:00.18 
+END: Thu 07/24/2025 14:20:15.26 
+ 
+=============================== 
+START: Thu 07/24/2025 14:35:00.12 
+END: Thu 07/24/2025 14:35:14.85 
+ 
+=============================== 
+START: Thu 07/24/2025 14:50:01.30 
+END: Thu 07/24/2025 14:50:16.15 
+ 
+=============================== 
+START: Thu 07/24/2025 15:05:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Thu 07/24/2025 15:05:11.65 
+ 
+=============================== 
+START: Thu 07/24/2025 15:20:00.18 
+END: Thu 07/24/2025 15:20:15.56 
+ 
+=============================== 
+START: Thu 07/24/2025 15:35:00.12 
+END: Thu 07/24/2025 15:35:15.01 
+ 
+=============================== 
+START: Thu 07/24/2025 15:50:00.14 
+END: Thu 07/24/2025 15:50:15.22 
+ 
+=============================== 
+START: Thu 07/24/2025 16:05:00.13 
+END: Thu 07/24/2025 16:05:15.08 
+ 
+=============================== 
+START: Thu 07/24/2025 16:20:00.14 
+END: Thu 07/24/2025 16:20:14.73 
+ 
+=============================== 
+START: Thu 07/24/2025 16:35:00.16 
+END: Thu 07/24/2025 16:35:14.69 
+ 
+=============================== 
+START: Thu 07/24/2025 16:50:00.16 
+END: Thu 07/24/2025 16:50:15.49 
+ 
+=============================== 
+START: Thu 07/24/2025 17:05:00.14 
+END: Thu 07/24/2025 17:05:14.80 
+ 
+=============================== 
+START: Thu 07/24/2025 17:20:00.16 
+END: Thu 07/24/2025 17:20:15.53 
+ 
+=============================== 
+START: Thu 07/24/2025 17:35:00.11 
+END: Thu 07/24/2025 17:35:15.07 
+ 
+=============================== 
+START: Thu 07/24/2025 17:50:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 18, in <module>
+    from .connectionpool import HTTPConnectionPool, HTTPSConnectionPool, connection_from_url
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 15, in <module>
+    from ._request_methods import RequestMethods
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 9, in <module>
+    from .filepost import _TYPE_FIELDS, encode_multipart_formdata
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\filepost.py", line 9, in <module>
+    from .fields import _TYPE_FIELD_VALUE_TUPLE, RequestField
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\fields.py", line 4, in <module>
+    import mimetypes
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Thu 07/24/2025 17:50:00.42 
+ 
+=============================== 
+START: Thu 07/24/2025 18:05:00.14 
+END: Thu 07/24/2025 18:05:15.60 
+ 
+=============================== 
+START: Thu 07/24/2025 18:20:00.16 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 14, in <module>
+    from . import exceptions
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\exceptions.py", line 7, in <module>
+    from http.client import IncompleteRead as httplib_IncompleteRead
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1448, in <module>
+    import ssl
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Thu 07/24/2025 18:20:00.44 
+ 
+=============================== 
+START: Thu 07/24/2025 18:35:00.11 
+END: Thu 07/24/2025 18:35:15.04 
+ 
+=============================== 
+START: Thu 07/24/2025 18:50:00.15 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Thu 07/24/2025 18:50:01.40 
+ 
+=============================== 
+START: Thu 07/24/2025 19:05:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Thu 07/24/2025 19:05:22.94 
+ 
+=============================== 
+START: Thu 07/24/2025 19:20:00.15 
+END: Thu 07/24/2025 19:20:15.24 
+ 
+=============================== 
+START: Thu 07/24/2025 19:35:00.11 
+END: Thu 07/24/2025 19:35:14.74 
+ 
+=============================== 
+START: Thu 07/24/2025 19:50:00.14 
+END: Thu 07/24/2025 19:50:14.70 
+ 
+=============================== 
+START: Thu 07/24/2025 20:05:00.13 
+END: Thu 07/24/2025 20:05:14.61 
+ 
+=============================== 
+START: Thu 07/24/2025 20:20:00.14 
+END: Thu 07/24/2025 20:20:14.78 
+ 
+=============================== 
+START: Thu 07/24/2025 20:35:00.12 
+END: Thu 07/24/2025 20:35:14.84 
+ 
+=============================== 
+START: Thu 07/24/2025 20:50:00.15 
+END: Thu 07/24/2025 20:50:15.03 
+ 
+=============================== 
+START: Thu 07/24/2025 21:05:00.16 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Thu 07/24/2025 21:05:01.45 
+ 
+=============================== 
+START: Thu 07/24/2025 21:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 45, in <module>
+    from .exceptions import RequestsDependencyWarning
+  File "C:\Program Files\Python312\Lib\site-packages\requests\exceptions.py", line 9, in <module>
+    from .compat import JSONDecodeError as CompatJSONDecodeError
+  File "C:\Program Files\Python312\Lib\site-packages\requests\compat.py", line 30, in <module>
+    chardet = _resolve_char_detection()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\requests\compat.py", line 24, in _resolve_char_detection
+    chardet = importlib.import_module(lib)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\__init__.py", line 24, in <module>
+    from .universaldetector import UniversalDetector
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\universaldetector.py", line 52, in <module>
+    from .sbcsgroupprober import SBCSGroupProber
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\sbcsgroupprober.py", line 32, in <module>
+    from .langgreekmodel import ISO_8859_7_GREEK_MODEL, WINDOWS_1253_GREEK_MODEL
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1124, in get_code
+  File "<frozen importlib._bootstrap_external>", line 753, in _compile_bytecode
+MemoryError
+END: Thu 07/24/2025 21:20:00.66 
+ 
+=============================== 
+START: Thu 07/24/2025 21:35:00.12 
+END: Thu 07/24/2025 21:35:14.62 
+ 
+=============================== 
+START: Thu 07/24/2025 21:50:00.14 
+END: Thu 07/24/2025 21:50:00.50 
+ 
+=============================== 
+START: Thu 07/24/2025 22:05:00.14 
+END: Thu 07/24/2025 22:05:14.67 
+ 
+=============================== 
+START: Thu 07/24/2025 22:20:00.16 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Thu 07/24/2025 22:20:08.18 
+ 
+=============================== 
+START: Thu 07/24/2025 22:35:00.22 
+END: Thu 07/24/2025 22:35:14.65 
+ 
+=============================== 
+START: Thu 07/24/2025 22:50:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 18, in <module>
+    from .connectionpool import HTTPConnectionPool, HTTPSConnectionPool, connection_from_url
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 15, in <module>
+    from ._request_methods import RequestMethods
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 10, in <module>
+    from .response import BaseHTTPResponse
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\response.py", line 49, in <module>
+    from .connection import BaseSSLError, HTTPConnection, HTTPException
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connection.py", line 24, in <module>
+    from .http2 import probe as http2_probe
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\http2\__init__.py", line 3, in <module>
+    from importlib.metadata import version
+  File "C:\Program Files\Python312\Lib\importlib\metadata\__init__.py", line 7, in <module>
+    import pathlib
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Thu 07/24/2025 22:50:00.45 
+ 
+=============================== 
+START: Fri 07/25/2025  7:20:00.11 
+END: Fri 07/25/2025  7:20:14.87 
+ 
+=============================== 
+START: Fri 07/25/2025  7:35:00.13 
+END: Fri 07/25/2025  7:35:14.57 
+ 
+=============================== 
+START: Fri 07/25/2025  7:50:00.11 
+END: Fri 07/25/2025  7:50:14.56 
+ 
+=============================== 
+START: Fri 07/25/2025  8:05:00.11 
+END: Fri 07/25/2025  8:05:14.51 
+ 
+=============================== 
+START: Fri 07/25/2025  8:20:00.11 
+END: Fri 07/25/2025  8:20:14.58 
+ 
+=============================== 
+START: Fri 07/25/2025  8:35:00.15 
+END: Fri 07/25/2025  8:35:14.76 
+ 
+=============================== 
+START: Fri 07/25/2025  8:50:00.11 
+END: Fri 07/25/2025  8:50:14.68 
+ 
+=============================== 
+START: Fri 07/25/2025  9:05:00.27 
+END: Fri 07/25/2025  9:05:15.03 
+ 
+=============================== 
+START: Fri 07/25/2025  9:20:00.16 
+END: Fri 07/25/2025  9:20:15.70 
+ 
+=============================== 
+START: Fri 07/25/2025  9:35:00.13 
+END: Fri 07/25/2025  9:35:14.75 
+ 
+=============================== 
+START: Fri 07/25/2025  9:50:00.11 
+END: Fri 07/25/2025  9:50:14.67 
+ 
+=============================== 
+START: Fri 07/25/2025 10:05:00.13 
+END: Fri 07/25/2025 10:05:14.63 
+ 
+=============================== 
+START: Fri 07/25/2025 10:20:00.11 
+END: Fri 07/25/2025 10:20:15.02 
+ 
+=============================== 
+START: Fri 07/25/2025 10:35:00.12 
+END: Fri 07/25/2025 10:35:14.50 
+ 
+=============================== 
+START: Fri 07/25/2025 10:50:00.12 
+END: Fri 07/25/2025 10:50:14.57 
+ 
+=============================== 
+START: Fri 07/25/2025 11:05:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 15, in <module>
+    from ._base_connection import _TYPE_BODY
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_base_connection.py", line 5, in <module>
+    from .util.connection import _TYPE_SOCKET_OPTIONS
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\__init__.py", line 8, in <module>
+    from .ssl_ import (
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\ssl_.py", line 13, in <module>
+    from .url import _BRACELESS_IPV6_ADDRZ_RE, _IPV4_RE
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\url.py", line 81, in <module>
+    typing.NamedTuple(
+  File "C:\Program Files\Python312\Lib\typing.py", line 2869, in NamedTuple
+    nt = _make_nmtuple(typename, fields, module=_caller())
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\typing.py", line 2794, in _make_nmtuple
+    nm_tpl = collections.namedtuple(name, fields,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\collections\__init__.py", line 441, in namedtuple
+    __new__ = eval(code, namespace)
+              ^^^^^^^^^^^^^^^^^^^^^
+SystemError: error return without exception set
+END: Fri 07/25/2025 11:05:00.70 
+ 
+=============================== 
+START: Fri 07/25/2025 11:20:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 45, in <module>
+    from .exceptions import RequestsDependencyWarning
+  File "C:\Program Files\Python312\Lib\site-packages\requests\exceptions.py", line 9, in <module>
+    from .compat import JSONDecodeError as CompatJSONDecodeError
+  File "C:\Program Files\Python312\Lib\site-packages\requests\compat.py", line 30, in <module>
+    chardet = _resolve_char_detection()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\requests\compat.py", line 24, in _resolve_char_detection
+    chardet = importlib.import_module(lib)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\__init__.py", line 24, in <module>
+    from .universaldetector import UniversalDetector
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\universaldetector.py", line 50, in <module>
+    from .mbcsgroupprober import MBCSGroupProber
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\mbcsgroupprober.py", line 30, in <module>
+    from .big5prober import Big5Prober
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\big5prober.py", line 28, in <module>
+    from .chardistribution import Big5DistributionAnalysis
+  File "C:\Program Files\Python312\Lib\site-packages\chardet\chardistribution.py", line 55, in <module>
+    from .johabfreq import JOHAB_TO_EUCKR_ORDER_TABLE
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Fri 07/25/2025 11:20:00.55 
+ 
+=============================== 
+START: Fri 07/25/2025 11:35:00.12 
+END: Fri 07/25/2025 11:35:15.26 
+ 
+=============================== 
+START: Fri 07/25/2025 11:50:00.16 
+END: Fri 07/25/2025 11:50:14.93 
+ 
+=============================== 
+START: Fri 07/25/2025 12:05:00.11 
+END: Fri 07/25/2025 12:05:14.80 
+ 
+=============================== 
+START: Fri 07/25/2025 12:20:00.14 
+END: Fri 07/25/2025 12:20:14.98 
+ 
+=============================== 
+START: Fri 07/25/2025 12:35:00.12 
+END: Fri 07/25/2025 12:35:14.72 
+ 
+=============================== 
+START: Fri 07/25/2025 12:50:00.16 
+END: Fri 07/25/2025 12:50:15.20 
+ 
+=============================== 
+START: Fri 07/25/2025 13:05:00.11 
+END: Fri 07/25/2025 13:05:14.65 
+ 
+=============================== 
+START: Fri 07/25/2025 13:20:00.13 
+END: Fri 07/25/2025 13:20:14.85 
+ 
+=============================== 
+START: Fri 07/25/2025 13:35:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	(No symbol) [0x0x7ffa84784de0]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Fri 07/25/2025 13:35:08.09 
+ 
+=============================== 
+START: Fri 07/25/2025 13:50:00.17 
+END: Fri 07/25/2025 13:50:14.98 
+ 
+=============================== 
+START: Fri 07/25/2025 14:05:00.11 
+END: Fri 07/25/2025 14:05:14.86 
+ 
+=============================== 
+START: Fri 07/25/2025 14:20:00.22 
+Error processing line 1 of C:\Program Files\Python312\Lib\site-packages\distutils-precedence.pth:
+
+Fatal Python error: init_import_site: Failed to import the site module
+Python runtime state: initialized
+Traceback (most recent call last):
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1176, in exec_module
+  File "<frozen site>", line 635, in <module>
+  File "<frozen site>", line 622, in main
+  File "<frozen site>", line 405, in addsitepackages
+  File "<frozen site>", line 247, in addsitedir
+  File "<frozen site>", line 216, in addpackage
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Fri 07/25/2025 14:20:00.33 
+ 
+=============================== 
+START: Fri 07/25/2025 14:50:00.28 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 4, in <module>
+    import pyodbc
+ImportError: DLL load failed while importing pyodbc: The paging file is too small for this operation to complete.
+END: Fri 07/25/2025 14:50:01.64 
+ 
+=============================== 
+START: Fri 07/25/2025 15:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from chrome not reachable
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9c1c]
+	(No symbol) [0x0x7ff79c1bada1]
+	(No symbol) [0x0x7ff79c20cfd2]
+	(No symbol) [0x0x7ff79c206e2a]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 15:06:08.73 
+ 
+=============================== 
+START: Fri 07/25/2025 15:20:00.18 
+END: Fri 07/25/2025 15:20:16.37 
+ 
+=============================== 
+START: Fri 07/25/2025 15:35:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Fri 07/25/2025 15:35:01.15 
+ 
+=============================== 
+START: Fri 07/25/2025 15:50:00.16 
+END: Fri 07/25/2025 15:50:14.85 
+ 
+=============================== 
+START: Fri 07/25/2025 16:05:00.11 
+END: Fri 07/25/2025 16:05:14.56 
+ 
+=============================== 
+START: Fri 07/25/2025 16:20:00.16 
+END: Fri 07/25/2025 16:20:00.19 
+ 
+=============================== 
+START: Fri 07/25/2025 16:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from chrome not reachable
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9c1c]
+	(No symbol) [0x0x7ff79c1bada1]
+	(No symbol) [0x0x7ff79c20cfd2]
+	(No symbol) [0x0x7ff79c206e2a]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 16:36:08.66 
+ 
+=============================== 
+START: Fri 07/25/2025 16:50:00.15 
+END: Fri 07/25/2025 16:50:14.91 
+ 
+=============================== 
+START: Fri 07/25/2025 17:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 17:05:07.93 
+ 
+=============================== 
+START: Fri 07/25/2025 17:20:00.25 
+END: Fri 07/25/2025 17:20:14.84 
+ 
+=============================== 
+START: Fri 07/25/2025 17:35:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: DevToolsActivePort file doesn't exist
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c20c9d9]
+	(No symbol) [0x0x7ff79c206b3b]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 17:36:07.77 
+ 
+=============================== 
+START: Fri 07/25/2025 17:50:00.14 
+END: Fri 07/25/2025 17:50:17.10 
+ 
+=============================== 
+START: Fri 07/25/2025 18:05:00.11 
+END: Fri 07/25/2025 18:05:00.14 
+ 
+=============================== 
+START: Fri 07/25/2025 18:20:00.13 
+END: Fri 07/25/2025 18:20:00.16 
+ 
+=============================== 
+START: Fri 07/25/2025 18:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 18:35:08.13 
+ 
+=============================== 
+START: Fri 07/25/2025 18:50:00.15 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 18:50:18.19 
+ 
+=============================== 
+START: Fri 07/25/2025 19:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 18, in <module>
+    from .connectionpool import HTTPConnectionPool, HTTPSConnectionPool, connection_from_url
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 15, in <module>
+    from ._request_methods import RequestMethods
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 3, in <module>
+    import json as _json
+  File "C:\Program Files\Python312\Lib\json\__init__.py", line 107, in <module>
+    from .encoder import JSONEncoder
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Fri 07/25/2025 19:20:00.38 
+ 
+=============================== 
+START: Fri 07/25/2025 19:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created
+from chrome not reachable
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9c1c]
+	(No symbol) [0x0x7ff79c1bada1]
+	(No symbol) [0x0x7ff79c20cfd2]
+	(No symbol) [0x0x7ff79c206e2a]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 19:36:08.48 
+ 
+=============================== 
+START: Fri 07/25/2025 19:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 19:50:20.95 
+ 
+=============================== 
+START: Fri 07/25/2025 20:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 8, in <module>
+    import logging
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Fri 07/25/2025 20:20:00.23 
+ 
+=============================== 
+START: Fri 07/25/2025 20:35:00.11 
+END: Fri 07/25/2025 20:45:46.23 
+ 
+=============================== 
+START: Fri 07/25/2025 20:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 6, in <module>
+    from selenium import webdriver
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\__init__.py", line 20, in <module>
+    from .chrome.webdriver import WebDriver as Chrome  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 18, in <module>
+    from selenium.webdriver.chromium.webdriver import ChromiumDriver
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 19, in <module>
+    from selenium.webdriver.common.driver_finder import DriverFinder
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\driver_finder.py", line 22, in <module>
+    from selenium.webdriver.common.selenium_manager import SeleniumManager
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\selenium_manager.py", line 23, in <module>
+    import sysconfig
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Fri 07/25/2025 20:50:01.12 
+ 
+=============================== 
+START: Fri 07/25/2025 21:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 8, in <module>
+    import logging
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 26, in <module>
+    import sys, os, time, io, re, traceback, warnings, weakref, collections.abc
+  File "C:\Program Files\Python312\Lib\traceback.py", line 578, in <module>
+    _Anchors = collections.namedtuple(
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\collections\__init__.py", line 441, in namedtuple
+    __new__ = eval(code, namespace)
+              ^^^^^^^^^^^^^^^^^^^^^
+SystemError: error return without exception set
+END: Fri 07/25/2025 21:05:00.39 
+ 
+=============================== 
+START: Fri 07/25/2025 21:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 6, in <module>
+    from selenium import webdriver
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\__init__.py", line 20, in <module>
+    from .chrome.webdriver import WebDriver as Chrome  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 18, in <module>
+    from selenium.webdriver.chromium.webdriver import ChromiumDriver
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 22, in <module>
+    from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Fri 07/25/2025 21:20:01.07 
+ 
+=============================== 
+START: Fri 07/25/2025 21:35:00.11 
+END: Fri 07/25/2025 21:35:14.39 
+ 
+=============================== 
+START: Fri 07/25/2025 21:50:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 21:50:08.40 
+ 
+=============================== 
+START: Fri 07/25/2025 22:05:00.11 
+END: Fri 07/25/2025 22:05:14.59 
+ 
+=============================== 
+START: Fri 07/25/2025 22:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Fri 07/25/2025 22:20:01.14 
+ 
+=============================== 
+START: Fri 07/25/2025 22:35:00.11 
+END: Fri 07/25/2025 22:35:14.37 
+ 
+=============================== 
+START: Fri 07/25/2025 22:50:00.22 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Fri 07/25/2025 22:50:08.33 
+ 
+=============================== 
+START: Fri 07/25/2025 23:05:00.17 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+Error initializing symbols (3221225495).  Dumping unresolved backtrace:
+	0x7ff79c416f65
+	0x7ff79c416fc0
+	0x7ff79c1c9dea
+	0x7ff79c208932
+	0x7ff79c202675
+	0x7ff79c255e9e
+	0x7ff79c255630
+	0x7ff79c248243
+	0x7ff79c211431
+	0x7ff79c2121c3
+	0x7ff79c6ed29d
+	0x7ff79c6e78f3
+	0x7ff79c70588d
+	0x7ff79c43182e
+	0x7ff79c4396ef
+	0x7ff79c41fae4
+	0x7ff79c41fc99
+	0x7ff79c406c68
+	0x7ffa84784de0
+	0x7ffa8583edab
+
+END: Fri 07/25/2025 23:05:07.90 
+ 
+=============================== 
+START: Fri 07/25/2025 23:20:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Fri 07/25/2025 23:20:07.83 
+ 
+=============================== 
+START: Fri 07/25/2025 23:35:00.11 
+END: Fri 07/25/2025 23:35:14.69 
+ 
+=============================== 
+START: Fri 07/25/2025 23:50:00.12 
+END: Fri 07/25/2025 23:50:14.61 
+ 
+=============================== 
+START: Sat 07/26/2025  7:20:00.12 
+END: Sat 07/26/2025  7:20:14.72 
+ 
+=============================== 
+START: Sat 07/26/2025  7:35:00.22 
+END: Sat 07/26/2025  7:35:14.66 
+ 
+=============================== 
+START: Sat 07/26/2025  7:50:00.11 
+END: Sat 07/26/2025  7:50:14.58 
+ 
+=============================== 
+START: Sat 07/26/2025  8:05:00.10 
+END: Sat 07/26/2025  8:05:14.75 
+ 
+=============================== 
+START: Sat 07/26/2025  8:20:00.10 
+END: Sat 07/26/2025  8:20:14.71 
+ 
+=============================== 
+START: Sat 07/26/2025  8:35:00.12 
+END: Sat 07/26/2025  8:35:14.46 
+ 
+=============================== 
+START: Sat 07/26/2025  8:50:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Sat 07/26/2025  8:50:01.18 
+ 
+=============================== 
+START: Sat 07/26/2025  9:05:00.11 
+END: Sat 07/26/2025  9:05:14.52 
+ 
+=============================== 
+START: Sat 07/26/2025  9:20:00.11 
+END: Sat 07/26/2025  9:20:14.65 
+ 
+=============================== 
+START: Sat 07/26/2025  9:35:00.11 
+END: Sat 07/26/2025  9:35:14.46 
+ 
+=============================== 
+START: Sat 07/26/2025  9:50:00.10 
+END: Sat 07/26/2025  9:50:14.40 
+ 
+=============================== 
+START: Sat 07/26/2025 10:05:00.12 
+END: Sat 07/26/2025 10:05:14.43 
+ 
+=============================== 
+START: Sat 07/26/2025 10:20:00.11 
+END: Sat 07/26/2025 10:20:14.21 
+ 
+=============================== 
+START: Sat 07/26/2025 10:35:00.13 
+END: Sat 07/26/2025 10:51:24.18 
+ 
+=============================== 
+START: Sat 07/26/2025 11:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: DevToolsActivePort file doesn't exist
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c20c9d9]
+	(No symbol) [0x0x7ff79c206b3b]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 11:06:07.75 
+ 
+=============================== 
+START: Sat 07/26/2025 11:20:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 18, in <module>
+    from .connectionpool import HTTPConnectionPool, HTTPSConnectionPool, connection_from_url
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 15, in <module>
+    from ._request_methods import RequestMethods
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 10, in <module>
+    from .response import BaseHTTPResponse
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\response.py", line 49, in <module>
+    from .connection import BaseSSLError, HTTPConnection, HTTPException
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connection.py", line 24, in <module>
+    from .http2 import probe as http2_probe
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\http2\__init__.py", line 3, in <module>
+    from importlib.metadata import version
+  File "C:\Program Files\Python312\Lib\importlib\metadata\__init__.py", line 17, in <module>
+    import inspect
+  File "C:\Program Files\Python312\Lib\inspect.py", line 145, in <module>
+    import ast
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1124, in get_code
+  File "<frozen importlib._bootstrap_external>", line 753, in _compile_bytecode
+MemoryError
+END: Sat 07/26/2025 11:20:00.56 
+ 
+=============================== 
+START: Sat 07/26/2025 11:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: DevToolsActivePort file doesn't exist
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c20c9d9]
+	(No symbol) [0x0x7ff79c206b3b]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 11:36:07.84 
+ 
+=============================== 
+START: Sat 07/26/2025 11:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 11:50:07.92 
+ 
+=============================== 
+START: Sat 07/26/2025 12:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 12:05:25.76 
+ 
+=============================== 
+START: Sat 07/26/2025 12:20:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 4, in <module>
+    import pyodbc
+ImportError: DLL load failed while importing pyodbc: The paging file is too small for this operation to complete.
+END: Sat 07/26/2025 12:20:00.81 
+ 
+=============================== 
+START: Sat 07/26/2025 12:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 82, in <module>
+    driver.get(SITE_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=138.0.7204.101)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c1b75cc]
+	(No symbol) [0x0x7ff79c1b72ba]
+	(No symbol) [0x0x7ff79c1b4e8b]
+	(No symbol) [0x0x7ff79c1b570c]
+	(No symbol) [0x0x7ff79c1cdd9a]
+	(No symbol) [0x0x7ff79c27143e]
+	(No symbol) [0x0x7ff79c24846a]
+	(No symbol) [0x0x7ff79c27065c]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 12:36:10.90 
+ 
+=============================== 
+START: Sat 07/26/2025 12:50:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Failed to create Chrome process.
+Stacktrace:
+	(No symbol) [0x0x7ff79c416f65]
+	(No symbol) [0x0x7ff79c416fc0]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c2067a9]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	(No symbol) [0x0x7ff79c6ed29d]
+	(No symbol) [0x0x7ff79c6e78f3]
+	(No symbol) [0x0x7ff79c70588d]
+	(No symbol) [0x0x7ff79c43182e]
+	(No symbol) [0x0x7ff79c4396ef]
+	(No symbol) [0x0x7ff79c41fae4]
+	(No symbol) [0x0x7ff79c41fc99]
+	(No symbol) [0x0x7ff79c406c68]
+	(No symbol) [0x0x7ffa84784de0]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Sat 07/26/2025 12:50:07.88 
+ 
+=============================== 
+START: Sat 07/26/2025 13:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 13:05:22.93 
+ 
+=============================== 
+START: Sat 07/26/2025 13:20:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 13:20:17.82 
+ 
+=============================== 
+START: Sat 07/26/2025 13:35:00.12 
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connection.py", line 516, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 427, in execute
+    response = self.command_executor.execute(driver_command, params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\remote_connection.py", line 404, in execute
+    return self._request(command_info[0], url, body=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\remote_connection.py", line 428, in _request
+    response = self._conn.request(method, url, body=body, headers=headers, timeout=self._client_config.timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 143, in request
+    return self.request_encode_body(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 278, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 536, in _make_request
+    self._raise_timeout(err=e, url=url, timeout_value=read_timeout)
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 367, in _raise_timeout
+    raise ReadTimeoutError(
+urllib3.exceptions.ReadTimeoutError: HTTPConnectionPool(host='localhost', port=52902): Read timed out. (read timeout=120)
+END: Sat 07/26/2025 13:37:17.65 
+ 
+=============================== 
+START: Sat 07/26/2025 14:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 14:05:17.88 
+ 
+=============================== 
+START: Sat 07/26/2025 14:20:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 14, in <module>
+    from . import exceptions
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\exceptions.py", line 7, in <module>
+    from http.client import IncompleteRead as httplib_IncompleteRead
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1448, in <module>
+    import ssl
+  File "C:\Program Files\Python312\Lib\ssl.py", line 100, in <module>
+    import _ssl             # if we can't import it, let the error propagate
+    ^^^^^^^^^^^
+MemoryError
+END: Sat 07/26/2025 14:20:00.30 
+ 
+=============================== 
+START: Sat 07/26/2025 14:35:00.11 
+END: Sat 07/26/2025 14:35:06.01 
+ 
+=============================== 
+START: Sat 07/26/2025 14:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 14, in <module>
+    from . import exceptions
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\exceptions.py", line 7, in <module>
+    from http.client import IncompleteRead as httplib_IncompleteRead
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Sat 07/26/2025 14:50:00.41 
+ 
+=============================== 
+START: Sat 07/26/2025 15:05:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 15:05:08.60 
+ 
+=============================== 
+START: Sat 07/26/2025 15:20:00.16 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 164, in <module>
+    from .api import delete, get, head, options, patch, post, put, request
+  File "C:\Program Files\Python312\Lib\site-packages\requests\api.py", line 11, in <module>
+    from . import sessions
+  File "C:\Program Files\Python312\Lib\site-packages\requests\sessions.py", line 15, in <module>
+    from .adapters import HTTPAdapter
+  File "C:\Program Files\Python312\Lib\site-packages\requests\adapters.py", line 47, in <module>
+    from .models import Response
+  File "C:\Program Files\Python312\Lib\site-packages\requests\models.py", line 13, in <module>
+    import encodings.idna  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\encodings\idna.py", line 3, in <module>
+    import stringprep, re, codecs
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Sat 07/26/2025 15:20:00.76 
+ 
+=============================== 
+START: Sat 07/26/2025 15:35:00.10 
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connection.py", line 516, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [WinError 10054] An existing connection was forcibly closed by the remote host
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 427, in execute
+    response = self.command_executor.execute(driver_command, params)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\remote_connection.py", line 404, in execute
+    return self._request(command_info[0], url, body=data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\remote_connection.py", line 428, in _request
+    response = self._conn.request(method, url, body=body, headers=headers, timeout=self._client_config.timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 143, in request
+    return self.request_encode_body(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_request_methods.py", line 278, in request_encode_body
+    return self.urlopen(method, url, **extra_kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\poolmanager.py", line 443, in urlopen
+    response = conn.urlopen(method, u.request_uri, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\retry.py", line 474, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\util.py", line 38, in reraise
+    raise value.with_traceback(tb)
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\connection.py", line 516, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1428, in getresponse
+    response.begin()
+  File "C:\Program Files\Python312\Lib\http\client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\http\client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\socket.py", line 720, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))
+END: Sat 07/26/2025 15:35:32.65 
+ 
+=============================== 
+START: Sat 07/26/2025 15:50:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Failed to create Chrome process.
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c2067a9]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	(No symbol) [0x0x7ffa84784de0]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Sat 07/26/2025 15:50:07.81 
+ 
+=============================== 
+START: Sat 07/26/2025 16:20:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 8, in <module>
+    import logging
+  File "C:\Program Files\Python312\Lib\logging\__init__.py", line 44, in <module>
+    import threading
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Sat 07/26/2025 16:20:00.42 
+ 
+=============================== 
+START: Sat 07/26/2025 16:35:00.10 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 15, in <module>
+    from ._base_connection import _TYPE_BODY
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\_base_connection.py", line 5, in <module>
+    from .util.connection import _TYPE_SOCKET_OPTIONS
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\__init__.py", line 8, in <module>
+    from .ssl_ import (
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\ssl_.py", line 13, in <module>
+    from .url import _BRACELESS_IPV6_ADDRZ_RE, _IPV4_RE
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\util\url.py", line 59, in <module>
+    _IPV6_RE = re.compile("^" + _IPV6_PAT + "$")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\re\__init__.py", line 228, in compile
+    return _compile(pattern, flags)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\re\__init__.py", line 307, in _compile
+    p = _compiler.compile(pattern, flags)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 749, in compile
+    code = _code(p, flags)
+           ^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 582, in _code
+    _compile(code, p.data, flags)
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 176, in _compile
+    _compile(code, av, flags)
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 176, in _compile
+    _compile(code, av, flags)
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 119, in _compile
+    _compile(code, av[2], flags)
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 111, in _compile
+    _compile(code, av[2], flags)
+  File "C:\Program Files\Python312\Lib\re\_compiler.py", line 95, in _compile
+    skip = _len(code); emit(0)
+                       ^^^^^^^
+MemoryError
+END: Sat 07/26/2025 16:35:00.48 
+ 
+=============================== 
+START: Sat 07/26/2025 16:50:00.14 
+Error processing line 1 of C:\Program Files\Python312\Lib\site-packages\distutils-precedence.pth:
+
+Fatal Python error: init_import_site: Failed to import the site module
+Python runtime state: initialized
+Traceback (most recent call last):
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1176, in exec_module
+  File "<frozen site>", line 635, in <module>
+  File "<frozen site>", line 622, in main
+  File "<frozen site>", line 405, in addsitepackages
+  File "<frozen site>", line 247, in addsitedir
+  File "<frozen site>", line 216, in addpackage
+  File "C:\Program Files\Python312\Lib\traceback.py", line 3, in <module>
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Sat 07/26/2025 16:50:00.30 
+ 
+=============================== 
+START: Sat 07/26/2025 17:05:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 3, in <module>
+    import requests
+  File "C:\Program Files\Python312\Lib\site-packages\requests\__init__.py", line 43, in <module>
+    import urllib3
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\__init__.py", line 14, in <module>
+    from . import exceptions
+  File "C:\Program Files\Python312\Lib\site-packages\urllib3\exceptions.py", line 7, in <module>
+    from http.client import IncompleteRead as httplib_IncompleteRead
+  File "C:\Program Files\Python312\Lib\http\client.py", line 1448, in <module>
+    import ssl
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1124, in get_code
+  File "<frozen importlib._bootstrap_external>", line 753, in _compile_bytecode
+MemoryError
+END: Sat 07/26/2025 17:05:00.40 
+ 
+=============================== 
+START: Sat 07/26/2025 17:35:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 20, in <module>
+    conn = pyodbc.connect(DB_CONNECTION)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pyodbc.OperationalError: ('08001', '[08001] [Microsoft][ODBC Driver 18 for SQL Server]SSL Provider: The specified data could not be decrypted.\r\n\r\n (-2146893008) (SQLDriverConnect); [08001] [Microsoft][ODBC Driver 18 for SQL Server]Client unable to establish connection (-2146893008)')
+END: Sat 07/26/2025 17:35:01.13 
+ 
+=============================== 
+START: Sat 07/26/2025 17:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Sat 07/26/2025 17:50:08.26 
+ 
+=============================== 
+START: Sat 07/26/2025 18:05:00.15 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: DevToolsActivePort file doesn't exist
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c20c9d9]
+	(No symbol) [0x0x7ff79c206b3b]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 18:06:08.00 
+ 
+=============================== 
+START: Sat 07/26/2025 18:20:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 4, in <module>
+    import pyodbc
+ImportError: DLL load failed while importing pyodbc: The paging file is too small for this operation to complete.
+END: Sat 07/26/2025 18:20:00.76 
+ 
+=============================== 
+START: Sat 07/26/2025 18:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 18:35:07.80 
+ 
+=============================== 
+START: Sat 07/26/2025 18:50:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Sat 07/26/2025 18:50:01.23 
+ 
+=============================== 
+START: Sat 07/26/2025 19:05:00.12 
+END: Sat 07/26/2025 19:15:15.40 
+ 
+=============================== 
+START: Sat 07/26/2025 19:20:00.15 
+END: Sat 07/26/2025 19:20:14.63 
+ 
+=============================== 
+START: Sat 07/26/2025 19:35:00.11 
+END: Sat 07/26/2025 19:35:14.75 
+ 
+=============================== 
+START: Sat 07/26/2025 19:50:00.13 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	(No symbol) [0x0x7ffa84784de0]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 19:50:08.07 
+ 
+=============================== 
+START: Sat 07/26/2025 20:05:00.11 
+END: Sat 07/26/2025 20:05:14.45 
+ 
+=============================== 
+START: Sat 07/26/2025 20:20:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 4, in <module>
+    import pyodbc
+ImportError: DLL load failed while importing pyodbc: The paging file is too small for this operation to complete.
+END: Sat 07/26/2025 20:20:00.74 
+ 
+=============================== 
+START: Sat 07/26/2025 20:35:00.11 
+END: Sat 07/26/2025 20:35:14.38 
+ 
+=============================== 
+START: Sat 07/26/2025 20:50:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Failed to create Chrome process.
+Stacktrace:
+	(No symbol) [0x0x7ff79c416f65]
+	(No symbol) [0x0x7ff79c416fc0]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c2067a9]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	(No symbol) [0x0x7ff79c6ed29d]
+	(No symbol) [0x0x7ff79c6e78f3]
+	(No symbol) [0x0x7ff79c70588d]
+	(No symbol) [0x0x7ff79c43182e]
+	(No symbol) [0x0x7ff79c4396ef]
+	(No symbol) [0x0x7ff79c41fae4]
+	(No symbol) [0x0x7ff79c41fc99]
+	(No symbol) [0x0x7ff79c406c68]
+	(No symbol) [0x0x7ffa84784de0]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Sat 07/26/2025 20:50:07.96 
+ 
+=============================== 
+START: Sat 07/26/2025 21:05:00.12 
+END: Sat 07/26/2025 21:05:14.69 
+ 
+=============================== 
+START: Sat 07/26/2025 21:20:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 4, in <module>
+    import pyodbc
+ImportError: DLL load failed while importing pyodbc: The paging file is too small for this operation to complete.
+END: Sat 07/26/2025 21:20:00.76 
+ 
+=============================== 
+START: Sat 07/26/2025 21:35:00.11 
+END: Sat 07/26/2025 21:35:14.57 
+ 
+=============================== 
+START: Sat 07/26/2025 21:50:00.15 
+END: Sat 07/26/2025 21:50:14.71 
+ 
+=============================== 
+START: Sat 07/26/2025 22:05:00.17 
+END: Sat 07/26/2025 22:05:14.70 
+ 
+=============================== 
+START: Sat 07/26/2025 22:20:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Sat 07/26/2025 22:20:01.21 
+ 
+=============================== 
+START: Sat 07/26/2025 22:35:00.12 
+END: Sat 07/26/2025 22:35:14.69 
+ 
+=============================== 
+START: Sat 07/26/2025 22:50:00.12 
+END: Sat 07/26/2025 22:50:14.33 
+ 
+=============================== 
+START: Sat 07/26/2025 23:05:00.10 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sat 07/26/2025 23:05:07.95 
+ 
+=============================== 
+START: Sat 07/26/2025 23:20:00.15 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 55, in __init__
+    self.service.start()
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 109, in start
+    self._start_process(self._path)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\common\service.py", line 219, in _start_process
+    self.process = subprocess.Popen(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Program Files\Python312\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [WinError 1455] The paging file is too small for this operation to complete
+END: Sat 07/26/2025 23:20:01.41 
+ 
+=============================== 
+START: Sat 07/26/2025 23:35:00.11 
+END: Sat 07/26/2025 23:35:14.37 
+ 
+=============================== 
+START: Sat 07/26/2025 23:50:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 6, in <module>
+    from selenium import webdriver
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\__init__.py", line 29, in <module>
+    from .firefox.firefox_profile import FirefoxProfile  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\firefox\firefox_profile.py", line 31, in <module>
+    from typing_extensions import deprecated
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1087, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1187, in get_data
+MemoryError
+END: Sat 07/26/2025 23:50:00.94 
+ 
+=============================== 
+START: Sun 07/27/2025  7:20:00.12 
+END: Sun 07/27/2025  7:20:14.42 
+ 
+=============================== 
+START: Sun 07/27/2025  7:35:00.11 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Failed to create Chrome process.
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c2067a9]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	(No symbol) [0x0x7ffa8583edab]
+
+END: Sun 07/27/2025  7:35:07.82 
+ 
+=============================== 
+START: Sun 07/27/2025  7:50:00.11 
+END: Sun 07/27/2025  7:50:14.50 
+ 
+=============================== 
+START: Sun 07/27/2025  8:05:00.11 
+END: Sun 07/27/2025  8:05:14.73 
+ 
+=============================== 
+START: Sun 07/27/2025  8:20:00.11 
+END: Sun 07/27/2025  8:20:14.70 
+ 
+=============================== 
+START: Sun 07/27/2025  8:35:00.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sun 07/27/2025  8:35:11.22 
+ 
+=============================== 
+START: Sun 07/27/2025  8:50:00.20 
+END: Sun 07/27/2025  8:50:14.83 
+ 
+=============================== 
+START: Sun 07/27/2025  9:05:00.12 
+END: Sun 07/27/2025  9:05:14.69 
+ 
+=============================== 
+START: Sun 07/27/2025  9:20:00.12 
+END: Sun 07/27/2025  9:20:28.63 
+ 
+=============================== 
+START: Sun 07/27/2025  9:35:00.11 
+END: Sun 07/27/2025  9:36:32.67 
+ 
+=============================== 
+START: Sun 07/27/2025  9:50:00.15 
+END: Sun 07/27/2025  9:50:14.62 
+ 
+=============================== 
+START: Sun 07/27/2025 10:05:00.11 
+END: Sun 07/27/2025 10:05:21.07 
+ 
+=============================== 
+START: Sun 07/27/2025 10:20:00.17 
+END: Sun 07/27/2025 10:20:14.85 
+ 
+=============================== 
+START: Sun 07/27/2025 10:35:00.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 78, in <module>
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c208932]
+	(No symbol) [0x0x7ff79c202675]
+	(No symbol) [0x0x7ff79c255e9e]
+	(No symbol) [0x0x7ff79c255630]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sun 07/27/2025 10:35:25.72 
+ 
+=============================== 
+START: Sun 07/27/2025 20:05:00.18 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 82, in <module>
+    driver.get(SITE_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=138.0.7204.169)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c1c6ba5]
+	(No symbol) [0x0x7ff79c1b7879]
+	(No symbol) [0x0x7ff79c1b9631]
+	(No symbol) [0x0x7ff79c1b7b96]
+	(No symbol) [0x0x7ff79c1b75f6]
+	(No symbol) [0x0x7ff79c1b72ba]
+	(No symbol) [0x0x7ff79c1b4e8b]
+	(No symbol) [0x0x7ff79c1b570c]
+	(No symbol) [0x0x7ff79c1cdd9a]
+	(No symbol) [0x0x7ff79c27143e]
+	(No symbol) [0x0x7ff79c24846a]
+	(No symbol) [0x0x7ff79c27065c]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sun 07/27/2025 20:07:01.30 
+ 
+=============================== 
+START: Sun 07/27/2025 20:20:00.17 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\docketwatch_case_events.py", line 82, in <module>
+    driver.get(SITE_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=138.0.7204.169)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff79c416f65+76917]
+	GetHandleVerifier [0x0x7ff79c416fc0+77008]
+	(No symbol) [0x0x7ff79c1c9dea]
+	(No symbol) [0x0x7ff79c1c6ba5]
+	(No symbol) [0x0x7ff79c1b7879]
+	(No symbol) [0x0x7ff79c1b9631]
+	(No symbol) [0x0x7ff79c1b7b96]
+	(No symbol) [0x0x7ff79c1b75f6]
+	(No symbol) [0x0x7ff79c1b72ba]
+	(No symbol) [0x0x7ff79c1b4e8b]
+	(No symbol) [0x0x7ff79c1b570c]
+	(No symbol) [0x0x7ff79c1cdd9a]
+	(No symbol) [0x0x7ff79c27143e]
+	(No symbol) [0x0x7ff79c24846a]
+	(No symbol) [0x0x7ff79c27065c]
+	(No symbol) [0x0x7ff79c248243]
+	(No symbol) [0x0x7ff79c211431]
+	(No symbol) [0x0x7ff79c2121c3]
+	GetHandleVerifier [0x0x7ff79c6ed29d+3051437]
+	GetHandleVerifier [0x0x7ff79c6e78f3+3028483]
+	GetHandleVerifier [0x0x7ff79c70588d+3151261]
+	GetHandleVerifier [0x0x7ff79c43182e+185662]
+	GetHandleVerifier [0x0x7ff79c4396ef+218111]
+	GetHandleVerifier [0x0x7ff79c41fae4+112628]
+	GetHandleVerifier [0x0x7ff79c41fc99+113065]
+	GetHandleVerifier [0x0x7ff79c406c68+10616]
+	BaseThreadInitThunk [0x0x7ffa84784de0+16]
+	RtlUserThreadStart [0x0x7ffa8583edab+43]
+
+END: Sun 07/27/2025 20:21:50.23 
+ 
+=============================== 
+START: Sun 07/27/2025 20:35:00.13 
+END: Sun 07/27/2025 20:35:14.53 
+ 
+=============================== 
+START: Sun 07/27/2025 20:50:00.13 
+END: Sun 07/27/2025 20:50:14.57 
+ 
+=============================== 
+START: Sun 07/27/2025 21:05:00.11 
+END: Sun 07/27/2025 21:05:14.39 
+ 
+=============================== 
+START: Sun 07/27/2025 21:20:00.12 
+END: Sun 07/27/2025 21:20:14.40 
+ 
+=============================== 
+START: Sun 07/27/2025 21:35:00.11 
+END: Sun 07/27/2025 21:35:14.46 
+ 
+=============================== 
+START: Sun 07/27/2025 21:50:00.13 
+END: Sun 07/27/2025 21:50:14.60 
+ 
+=============================== 
+START: Sun 07/27/2025 22:05:00.10 
+END: Sun 07/27/2025 22:05:14.26 
+ 
+=============================== 
+START: Sun 07/27/2025 22:20:00.13 
+END: Sun 07/27/2025 22:20:14.58 
+ 
+=============================== 
+START: Sun 07/27/2025 22:35:00.12 
+END: Sun 07/27/2025 22:35:14.51 
+ 
+=============================== 
+START: Sun 07/27/2025 22:50:00.13 
+END: Sun 07/27/2025 22:50:14.38 
+ 
+=============================== 
+START: Sun 07/27/2025 23:05:00.11 
+END: Sun 07/27/2025 23:05:14.47 
+ 
+=============================== 
+START: Sun 07/27/2025 23:20:00.15 
+END: Sun 07/27/2025 23:20:14.28 
+ 
+=============================== 
+START: Sun 07/27/2025 23:35:00.11 
+END: Sun 07/27/2025 23:35:14.55 
+ 
+=============================== 
+START: Sun 07/27/2025 23:50:00.16 
+END: Sun 07/27/2025 23:50:14.48 
+ 
+=============================== 
+START: Mon 07/28/2025  7:20:00.14 
+END: Mon 07/28/2025  7:20:14.55 
+ 
+=============================== 
+START: Mon 07/28/2025  7:35:00.18 
+END: Mon 07/28/2025  7:35:14.75 
+ 
+=============================== 
+START: Mon 07/28/2025  7:50:00.11 
+END: Mon 07/28/2025  7:50:14.66 
+ 
+=============================== 
+START: Mon 07/28/2025  8:05:00.10 
+END: Mon 07/28/2025  8:05:14.27 
+ 
+=============================== 
+START: Mon 07/28/2025  8:20:00.10 
+END: Mon 07/28/2025  8:20:14.54 
+ 
+=============================== 
+START: Mon 07/28/2025  8:35:00.11 
+END: Mon 07/28/2025  8:35:14.41 
+ 
+=============================== 
+START: Mon 07/28/2025  8:50:00.12 
+END: Mon 07/28/2025  8:50:14.59 
+ 
+=============================== 
+START: Mon 07/28/2025  9:05:00.13 
+END: Mon 07/28/2025  9:05:14.49 
+ 
+=============================== 
+START: Mon 07/28/2025  9:20:00.11 
+END: Mon 07/28/2025  9:20:14.75 
+ 
