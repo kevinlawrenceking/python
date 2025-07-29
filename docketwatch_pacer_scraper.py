@@ -146,7 +146,7 @@ try:
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--headless=new")
+    #chrome_options.add_argument("--headless=new")
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     log_message("INFO", "ChromeDriver Initialized Successfully")
@@ -204,14 +204,14 @@ try:
     # Query cases
     if case_id_arg:
         cursor.execute("""
-            SELECT c.id, c.id as fk_case, c.case_url, c.case_name, c.case_number, c.case_url
+            SELECT c.id, c.id as fk_case, c.case_url, c.case_name, c.case_number
             FROM docketwatch.dbo.cases c
             WHERE c.fk_tool = 2 AND c.case_url IS NOT NULL and c.status = 'Tracked'
             AND c.id = ?
         """, (case_id_arg,))
     else:
         cursor.execute("""
-            SELECT c.id, c.id as fk_case, c.case_url, c.case_name, c.case_number, c.case_url
+            SELECT c.id, c.id as fk_case, c.case_url, c.case_name, c.case_number
             FROM docketwatch.dbo.cases c
             WHERE c.fk_tool = 2 AND c.case_url IS NOT NULL and c.status = 'Tracked'
         """)
@@ -224,7 +224,7 @@ try:
         sys.exit()
 
     for case in cases:
-        case_id, fk_case, case_url, case_name, case_number, case_number, case_name, _ = case
+        case_id, fk_case, case_url, case_name, case_number = case
         log_id = log_message("INFO", f"Reviewing case: {case_name}")
         cursor.execute("UPDATE dbo.cases SET fk_task_run_log = ? WHERE id = ?", (log_id, case_id))
         conn.commit()
