@@ -1,34 +1,31 @@
 """
 MAP Case Summarizer
 
-- Logs into LA Court Media Access Portal using existing authentication method
-- Navigates to each case via API and extracts case details and docket information
-- Sends to Gemini for summarization using the EXACT same prompt as PACER
+Based on proven docketwatch_map_scraper.py pattern
+- Uses exact same login and authentication method
+- Logs into LA Court Media Access Portal 
+- Fetches case details via API
+- Sends to Gemini for summarization using EXACT same prompt as PACER
 - Saves result to `cases.summarize` and `cases.summarize_html`
 """
 
 import os
-import sys
-import time
-import argparse
-import logging
-import pyodbc
 import json
+import pyodbc
+import time
 import requests
+import logging
 import markdown2
-from datetime import datetime, timedelta
+import argparse
+from datetime import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 from scraper_base import log_message
-
-def human_pause(a, b):
-    time.sleep((a + b) / 2)
 
 def get_gemini_key(cursor):
     cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
@@ -92,26 +89,6 @@ def convert_to_clean_html(summary_text):
 
     return str(soup)
 
-def get_target_cases(cursor, single_case_id=None):
-    """Get MAP cases that need summarization"""
-    if single_case_id:
-        cursor.execute("""
-            SELECT id, id AS fk_case, case_number, case_name, map_id 
-            FROM docketwatch.dbo.cases 
-            WHERE id = ? AND fk_tool = 12
-        """, (single_case_id,))
-    else:
-        cursor.execute("""
-            SELECT id, id AS fk_case, case_number, case_name, map_id
-            FROM docketwatch.dbo.cases 
-            WHERE fk_tool = 12 
-              AND status = 'Tracked' 
-              AND map_id IS NOT NULL 
-              AND (summarize IS NULL OR LEN(LTRIM(RTRIM(ISNULL(summarize, '')))) = 0)
-            ORDER BY last_updated
-        """)
-    return cursor.fetchall()
-
 def summarize_case_data(case_data_text, api_key):
     """Send case data to Gemini for summarization - EXACT same function as PACER"""
     prompt = PROMPT_TEMPLATE + case_data_text[:MAX_INPUT_LENGTH]
@@ -124,7 +101,7 @@ def summarize_case_data(case_data_text, api_key):
                 "contents": [{"role": "user", "parts": [{"text": prompt}]}],
                 "generationConfig": {"temperature": 0.6, "max_output_tokens": 1000}
             }),
-            timeout=60  # Add timeout for Gemini API
+            timeout=60
         )
         response.raise_for_status()
         result = response.json()
@@ -137,76 +114,6 @@ def summarize_case_data(case_data_text, api_key):
         return None
     except Exception as e:
         print("Gemini API error:", e)
-        return None
-
-def login_to_map(driver, username, password, login_url, cursor, fk_task_run):
-    """Login to LA Court Media Access Portal"""
-    try:
-        log_message(cursor, fk_task_run, "INFO", "Navigating to login page...")
-        driver.get(login_url)
-        wait = WebDriverWait(driver, 20)
-        log_message(cursor, fk_task_run, "INFO", "Waiting for login form to appear...")
-        wait.until(EC.presence_of_element_located((By.ID, "logonIdentifier"))).send_keys(username)
-        wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(password)
-        wait.until(EC.element_to_be_clickable((By.ID, "next"))).click()
-        log_message(cursor, fk_task_run, "INFO", "Login submitted, waiting for OpenID redirect...")
-        time.sleep(5)
-        if "signin-oidc" in driver.current_url or "media.lacourt.org" in driver.current_url:
-            log_message(cursor, fk_task_run, "INFO", "Login successful.")
-        else:
-            log_message(cursor, fk_task_run, "ERROR", f"Login may have failed. Current URL: {driver.current_url}")
-            driver.quit()
-            exit()
-    except Exception as e:
-        log_message(cursor, fk_task_run, "ERROR", f"Login failed: {str(e)}")
-        driver.quit()
-        exit()
-
-def extract_auth_cookie(driver):
-    """Extract authentication cookie from browser session"""
-    cookies = driver.get_cookies()
-    cookie_dict = {cookie["name"]: cookie["value"] for cookie in cookies}
-    auth_cookie = cookie_dict.get(".AspNetCore.Cookies")
-    return auth_cookie
-
-def get_case_data_from_api(map_id, auth_cookie, cursor, fk_task_run, fk_case):
-    """Fetch case details from MAP API"""
-    try:
-        headers = {"cookie": f".AspNetCore.Cookies={auth_cookie}"}
-        api_url = f"https://media.lacourt.org/api/AzureApi/GetCaseDetail/{map_id}"
-        
-        if fk_task_run:
-            log_message(cursor, fk_task_run, "INFO", f"Making API request to {api_url}", fk_case=fk_case)
-        print(f"Making API request for MAP ID: {map_id}")
-        
-        # Add timeout to prevent hanging
-        response = requests.get(api_url, headers=headers, timeout=30)
-        response.raise_for_status()
-        
-        data = response.json()
-        if fk_task_run:
-            log_message(cursor, fk_task_run, "INFO", f"Successfully retrieved API data for MAP ID {map_id}", fk_case=fk_case)
-        print(f"Successfully retrieved API data for MAP ID: {map_id}")
-        
-        return data
-        
-    except requests.exceptions.Timeout:
-        error_msg = f"API request timeout for MAP ID {map_id}"
-        if fk_task_run:
-            log_message(cursor, fk_task_run, "ERROR", error_msg, fk_case=fk_case)
-        print(f"Error: {error_msg}")
-        return None
-    except requests.exceptions.RequestException as e:
-        error_msg = f"API request failed for MAP ID {map_id}: {e}"
-        if fk_task_run:
-            log_message(cursor, fk_task_run, "ERROR", error_msg, fk_case=fk_case)
-        print(f"Error: {error_msg}")
-        return None
-    except Exception as e:
-        error_msg = f"Failed to fetch API data for MAP ID {map_id}: {e}"
-        if fk_task_run:
-            log_message(cursor, fk_task_run, "ERROR", error_msg, fk_case=fk_case)
-        print(f"Error: {error_msg}")
         return None
 
 def format_case_data_for_summary(api_data):
@@ -316,6 +223,10 @@ def main():
     task_run = cursor.fetchone()
     fk_task_run = task_run[0] if task_run else None
 
+    # === LOGGING SETUP ===
+    LOG_FILE = rf"\\10.146.176.84\general\docketwatch\python\logs\{script_filename}.log"
+    logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
     log_message(cursor, fk_task_run, "INFO", "=== MAP Case Summarizer Started ===")
 
     # === Setup ChromeDriver ===
@@ -323,7 +234,6 @@ def main():
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # chrome_options.add_argument("--headless")  # Disable headless for debugging
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     log_message(cursor, fk_task_run, "INFO", "ChromeDriver initialized.")
@@ -339,56 +249,111 @@ def main():
         log_message(cursor, fk_task_run, "ERROR", "No credentials found for tool id 12.")
         driver.quit()
         conn.close()
-        exit()
+        return
     login_url, username, password, _ = login_row
     log_message(cursor, fk_task_run, "INFO", "Fetched login credentials from database.")
 
-    # === Fetch Gemini Key ===
+    # === Get Gemini API key ===
     gemini_key = get_gemini_key(cursor)
     if not gemini_key:
         log_message(cursor, fk_task_run, "ERROR", "No Gemini API key found")
         driver.quit()
         conn.close()
-        exit()
+        return
 
-    # === Step 1: Log into the page ===
+    # === Step 1: Log into the page (exact same as working scraper) ===
     try:
-        login_to_map(driver, username, password, login_url, cursor, fk_task_run)
+        log_message(cursor, fk_task_run, "INFO", "Navigating to login page...")
+        driver.get(login_url)
+
+        wait = WebDriverWait(driver, 20)
+        log_message(cursor, fk_task_run, "INFO", "Waiting for login form to appear...")
+
+        wait.until(EC.presence_of_element_located((By.ID, "logonIdentifier"))).send_keys(username)
+        wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(password)
+        wait.until(EC.element_to_be_clickable((By.ID, "next"))).click()
+
+        log_message(cursor, fk_task_run, "INFO", "Login submitted, waiting for OpenID redirect...")
+        time.sleep(5)
+
+        if "signin-oidc" in driver.current_url or "media.lacourt.org" in driver.current_url:
+            log_message(cursor, fk_task_run, "INFO", "Login successful.")
+        else:
+            log_message(cursor, fk_task_run, "ERROR", f"Login may have failed. Current URL: {driver.current_url}")
+            driver.quit()
+            conn.close()
+            return
+
     except Exception as e:
         log_message(cursor, fk_task_run, "ERROR", f"Login failed: {str(e)}")
         driver.quit()
         conn.close()
-        exit()
+        return
 
-    # === Step 2: Extract .AspNetCore.Cookies ===
+    # === Step 2: Extract .AspNetCore.Cookies (exact same as working scraper) ===
     cookies = driver.get_cookies()
     cookie_dict = {cookie["name"]: cookie["value"] for cookie in cookies}
     auth_cookie = cookie_dict.get(".AspNetCore.Cookies")
     driver.quit()
     log_message(cursor, fk_task_run, "INFO", "Extracted auth cookie from session.")
 
-    # === Fetch cases that need summarization ===
-    cases = get_target_cases(cursor, args.case_id)
-    if not cases:
-        log_message(cursor, fk_task_run, "INFO", "No MAP cases found to process.")
+    if not auth_cookie:
+        log_message(cursor, fk_task_run, "ERROR", "Failed to extract authentication cookie")
         conn.close()
-        exit()
+        return
 
-    log_message(cursor, fk_task_run, "INFO", f"Found {len(cases)} cases to summarize")
+    # === Fetch cases that need summarization ===
+    if args.case_id:
+        cursor.execute("""
+            SELECT [case_number], [map_id], id as [fk_case], [case_name]
+            FROM [docketwatch].[dbo].[cases]
+            WHERE id = ? AND fk_tool = 12
+        """, (args.case_id,))
+    else:
+        cursor.execute("""
+            SELECT [case_number], [map_id], id as [fk_case], [case_name]
+            FROM [docketwatch].[dbo].[cases]
+            WHERE fk_tool = 12 
+              AND status = 'Tracked' 
+              AND map_id IS NOT NULL 
+              AND (summarize IS NULL OR LEN(LTRIM(RTRIM(ISNULL(summarize, '')))) = 0)
+            ORDER BY last_updated
+        """)
+    
+    tool_cases = cursor.fetchall()
+    if not tool_cases:
+        log_message(cursor, fk_task_run, "INFO", "No tracked cases found that need summarization.")
+        conn.close()
+        return
 
-    for case_id, fk_case, case_number, case_name, map_id in cases:
+    # Safety limit
+    max_cases = 50 if not args.case_id else 1
+    if len(tool_cases) > max_cases:
+        log_message(cursor, fk_task_run, "WARNING", f"Limiting processing to {max_cases} cases (found {len(tool_cases)})")
+        tool_cases = tool_cases[:max_cases]
+
+    log_message(cursor, fk_task_run, "INFO", f"Found {len(tool_cases)} cases to summarize.")
+
+    # === Create session with auth cookie (exact same as working scraper) ===
+    session = requests.Session()
+    session.headers.update({"cookie": f".AspNetCore.Cookies={auth_cookie}"})
+
+    processed_count = 0
+    for case_number, map_id, fk_case, case_name in tool_cases:
+        processed_count += 1
+        print(f"\nProcessing MAP Case {processed_count}/{len(tool_cases)}: {case_number} — {case_name} — MAP ID: {map_id}")
+        log_message(cursor, fk_task_run, "INFO", f"Processing case {case_number} for summarization", fk_case=fk_case)
+        
+        api_url = f"https://media.lacourt.org/api/AzureApi/GetCaseDetail/{map_id}"
+        
         try:
-            log_message(cursor, fk_task_run, "INFO", f"Processing case: {case_number}", fk_case=fk_case)
-            
-            # Get case data from MAP API
-            api_data = get_case_data_from_api(map_id, auth_cookie, cursor, fk_task_run, fk_case)
-            
-            if not api_data:
-                log_message(cursor, fk_task_run, "ERROR", f"No API data received for case {case_number}", fk_case=fk_case)
-                continue
-            
+            response = session.get(api_url)
+            response.raise_for_status()
+            data = response.json()
+            log_message(cursor, fk_task_run, "INFO", f"Retrieved API data for case {case_number}.", fk_case=fk_case)
+
             # Format the data for Gemini
-            formatted_case_data = format_case_data_for_summary(api_data)
+            formatted_case_data = format_case_data_for_summary(data)
             log_message(cursor, fk_task_run, "INFO", f"Formatted case data for summarization", fk_case=fk_case)
             
             # Send to Gemini for summarization
@@ -396,24 +361,33 @@ def main():
 
             if summary:
                 html_version = convert_to_clean_html(summary)
+                print(f"Summary received. Saving to case ID: {fk_case}")
                 log_message(cursor, fk_task_run, "INFO", f"Gemini summary generated successfully", fk_case=fk_case)
                 
                 cursor.execute(
                     "UPDATE docketwatch.dbo.cases SET summarize = ?, summarize_html = ? WHERE id = ?",
-                    (summary[:4000], html_version[:8000], case_id)
+                    (summary[:4000], html_version[:8000], fk_case)
                 )
                 conn.commit()
                 log_message(cursor, fk_task_run, "SUCCESS", f"Summary saved for case {case_number}", fk_case=fk_case)
+                print(f"Success: Summary saved for case {case_number}")
             else:
                 log_message(cursor, fk_task_run, "WARNING", f"Gemini returned no summary for case {case_number}", fk_case=fk_case)
+                print(f"Warning: Gemini returned no summary for case {case_number}")
                 
+            # Small delay to prevent overwhelming APIs
+            time.sleep(2)
+
         except Exception as e:
-            log_message(cursor, fk_task_run, "ERROR", f"Failed to summarize case {case_number}: {e}", fk_case=fk_case)
+            log_message(cursor, fk_task_run, "ERROR", f"Failed to summarize case {case_number}: {str(e)}", fk_case=fk_case)
+            print(f"Error processing case {case_number}: {str(e)}")
             continue
 
+    # === Cleanup ===
     cursor.close()
     conn.close()
     log_message(cursor, fk_task_run, "INFO", "=== MAP Case Summarizer Completed ===")
+    print("MAP Case Summarizer Completed")
 
 if __name__ == "__main__":
     main()
