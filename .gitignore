@@ -4,3 +4,4 @@ logs/
 */
 event_log.txt
 docketwatch_la_scraper.lock
+docketwatch_pacer_scraper.lock
