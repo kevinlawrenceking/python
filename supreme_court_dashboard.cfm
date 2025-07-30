@@ -1,4 +1,4 @@
-<!--- Supreme Court Monitor Dashboard ---
+<!--- Supreme Court Monitor Dashboard --->
 <!--- Place this in your DocketWatch ColdFusion application --->
 
 <cfparam name="url.refresh" default="30">
@@ -115,7 +115,7 @@
         </p>
     </div>
 
-    <cfquery name="getMonitorStatus" datasource="docketwatch">
+    <cfquery name="getMonitorStatus" datasource="reach">
         SELECT 
             case_number,
             case_name,
@@ -182,7 +182,7 @@
     </div>
 
     <!--- Alert History Section --->
-    <cfquery name="getRecentAlerts" datasource="docketwatch">
+    <cfquery name="getRecentAlerts" datasource="reach">
         SELECT TOP 10
             case_number,
             status,
