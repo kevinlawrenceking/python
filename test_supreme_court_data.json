@@ -1,0 +1,205 @@
+{
+  "CaseNumber": "24-1073 ",
+  "bCapitalCase": false,
+  "sJsonCreationDate": "07/30/2025",
+  "sJsonTerm": "2024",
+  "sJsonCaseNumber": "01073",
+  "sJsonCaseType": "Paid",
+  "RelatedCaseNumber": [],
+  "PetitionerTitle": "Ghislaine Maxwell, Petitioner",
+  "RespondentTitle": "United States",
+  "DocketedDate": "April 14, 2025",
+  "Links": "Linked with 2",
+  "LowerCourt": "United States Court of Appeals for the Second Circuit",
+  "LowerCourtCaseNumbers": "(22-1426)",
+  "LowerCourtDecision": "September 17, 2024",
+  "LowerCourtRehearingDenied": "November 25, 2024",
+  "ProceedingsandOrder": [
+    {
+      "Date": "Jan 15 2025",
+      "Text": "Application (24A709) to extend the time to file a petition for a writ of certiorari from February 23, 2025 to April 10, 2025, submitted to Justice Sotomayor.",
+      "Links": [
+        {
+          "Description": "Main Document",
+          "File": "AMENDED Application to Extend Time to File Petition for Writ.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/337362/20250117162420418_AMENDED%20Application%20to%20Extend%20Time%20to%20File%20Petition%20for%20Writ.pdf"
+        },
+        {
+          "Description": "Lower Court Orders/Opinions",
+          "File": "22-1426.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/337362/20250117133905126_22-1426.pdf"
+        },
+        {
+          "Description": "Proof of Service",
+          "File": "Certificate of Service.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/337362/20250115134822946_Certificate%20of%20Service.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "Jan 21 2025",
+      "Text": "Application (24A709) granted by Justice Sotomayor extending the time to file until April 10, 2025."
+    },
+    {
+      "Date": "Apr 10 2025",
+      "Text": "Petition for a writ of certiorari filed. (Response due May 14, 2025)",
+      "Links": [
+        {
+          "Description": "Certificate of Word Count",
+          "File": "No. 24-_Markus Moss PLLC COC.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/355252/20250410114623513_No.%2024-_Markus%20Moss%20PLLC%20COC.pdf"
+        },
+        {
+          "Description": "Proof of Service",
+          "File": "No. 24-_Markus Moss PLLC COS.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/355252/20250410114615256_No.%2024-_Markus%20Moss%20PLLC%20COS.pdf"
+        },
+        {
+          "Description": "Petition",
+          "File": "24-__PetitionForWritOfCertiorari.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/355252/20250424150144637_24-__PetitionForWritOfCertiorari.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "May 07 2025",
+      "Text": "Motion to extend the time to file a response from May 14, 2025 to June 13, 2025, submitted to The Clerk.",
+      "Links": [
+        {
+          "Description": "Main Document",
+          "File": "Extension Letter 24-1073.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/358264/20250507134103306_Extension%20Letter%2024-1073.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "May 08 2025",
+      "Text": "Motion to extend the time to file a response is granted and the time is extended to and including June 13, 2025."
+    },
+    {
+      "Date": "May 09 2025",
+      "Text": "Brief amicus curiae of National Association of Criminal Defense Lawyers filed.",
+      "Links": [
+        {
+          "Description": "Main Document",
+          "File": "24-1073 Amicus Brief.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/358461/20250509132003864_24-1073%20Amicus%20Brief.pdf"
+        },
+        {
+          "Description": "Proof of Service",
+          "File": "24-1073 Affidavit.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/358461/20250509132036202_24-1073%20Affidavit.pdf"
+        },
+        {
+          "Description": "Certificate of Word Count",
+          "File": "24-1073 Certificate.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/358461/20250509132022045_24-1073%20Certificate.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "Jun 06 2025",
+      "Text": "Motion to extend the time to file a response from June 13, 2025 to July 14, 2025, submitted to The Clerk.",
+      "Links": [
+        {
+          "Description": "Main Document",
+          "File": "Extension Letter 24-1073 2nd.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/362490/20250606115543471_Extension%20Letter%2024-1073%202nd.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "Jun 09 2025",
+      "Text": "Motion to extend the time to file a response is granted and the time is further extended to and including July 14, 2025."
+    },
+    {
+      "Date": "Jul 14 2025",
+      "Text": "Brief of respondent United States in opposition filed.",
+      "Links": [
+        {
+          "Description": "Main Document",
+          "File": "24-1073_Maxwell_Opp.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/365132/20250714161434468_24-1073_Maxwell_Opp.pdf"
+        },
+        {
+          "Description": "Proof of Service",
+          "File": "Certificate - 24-1073 - Maxwell v. USA.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/365132/20250714161447132_Certificate%20-%2024-1073%20-%20Maxwell%20v.%20USA.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "Jul 28 2025",
+      "Text": "Reply of petitioner Ghislaine Maxwell filed.  (Distributed)",
+      "Links": [
+        {
+          "Description": "Main Document",
+          "File": "24-1073ReplyInSupportOfPetitionForWritOfCertiorari.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/368155/20250728111721067_24-1073ReplyInSupportOfPetitionForWritOfCertiorari.pdf"
+        },
+        {
+          "Description": "Proof of Service",
+          "File": "No. 24-1073 Markus Moss COS.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/368155/20250728111729830_No.%2024-1073%20Markus%20Moss%20COS.pdf"
+        },
+        {
+          "Description": "Certificate of Word Count",
+          "File": "No. 24-1073 Markus Moss COC.pdf",
+          "DocumentUrl": "http://www.supremecourt.gov/DocketPDF/24/24-1073/368155/20250728111737196_No.%2024-1073%20Markus%20Moss%20COC.pdf"
+        }
+      ]
+    },
+    {
+      "Date": "Jul 30 2025",
+      "Text": "DISTRIBUTED for Conference of 9/29/2025."
+    }
+  ],
+  "AttorneyHeaderPetitioner": "Attorneys for Petitioner",
+  "Petitioner": [
+    {
+      "Attorney": "David Oscar Markus",
+      "IsCounselofRecord": true,
+      "Title": "Markus/Moss",
+      "PrisonerId": null,
+      "Phone": "(305) 379-6667",
+      "Address": "40 N.W. Third Street\r\nPenthouse One",
+      "City": "Miami",
+      "State": "FL",
+      "Zip": "33128",
+      "Email": "dmarkus@markuslaw.com",
+      "PartyName": "Ghislaine Maxwell"
+    }
+  ],
+  "AttorneyHeaderRespondent": "Attorneys for Respondent",
+  "Respondent": [
+    {
+      "Attorney": "D. John Sauer",
+      "IsCounselofRecord": true,
+      "Title": "Solicitor General",
+      "PrisonerId": null,
+      "Phone": "202-514-2217",
+      "Address": "United States Department of Justice\r\n950 Pennsylvania Avenue, NW",
+      "City": "Washington",
+      "State": "D",
+      "Zip": "20530-0001",
+      "Email": "SUPREMECTBRIEFS@USDOJ.GOV",
+      "PartyName": "United States"
+    }
+  ],
+  "AttorneyHeaderOther": "Other",
+  "Other": [
+    {
+      "Attorney": "Sara Elizabeth Kropf",
+      "IsCounselofRecord": true,
+      "Title": "Law Office of Sara Kropf PLLC",
+      "PrisonerId": null,
+      "Phone": "2026276900",
+      "Address": "1100 H Street NW\r\nSuite 1220",
+      "City": "Washington",
+      "State": "DC",
+      "Zip": "20005",
+      "Email": "sara@kmlawfirm.com",
+      "PartyName": "National Association of Criminal Defense Lawyers"
+    }
+  ]
+}
