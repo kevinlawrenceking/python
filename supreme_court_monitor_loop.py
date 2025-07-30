@@ -45,24 +45,24 @@ def run_monitor():
         )
         
         if result.returncode == 0:
-            log_and_print("✅ Monitor completed successfully")
+            log_and_print("Monitor completed successfully")
             if result.stdout:
                 print("--- Monitor Output ---")
                 print(result.stdout)
                 print("--- End Output ---")
             return True
         else:
-            log_and_print(f"❌ Monitor failed with return code {result.returncode}")
+            log_and_print(f"Monitor failed with return code {result.returncode}")
             if result.stderr:
                 log_and_print(f"Error output: {result.stderr}")
                 print(f"Error output: {result.stderr}")
             return False
             
     except subprocess.TimeoutExpired:
-        log_and_print("❌ Monitor script timed out after 5 minutes")
+        log_and_print("Monitor script timed out after 5 minutes")
         return False
     except Exception as e:
-        log_and_print(f"❌ Error running monitor: {e}")
+        log_and_print(f"Error running monitor: {e}")
         return False
 
 def main():
@@ -77,26 +77,26 @@ def main():
     try:
         while True:
             run_count += 1
-            log_and_print(f"\n🔄 Starting monitor run #{run_count}")
+            log_and_print(f"\nStarting monitor run #{run_count}")
             
             # Run the monitor
             success = run_monitor()
             
             if success:
-                log_and_print(f"✅ Run #{run_count} completed successfully")
+                log_and_print(f"Run #{run_count} completed successfully")
             else:
-                log_and_print(f"❌ Run #{run_count} failed")
+                log_and_print(f"Run #{run_count} failed")
             
             # Sleep for 5 minutes
-            log_and_print(f"😴 Sleeping for {SLEEP_MINUTES} minutes until next run...")
+            log_and_print(f"Sleeping for {SLEEP_MINUTES} minutes until next run...")
             log_and_print(f"Next run at: {datetime.now().replace(second=0, microsecond=0) + timedelta(minutes=SLEEP_MINUTES)}")
             
             time.sleep(SLEEP_MINUTES * 60)  # Convert minutes to seconds
             
     except KeyboardInterrupt:
-        log_and_print("\n🛑 Loop stopped by user (Ctrl+C)")
+        log_and_print("\nLoop stopped by user (Ctrl+C)")
     except Exception as e:
-        log_and_print(f"🚨 Fatal error in loop: {e}")
+        log_and_print(f"Fatal error in loop: {e}")
     
     log_and_print(f"Supreme Court Monitor Loop stopped after {run_count} runs")
 

@@ -142,7 +142,7 @@ def format_proceeding_for_email(proceeding):
 
 def send_alert_email(case_number, case_name, new_proceedings):
     """Send email alert for new proceedings"""
-    subject = f"🚨 Supreme Court Alert: New Proceedings in {case_name} ({case_number})"
+    subject = f"Supreme Court Alert: New Proceedings in {case_name} ({case_number})"
     
     body = f"""
     <html>
@@ -152,7 +152,7 @@ def send_alert_email(case_number, case_name, new_proceedings):
         <p><strong>Case Number:</strong> {case_number}</p>
         <p><strong>Alert Time:</strong> {datetime.now().strftime("%B %d, %Y at %I:%M %p")}</p>
         
-        <h3 style="color: #d32f2f;">🆕 New Proceedings Detected ({len(new_proceedings)} new entries):</h3>
+        <h3 style="color: #d32f2f;">New Proceedings Detected ({len(new_proceedings)} new entries):</h3>
         
         {''.join([format_proceeding_for_email(proc) for proc in new_proceedings])}
         
@@ -219,6 +219,28 @@ def compare_proceedings(previous_data, current_data, case_number):
     print(f"Total new proceedings found: {len(new_proceedings)}")
     return new_proceedings
 
+def update_monitor_status(cursor, case_number, status, message, proceedings_count=0, last_proceeding_date=None):
+    """Update the monitor status in database for dashboard display"""
+    try:
+        cursor.execute("""
+            IF EXISTS (SELECT 1 FROM dbo.supreme_court_monitor_status WHERE case_number = ?)
+                UPDATE dbo.supreme_court_monitor_status 
+                SET status = ?, 
+                    message = ?, 
+                    last_check = GETDATE(),
+                    proceedings_count = ?,
+                    last_proceeding_date = ?
+                WHERE case_number = ?
+            ELSE
+                INSERT INTO dbo.supreme_court_monitor_status 
+                (case_number, status, message, last_check, proceedings_count, last_proceeding_date)
+                VALUES (?, ?, ?, GETDATE(), ?, ?)
+        """, (case_number, status, message, proceedings_count, last_proceeding_date, case_number,
+              case_number, status, message, proceedings_count, last_proceeding_date))
+        cursor.commit()
+    except Exception as e:
+        logging.error(f"Error updating monitor status: {e}")
+
 def monitor_case(case_number):
     """Monitor a specific Supreme Court case"""
     global cursor, fk_task_run
@@ -237,26 +259,33 @@ def monitor_case(case_number):
     if not current_data:
         print(f"FAILED to fetch data for case {case_number}")
         log_message(cursor, fk_task_run, "ERROR", f"Failed to fetch data for case {case_number}")
+        update_monitor_status(cursor, case_number, "ERROR", f"Failed to fetch data for case {case_number}")
         return False
     
     case_name = f"{current_data.get('PetitionerTitle', 'Unknown')} v. {current_data.get('RespondentTitle', 'Unknown')}"
     print(f"Case Name: {case_name}")
     log_message(cursor, fk_task_run, "INFO", f"Successfully fetched data for {case_name}")
     
+    # Get proceedings info for status update
+    current_proceedings = current_data.get('ProceedingsandOrder', [])
+    proceedings_count = len(current_proceedings)
+    last_proceeding_date = current_proceedings[-1]['Date'] if current_proceedings else None
+    
     # Compare with previous data
     new_proceedings = compare_proceedings(previous_data, current_data, case_number)
     
     if new_proceedings:
-        print(f"\n🚨 ALERT: Found {len(new_proceedings)} new proceedings in {case_name}")
+        print(f"\nALERT: Found {len(new_proceedings)} new proceedings in {case_name}")
         log_message(cursor, fk_task_run, "ALERT", f"Found {len(new_proceedings)} new proceedings in {case_name}")
+        update_monitor_status(cursor, case_number, "ALERT", f"Found {len(new_proceedings)} new proceedings", proceedings_count, last_proceeding_date)
         
         # Send email alert
         print("Sending email alert...")
         if send_alert_email(case_number, case_name, new_proceedings):
-            print("✅ Email alert sent successfully!")
+            print("Email alert sent successfully!")
             log_message(cursor, fk_task_run, "INFO", f"Email alert sent successfully for {len(new_proceedings)} new proceedings")
         else:
-            print("❌ Failed to send email alert")
+            print("Failed to send email alert")
             log_message(cursor, fk_task_run, "ERROR", f"Failed to send email alert for new proceedings")
         
         # Store individual proceedings in database
@@ -267,8 +296,9 @@ def monitor_case(case_number):
             except Exception as e:
                 log_message(cursor, fk_task_run, "ERROR", f"Error storing proceeding: {e}")
     else:
-        print(f"✅ No new proceedings found for {case_name}")
+        print(f"No new proceedings found for {case_name}")
         log_message(cursor, fk_task_run, "INFO", f"No new proceedings found for {case_name}")
+        update_monitor_status(cursor, case_number, "OK", f"No new proceedings - {proceedings_count} total", proceedings_count, last_proceeding_date)
     
     # Save current data for next comparison
     if case_number not in previous_data:
@@ -299,7 +329,7 @@ def main():
         conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
         conn.setencoding(encoding='utf-8')
         cursor = conn.cursor()
-        print("✅ Database connection successful")
+        print("Database connection successful")
         
         # Get task run ID
         cursor.execute("""
