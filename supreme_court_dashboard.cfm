@@ -125,7 +125,7 @@
             proceedings_count,
             last_proceeding_date,
             DATEDIFF(minute, last_check, GETDATE()) as minutes_ago
-        FROM dbo.supreme_court_monitor_status
+        FROM docketwatch.dbo.supreme_court_monitor_status
         ORDER BY last_check DESC
     </cfquery>
 
@@ -136,6 +136,7 @@
         </div>
     <cfelse>
         <cfloop query="getMonitorStatus">
+            <Cfoutput>
             <div class="status-card status-#LCase(status)#">
                 <div class="case-title">
                     <cfif Len(case_name)>
@@ -172,14 +173,15 @@
                         <strong>Latest Proceeding:</strong> #last_proceeding_date#
                     </div>
                 </cfif>
-            </div>
+            </div></Cfoutput>
         </cfloop>
+        
     </cfif>
-
+<Cfoutput>
     <div class="refresh-info">
         <strong>Last Updated:</strong> <cfoutput>#DateFormat(Now(), "mm/dd/yyyy")# #TimeFormat(Now(), "h:mm:ss tt")#</cfoutput>
         <br>Page automatically refreshes every <cfoutput>#url.refresh#</cfoutput> seconds
-    </div>
+    </div></Cfoutput>
 
     <!--- Alert History Section --->
     <cfquery name="getRecentAlerts" datasource="reach">
@@ -188,18 +190,19 @@
             status,
             message,
             last_check
-        FROM dbo.supreme_court_monitor_status
+        FROM docketwatch.dbo.supreme_court_monitor_status
         WHERE status = 'ALERT'
         ORDER BY last_check DESC
     </cfquery>
 
     <cfif getRecentAlerts.recordCount GT 0>
+ 
         <div style="margin-top: 30px;">
             <h3>Recent Alerts</h3>
             <cfloop query="getRecentAlerts">
                 <div style="padding: 10px; margin: 5px 0; background: #fff3e0; border-left: 4px solid #ff9800;">
-                    <strong>#case_number#:</strong> #message#
-                    <br><small>#DateFormat(last_check, "mm/dd/yyyy")# #TimeFormat(last_check, "h:mm:ss tt")#</small>
+                    <strong><cfoutput>#case_number#:</strong> #message#</cfoutput>
+                    <br><small><cfoutput>#DateFormat(last_check, "mm/dd/yyyy")# #TimeFormat(last_check, "h:mm:ss tt")#</cfoutput></small>
                 </div>
             </cfloop>
         </div>
