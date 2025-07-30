@@ -392,6 +392,13 @@ def log_message(cursor, fk_task_run, log_type, message, fk_case=None):
 
 # === Not Found Case Alerting ===
 def send_not_found_email(case_id, fail_count, level, last_checked=None):
+    # TOGGLE: Set to False to disable emails, True to enable
+    SEND_EMAILS_ENABLED = False
+    
+    if not SEND_EMAILS_ENABLED:
+        logging.info(f"Email disabled for case {case_id} ({level}): {fail_count} failures")
+        return
+    
     subject = f"DocketWatch {level}: Case ID {case_id} Not Found"
     body = f"""
     <html>
