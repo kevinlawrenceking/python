@@ -28,7 +28,7 @@ fs.ensureDirSync(SAVE_DIR);
       executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
       headless: true,
       defaultViewport: null,
-      protocolTimeout: 60000, // Increase protocol timeout to 60 seconds
+      protocolTimeout: 300000, // Increase protocol timeout to 5 minutes
       args: [
         '--start-maximized',
         '--no-sandbox',
@@ -43,8 +43,8 @@ fs.ensureDirSync(SAVE_DIR);
     const page = await browser.newPage();
   
   // Configure page for better performance with large documents
-  await page.setDefaultNavigationTimeout(120000); // 2 minute navigation timeout
-  await page.setDefaultTimeout(60000); // 1 minute timeout for other operations
+  await page.setDefaultNavigationTimeout(300000); // 5 minute navigation timeout
+  await page.setDefaultTimeout(180000); // 3 minute timeout for other operations
   
   // Optimize for memory usage (especially helpful for large documents)
   await page.setRequestInterception(true);
@@ -76,6 +76,8 @@ fs.ensureDirSync(SAVE_DIR);
     secure: true
   });
 
+  console.log(`[+] Cookie set successfully for domain ww2.lacourt.org`);
+
   const seen = new Set();
 
   page.on('response', async (res) => {
@@ -101,9 +103,22 @@ fs.ensureDirSync(SAVE_DIR);
 
   try {
     console.log(`[+] Navigating to viewer: ${VIEWER_URL}`);
-    await page.goto(VIEWER_URL, { waitUntil: 'networkidle2', timeout: 60000 });
+    
+    // Try networkidle2 first, then fallback to domcontentloaded if that fails
+    try {
+      await page.goto(VIEWER_URL, { waitUntil: 'networkidle2', timeout: 300000 });
+      console.log(`[+] Successfully loaded viewer page with networkidle2`);
+    } catch (networkIdleError) {
+      console.log(`[!] networkidle2 failed, trying domcontentloaded: ${networkIdleError.message}`);
+      await page.goto(VIEWER_URL, { waitUntil: 'domcontentloaded', timeout: 300000 });
+      console.log(`[+] Successfully loaded viewer page with domcontentloaded`);
+      // Give extra time for any async loading
+      await new Promise(resolve => setTimeout(resolve, 10000));
+    }
   } catch (err) {
-    console.error(`[×] Viewer page load failed:`, err.message);
+    console.error(`[×] Viewer page load failed: ${err.message}`);
+    console.error(`[×] Error name: ${err.name}`);
+    console.error(`[×] Full error:`, err);
     await browser.close();
     process.exit(1);
   }
