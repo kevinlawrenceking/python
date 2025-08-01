@@ -195,7 +195,20 @@ try:
 
                 # --- Insert RegisterOfActions (case events) ---
                 try:
-                    actions = data.get("ResultList", [])[0].get("NonCriminalCaseInformation", {}).get("RegisterOfActions", [])
+                    result_list = data.get("ResultList", [])
+                    if not result_list:
+                        log_message(cursor, fk_task_run, "WARNING", f"No ResultList found in API response for case {case_number}.", fk_case=fk_case)
+                        mark_case_not_found(cursor, fk_case, fk_task_run)
+                        continue
+                    
+                    first_result = result_list[0]
+                    non_criminal_info = first_result.get("NonCriminalCaseInformation", {})
+                    if not non_criminal_info:
+                        log_message(cursor, fk_task_run, "WARNING", f"No NonCriminalCaseInformation found for case {case_number}.", fk_case=fk_case)
+                        mark_case_not_found(cursor, fk_case, fk_task_run)
+                        continue
+                    
+                    actions = non_criminal_info.get("RegisterOfActions", [])
                     log_message(cursor, fk_task_run, "INFO", f"Found {len(actions)} events for case {case_number}.", fk_case=fk_case)
                     mark_case_found(cursor, fk_case)
 
