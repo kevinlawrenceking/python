@@ -112,9 +112,7 @@ class ErrorNotificationSystem:
     def _send_email_notification(self, error_id: int, error_type: str, error_message: str, severity: str, stack_trace: str = None):
         """Send email notification for the error."""
         try:
-            if not self.smtp_config.get('username') or not self.smtp_config.get('password'):
-                print("SMTP credentials not configured - cannot send email notification")
-                return False
+            # No authentication needed for our SMTP server (same as scraper_base.py)
             
             # Create email message
             msg = MIMEMultipart()
