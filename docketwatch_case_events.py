@@ -10,6 +10,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from twocaptcha import TwoCaptcha  #  Using 2Captcha Python SDK
+from error_notification_system import create_error_notifier
+
+# Setup Error Notification System
+script_name = os.path.splitext(os.path.basename(__file__))[0]
+error_notifier = create_error_notifier(script_name)
 
 # Setup Logging
 LOG_FILE = r"\\10.146.176.84\general\docketwatch\python\logs\docketwatch_case_events.log"
@@ -46,8 +51,12 @@ def log_message(log_type, message, fk_case=None):
             conn.commit()
         except Exception as e:
             print(f"Log DB error: {e}")
+            # Also log this to error notification system
+            error_notifier.log_database_error(f"Failed to log message to task_runs_log: {e}", fk_task_run=fk_task_run)
 
-log_message("INFO", "=== CAPTCHA Bypass Script Started ===")
+# Wrap the entire script in error handling
+try:
+    log_message("INFO", "=== CAPTCHA Bypass Script Started ===")
 
 # Fetch CAPTCHA API Key
 def get_captcha_api():
@@ -57,8 +66,10 @@ def get_captcha_api():
 
 API_KEY = get_captcha_api()
 if not API_KEY:
-    log_message("ERROR", "No 2Captcha API Key found in database!")
-    raise ValueError("No 2Captcha API Key found in database!")
+    error_msg = "No 2Captcha API Key found in database!"
+    log_message("ERROR", error_msg)
+    error_notifier.log_critical_error(error_msg, fk_task_run=fk_task_run)
+    raise ValueError(error_msg)
 
 # Setup 2Captcha Solver
 solver = TwoCaptcha(API_KEY)
@@ -257,4 +268,22 @@ finally:
             driver.quit()
             log_message("INFO", "ChromeDriver properly closed.")
         except Exception as cleanup_error:
-            log_message("ERROR", f"Error during driver cleanup: {str(cleanup_error)}")
+            error_msg = f"Error during driver cleanup: {str(cleanup_error)}"
+            log_message("ERROR", error_msg)
+            error_notifier.log_chrome_error(error_msg, fk_task_run=fk_task_run)
+
+except Exception as e:
+    # Handle any unhandled exceptions at the top level
+    error_msg = f"Critical script failure: {str(e)}"
+    print(error_msg)
+    try:
+        log_message("ERROR", error_msg)
+    except:
+        pass  # Don't fail if logging fails
+    
+    error_notifier.log_critical_error(
+        error_msg, 
+        fk_task_run=fk_task_run,
+        additional_context="Script failed at top level - check logs for details"
+    )
+    raise
