@@ -9,8 +9,8 @@ import smtplib
 import traceback
 import pyodbc
 from datetime import datetime
-from email.mime.text import MimeText
-from email.mime.multipart import MimeMultipart
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from typing import Optional, Dict, Any
 import logging
 
@@ -146,7 +146,7 @@ class ErrorNotificationSystem:
                 return False
             
             # Create email message
-            msg = MimeMultipart()
+            msg = MIMEMultipart()
             msg['From'] = self.smtp_config['username']
             msg['To'] = self.notification_email
             msg['Subject'] = f"DocketWatch {severity}: {self.script_name} - {error_type}"
@@ -176,7 +176,7 @@ Please investigate this error promptly.
 DocketWatch Automated Error Notification System
             """
             
-            msg.attach(MimeText(body, 'plain'))
+            msg.attach(MIMEText(body, 'plain'))
             
             # Send email
             server = smtplib.SMTP(self.smtp_config['server'], self.smtp_config['port'])
