@@ -8,6 +8,7 @@ import sys
 import smtplib
 import traceback
 import pyodbc
+import re
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -42,6 +43,39 @@ class ErrorNotificationSystem:
             'use_tls': False  # Port 25 typically doesn't use TLS
         }
     
+    def _clean_text(self, text: str) -> str:
+        """Clean text of garbage characters and ensure proper encoding."""
+        if not text:
+            return text
+            
+        # Remove common garbage characters and fix encoding issues
+        text = str(text)
+        
+        # Remove or replace common garbage character patterns
+        garbage_patterns = [
+            (r'\[Ã—\]', '[×]'),  # Fix the specific character you found
+            (r'Ã—', '×'),         # Direct replacement
+            (r'Ã¡', 'á'),         # Common encoding issues
+            (r'Ã©', 'é'),
+            (r'Ã­', 'í'),
+            (r'Ã³', 'ó'),
+            (r'Ãº', 'ú'),
+            (r'Ã±', 'ñ'),
+            (r'â€™', "'"),        # Smart quote
+            (r'â€œ', '"'),        # Smart quote
+            (r'â€\x9d', '"'),     # Smart quote
+            (r'â€"', '—'),        # Em dash
+            (r'â€"', '–'),        # En dash
+        ]
+        
+        for pattern, replacement in garbage_patterns:
+            text = re.sub(pattern, replacement, text)
+        
+        # Remove any remaining non-printable characters except newlines and tabs
+        text = re.sub(r'[^\x20-\x7E\n\t\r]', '', text)
+        
+        return text.strip()
+    
     def log_error(self, 
                   error_type: str, 
                   error_message: str, 
@@ -66,8 +100,15 @@ class ErrorNotificationSystem:
             int: Error notification ID
         """
         try:
+            # Clean input text to remove garbage characters
+            error_type = self._clean_text(error_type)
+            error_message = self._clean_text(error_message)
+            additional_context = self._clean_text(additional_context) if additional_context else None
+            
             # Get stack trace
             stack_trace = traceback.format_exc() if sys.exc_info()[0] is not None else None
+            if stack_trace:
+                stack_trace = self._clean_text(stack_trace)
             
             # Insert into database
             conn = pyodbc.connect(self.db_connection_string)
@@ -114,6 +155,11 @@ class ErrorNotificationSystem:
         try:
             # No authentication needed for our SMTP server (same as scraper_base.py)
             
+            # Clean all text for email to prevent encoding issues
+            error_type = self._clean_text(error_type)
+            error_message = self._clean_text(error_message)
+            stack_trace = self._clean_text(stack_trace) if stack_trace else None
+            
             # Create email message
             msg = MIMEMultipart()
             msg['From'] = 'it@tmz.com'  # Use same From address as scraper_base.py
@@ -145,7 +191,8 @@ Please investigate this error promptly.
 DocketWatch Automated Error Notification System
             """
             
-            msg.attach(MIMEText(body, 'plain'))
+            # Attach email body with UTF-8 encoding
+            msg.attach(MIMEText(body, 'plain', 'utf-8'))
             
             # Send email using same method as scraper_base.py
             with smtplib.SMTP(self.smtp_config['server'], self.smtp_config['port']) as server:
