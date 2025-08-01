@@ -35,7 +35,7 @@
 ### ✅ COMPLETED (Chrome + Error Notifications)
 - `docketwatch_case_events.py` - ✅ Full implementation
 - `docketwatch_map_unfiled_scraper.py` - ✅ Full implementation (Chrome cleanup + Error notifications + Database logging)
-- `docketwatch_map_scraper.py` - ✅ Chrome cleanup done
+- `docketwatch_map_scraper.py` - ✅ Full implementation (Chrome cleanup + Error notifications + Database logging)
 - `script_template_with_error_handling.py` - ✅ Template created
 
 ### 🔄 PARTIAL (Chrome cleanup done, needs error notifications)
