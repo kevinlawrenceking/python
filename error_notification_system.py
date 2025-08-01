@@ -32,44 +32,15 @@ class ErrorNotificationSystem:
         self.smtp_config = self._get_smtp_config()
         
     def _get_smtp_config(self) -> Dict[str, Any]:
-        """Get SMTP configuration from database or environment variables."""
-        try:
-            conn = pyodbc.connect(self.db_connection_string)
-            cursor = conn.cursor()
-            
-            cursor.execute("""
-                SELECT smtp_server, smtp_port, smtp_username, smtp_password, smtp_use_tls
-                FROM docketwatch.dbo.utilities WHERE id = 1
-            """)
-            row = cursor.fetchone()
-            
-            if row:
-                return {
-                    'server': row[0] or 'smtp.gmail.com',
-                    'port': row[1] or 587,
-                    'username': row[2],
-                    'password': row[3],
-                    'use_tls': row[4] if row[4] is not None else True
-                }
-            else:
-                # Fallback configuration
-                return {
-                    'server': 'smtp.gmail.com',
-                    'port': 587,
-                    'username': os.getenv('SMTP_USERNAME'),
-                    'password': os.getenv('SMTP_PASSWORD'),
-                    'use_tls': True
-                }
-                
-        except Exception as e:
-            print(f"Failed to get SMTP config: {e}")
-            return {
-                'server': 'smtp.gmail.com',
-                'port': 587,
-                'username': os.getenv('SMTP_USERNAME'),
-                'password': os.getenv('SMTP_PASSWORD'),
-                'use_tls': True
-            }
+        """Get SMTP configuration - use same settings as scraper_base.py"""
+        # Use the same SMTP configuration as scraper_base.py
+        return {
+            'server': 'mx0a-00195501.pphosted.com',
+            'port': 25,
+            'username': '',  # No authentication needed for this SMTP server
+            'password': '',
+            'use_tls': False  # Port 25 typically doesn't use TLS
+        }
     
     def log_error(self, 
                   error_type: str, 
@@ -147,7 +118,7 @@ class ErrorNotificationSystem:
             
             # Create email message
             msg = MIMEMultipart()
-            msg['From'] = self.smtp_config['username']
+            msg['From'] = 'it@tmz.com'  # Use same From address as scraper_base.py
             msg['To'] = self.notification_email
             msg['Subject'] = f"DocketWatch {severity}: {self.script_name} - {error_type}"
             
@@ -178,14 +149,10 @@ DocketWatch Automated Error Notification System
             
             msg.attach(MIMEText(body, 'plain'))
             
-            # Send email
-            server = smtplib.SMTP(self.smtp_config['server'], self.smtp_config['port'])
-            if self.smtp_config['use_tls']:
-                server.starttls()
-            server.login(self.smtp_config['username'], self.smtp_config['password'])
-            text = msg.as_string()
-            server.sendmail(self.smtp_config['username'], self.notification_email, text)
-            server.quit()
+            # Send email using same method as scraper_base.py
+            with smtplib.SMTP(self.smtp_config['server'], self.smtp_config['port']) as server:
+                # No authentication needed for this SMTP server
+                server.sendmail('it@tmz.com', self.notification_email, msg.as_string())
             
             print(f"Error notification email sent for error ID {error_id}")
             return True
