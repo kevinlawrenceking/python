@@ -42,57 +42,67 @@ chrome_options = Options()
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 service = Service(CHROMEDRIVER_PATH)
-driver = webdriver.Chrome(service=service, options=chrome_options)
-log_message(cursor, fk_task_run, "INFO", "ChromeDriver initialized.")
 
-# === Fetch credentials and URLs from DB (tool id = 12) ===
-cursor.execute("""
-    SELECT [login_url], [username], [pass], [search_url]
-    FROM [docketwatch].[dbo].[tools]
-    WHERE id = 12
-""")
-login_row = cursor.fetchone()
-if not login_row:
-    log_message(cursor, fk_task_run, "ERROR", "No credentials found for tool id 12.")
-    driver.quit()
-    conn.close()
-    exit()
-login_url, username, password, _ = login_row
-log_message(cursor, fk_task_run, "INFO", "Fetched login credentials from database.")
-
-# === Step 1: Log into the page (robust + validated) ===
+driver = None
 try:
-    log_message(cursor, fk_task_run, "INFO", "Navigating to login page...")
-    driver.get(login_url)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    log_message(cursor, fk_task_run, "INFO", "ChromeDriver initialized.")
 
-    wait = WebDriverWait(driver, 20)
-    log_message(cursor, fk_task_run, "INFO", "Waiting for login form to appear...")
+    # === Fetch credentials and URLs from DB (tool id = 12) ===
+    cursor.execute("""
+        SELECT [login_url], [username], [pass], [search_url]
+        FROM [docketwatch].[dbo].[tools]
+        WHERE id = 12
+    """)
+    login_row = cursor.fetchone()
+    if not login_row:
+        log_message(cursor, fk_task_run, "ERROR", "No credentials found for tool id 12.")
+        conn.close()
+        exit()
+    login_url, username, password, _ = login_row
+    log_message(cursor, fk_task_run, "INFO", "Fetched login credentials from database.")
 
-    wait.until(EC.presence_of_element_located((By.ID, "logonIdentifier"))).send_keys(username)
-    wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(password)
-    wait.until(EC.element_to_be_clickable((By.ID, "next"))).click()
+    # === Step 1: Log into the page (robust + validated) ===
+    try:
+        log_message(cursor, fk_task_run, "INFO", "Navigating to login page...")
+        driver.get(login_url)
 
-    log_message(cursor, fk_task_run, "INFO", "Login submitted, waiting for OpenID redirect...")
-    time.sleep(5)
+        wait = WebDriverWait(driver, 20)
+        log_message(cursor, fk_task_run, "INFO", "Waiting for login form to appear...")
 
-    if "signin-oidc" in driver.current_url or "media.lacourt.org" in driver.current_url:
-        log_message(cursor, fk_task_run, "INFO", "Login successful.")
-    else:
-        log_message(cursor, fk_task_run, "ERROR", f"Login may have failed. Current URL: {driver.current_url}")
-        driver.quit()
+        wait.until(EC.presence_of_element_located((By.ID, "logonIdentifier"))).send_keys(username)
+        wait.until(EC.presence_of_element_located((By.ID, "password"))).send_keys(password)
+        wait.until(EC.element_to_be_clickable((By.ID, "next"))).click()
+
+        log_message(cursor, fk_task_run, "INFO", "Login submitted, waiting for OpenID redirect...")
+        time.sleep(5)
+
+        if "signin-oidc" in driver.current_url or "media.lacourt.org" in driver.current_url:
+            log_message(cursor, fk_task_run, "INFO", "Login successful.")
+        else:
+            log_message(cursor, fk_task_run, "ERROR", f"Login may have failed. Current URL: {driver.current_url}")
+            conn.close()
+            exit()
+
+    except Exception as e:
+        log_message(cursor, fk_task_run, "ERROR", f"Login failed: {str(e)}")
+        conn.close()
         exit()
 
-except Exception as e:
-    log_message(cursor, fk_task_run, "ERROR", f"Login failed: {str(e)}")
-    driver.quit()
-    exit()
+    # === Step 2: Extract .AspNetCore.Cookies ===
+    cookies = driver.get_cookies()
+    cookie_dict = {cookie["name"]: cookie["value"] for cookie in cookies}
+    auth_cookie = cookie_dict.get(".AspNetCore.Cookies")
+    log_message(cursor, fk_task_run, "INFO", "Extracted auth cookie from session.")
 
-# === Step 2: Extract .AspNetCore.Cookies ===
-cookies = driver.get_cookies()
-cookie_dict = {cookie["name"]: cookie["value"] for cookie in cookies}
-auth_cookie = cookie_dict.get(".AspNetCore.Cookies")
-driver.quit()
-log_message(cursor, fk_task_run, "INFO", "Extracted auth cookie from session.")
+finally:
+    # === Ensure ChromeDriver is always properly closed ===
+    if driver:
+        try:
+            driver.quit()
+            log_message(cursor, fk_task_run, "INFO", "ChromeDriver properly closed.")
+        except Exception as cleanup_error:
+            log_message(cursor, fk_task_run, "ERROR", f"Error during driver cleanup: {str(cleanup_error)}")
 
 # === Fetch cases records ===
 cursor.execute("""

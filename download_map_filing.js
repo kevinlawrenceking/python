@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
 const { spawn } = require('child_process');
+const os = require('os');
 
 const FILE_NAME = process.env.FILE_NAME;
 const KEY = process.env.KEY;
@@ -20,21 +21,74 @@ const VIEWER_URL = `https://ww2.lacourt.org/documentviewer/v1/?name=${FILE_NAME}
 const SAVE_DIR = path.resolve(__dirname, 'temp_pages');
 fs.ensureDirSync(SAVE_DIR);
 
+// Create a unique temporary directory for this Chrome instance
+const TEMP_USER_DATA_DIR = path.join(os.tmpdir(), `chrome_profile_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+fs.ensureDirSync(TEMP_USER_DATA_DIR);
+
+let browser = null;
+
+async function cleanup() {
+  console.log('[→] Starting cleanup process...');
+  
+  if (browser) {
+    try {
+      await browser.close();
+      console.log('[✓] Browser closed successfully');
+    } catch (err) {
+      console.error('[!] Error closing browser:', err.message);
+    }
+  }
+  
+  // Clean up temporary user data directory
+  try {
+    if (fs.existsSync(TEMP_USER_DATA_DIR)) {
+      fs.removeSync(TEMP_USER_DATA_DIR);
+      console.log(`[✓] Cleaned up Chrome profile directory: ${TEMP_USER_DATA_DIR}`);
+    }
+  } catch (err) {
+    console.error(`[!] Error cleaning up Chrome profile: ${err.message}`);
+  }
+  
+  // Clean up temp pages directory
+  try {
+    if (fs.existsSync(SAVE_DIR)) {
+      fs.removeSync(SAVE_DIR);
+      console.log(`[✓] Cleaned up temp directory: ${SAVE_DIR}`);
+    }
+  } catch (err) {
+    console.error(`[!] Error cleaning up temp directory: ${err.message}`);
+  }
+}
+
+// Set up cleanup on process exit
+process.on('exit', cleanup);
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
+process.on('uncaughtException', (err) => {
+  console.error('[×] Uncaught exception:', err);
+  cleanup();
+  process.exit(1);
+});
+
 (async () => {
-  console.log(`[+] Launching Chromium...`);
+  console.log(`[+] Launching Chromium with custom profile directory...`);
   
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
       headless: true,
       defaultViewport: null,
       protocolTimeout: 300000, // Increase protocol timeout to 5 minutes
+      userDataDir: TEMP_USER_DATA_DIR, // Use custom temp directory
       args: [
         '--start-maximized',
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-gpu',
-        '--disable-dev-shm-usage'
+        '--disable-dev-shm-usage',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding'
       ]
     });
     
@@ -307,7 +361,10 @@ fs.ensureDirSync(SAVE_DIR);
   console.log(`[→] Total pages detected: ${seen.size}`);
   console.log(`[!] Final wait before closing...`);
   await new Promise(resolve => setTimeout(resolve, 5000));
+  
+  // Close browser explicitly here to ensure it's closed before Python script
   await browser.close();
+  browser = null; // Set to null so cleanup doesn't try to close it again
 
   console.log(`[+] Generating PDF for case ID: ${FK_CASE}`);
   const py = spawn('python', ['combine_images_to_pdf.py'], {
@@ -355,13 +412,9 @@ fs.ensureDirSync(SAVE_DIR);
       console.error(`[×] Python stderr: ${pythonError}`);
     }
     
-    // Clean up temp files
-    try {
-      fs.removeSync(SAVE_DIR);
-      console.log(`[✓] Cleaned up temp directory: ${SAVE_DIR}`);
-    } catch (err) {
-      console.error(`[×] Failed to clean up temp directory: ${err.message}`);
-    }
+    // Final cleanup will be handled by process exit handlers
+    console.log(`[+] PDF generation process completed`);
+    process.exit(code);
   });
 
   py.on('error', (err) => {

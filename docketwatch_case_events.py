@@ -75,182 +75,186 @@ chrome_options.add_experimental_option("useAutomationExtension", False)
 chrome_options.add_argument("--headless=new")  
 
 service = Service(CHROMEDRIVER_PATH)
-driver = webdriver.Chrome(service=service, options=chrome_options)
 
-# Open Case Lookup Page
-SITE_URL = "https://caselookup.nmcourts.gov/caselookup/app"
-driver.get(SITE_URL)
-
-# Click "I Accept" Button & Extract Cookies
+driver = None
 try:
-    time.sleep(2)  # Slight delay to appear human-like
-    accept_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, "Submit"))
-    )
-    accept_button.click()
-    log_message("INFO", "Clicked 'I Accept' button.")
-    time.sleep(3)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    # Extract Cookies
-    cookies = driver.get_cookies()
-    session_cookies = {cookie['name']: cookie['value'] for cookie in cookies}
-    log_message("INFO", f"Extracted Session Cookies: {session_cookies}")
+    # Open Case Lookup Page
+    SITE_URL = "https://caselookup.nmcourts.gov/caselookup/app"
+    driver.get(SITE_URL)
 
-except Exception as e:
-    log_message("ERROR", f"Could not click 'I Accept' button: {e}")
-    driver.quit()
-    exit()
-
-# Extract the Correct Sitekey Dynamically
-try:
-    sitekey_element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-sitekey]"))
-    )
-    SITE_KEY = sitekey_element.get_attribute("data-sitekey")
-    log_message("INFO", f"Extracted Sitekey: {SITE_KEY}")
-
-except Exception as e:
-    log_message("ERROR", f"Error extracting Sitekey: {e}")
-    driver.quit()
-    exit()
-
-# Solve CAPTCHA Using 2Captcha
-log_message("INFO", "Sending CAPTCHA to 2Captcha for solving...")
-try:
-    result = solver.recaptcha(sitekey=SITE_KEY, url=SITE_URL)
-    captcha_solution = result['code']
-    log_message("INFO", f"CAPTCHA Solved: {captcha_solution}")
-except Exception as e:
-    log_message("ERROR", f"2Captcha Error: {e}")
-    driver.quit()
-    exit()
-
-# Inject CAPTCHA Solution into Page
-try:
-    driver.execute_script(f'document.getElementById("g-recaptcha-response").innerText = "{captcha_solution}";')
-    log_message("INFO", "Injected CAPTCHA solution into page.")
-
-    # Dispatch events to make sure reCAPTCHA registers the token
-    for event in ["input", "change", "blur", "keyup", "keydown"]:
-        driver.execute_script(f'document.getElementById("g-recaptcha-response").dispatchEvent(new Event("{event}", {{ bubbles: true }}));')
-
-    time.sleep(2)  # Give time for reCAPTCHA to process
-
-    # Click the "Verify" or "Submit" Button if present
+    # Click "I Accept" Button & Extract Cookies
     try:
-        verify_button = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable((By.ID, "recaptcha-verify-button"))
+        time.sleep(2)  # Slight delay to appear human-like
+        accept_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "Submit"))
         )
-        verify_button.click()
-        log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
-        time.sleep(2)
+        accept_button.click()
+        log_message("INFO", "Clicked 'I Accept' button.")
+        time.sleep(3)
+
+        # Extract Cookies
+        cookies = driver.get_cookies()
+        session_cookies = {cookie['name']: cookie['value'] for cookie in cookies}
+        log_message("INFO", f"Extracted Session Cookies: {session_cookies}")
+
+    except Exception as e:
+        log_message("ERROR", f"Could not click 'I Accept' button: {e}")
+        exit()
+
+    # Extract the Correct Sitekey Dynamically
+    try:
+        sitekey_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-sitekey]"))
+        )
+        SITE_KEY = sitekey_element.get_attribute("data-sitekey")
+        log_message("INFO", f"Extracted Sitekey: {SITE_KEY}")
+
+    except Exception as e:
+        log_message("ERROR", f"Error extracting Sitekey: {e}")
+        exit()
+
+    # Solve CAPTCHA Using 2Captcha
+    log_message("INFO", "Sending CAPTCHA to 2Captcha for solving...")
+    try:
+        result = solver.recaptcha(sitekey=SITE_KEY, url=SITE_URL)
+        captcha_solution = result['code']
+        log_message("INFO", f"CAPTCHA Solved: {captcha_solution}")
+    except Exception as e:
+        log_message("ERROR", f"2Captcha Error: {e}")
+        exit()
+
+    # Inject CAPTCHA Solution into Page
+    try:
+        driver.execute_script(f'document.getElementById("g-recaptcha-response").innerText = "{captcha_solution}";')
+        log_message("INFO", "Injected CAPTCHA solution into page.")
+
+        # Dispatch events to make sure reCAPTCHA registers the token
+        for event in ["input", "change", "blur", "keyup", "keydown"]:
+            driver.execute_script(f'document.getElementById("g-recaptcha-response").dispatchEvent(new Event("{event}", {{ bubbles: true }}));')
+
+        time.sleep(2)  # Give time for reCAPTCHA to process
+
+        # Click the "Verify" or "Submit" Button if present
+        try:
+            verify_button = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "recaptcha-verify-button"))
+            )
+            verify_button.click()
+            log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
+            time.sleep(2)
+        except:
+            log_message("INFO", "No 'Verify' button found, proceeding.")
+
+    except Exception as e:
+        log_message("ERROR", f"Error injecting CAPTCHA solution: {e}")
+        exit()
+
+    # Click "Continue" Button After CAPTCHA
+    try:
+        submit_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "Submit"))
+        )
+        driver.execute_script("arguments[0].scrollIntoView();", submit_button)
+        submit_button.click()
+        log_message("INFO", "Clicked 'Continue to Case Lookup' button.")
+        time.sleep(3)
+    except Exception as e:
+        log_message("ERROR", f"Error clicking 'Continue to Case Lookup' button: {e}")
+        exit()
+
+    # Confirm We Reached the Case Search Page
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "dl2"))
+        )
+        log_message("INFO", "Successfully reached the case search page!")
     except:
-        log_message("INFO", "No 'Verify' button found, proceeding.")
+        log_message("ERROR", "Still stuck on CAPTCHA or failed to reach case search page.")
+        exit()
 
-except Exception as e:
-    log_message("ERROR", f"Error injecting CAPTCHA solution: {e}")
-    driver.quit()
-    exit()
+    # SEARCHING FOR CASE EVENTS  #
 
-# Click "Continue" Button After CAPTCHA
-try:
-    submit_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, "Submit"))
-    )
-    driver.execute_script("arguments[0].scrollIntoView();", submit_button)
-    submit_button.click()
-    log_message("INFO", "Clicked 'Continue to Case Lookup' button.")
-    time.sleep(3)
-except Exception as e:
-    log_message("ERROR", f"Error clicking 'Continue to Case Lookup' button: {e}")
-    driver.quit()
-    exit()
+    # Fetch Cases from Database
+    cursor.execute("SELECT id, case_number, courttype, courtlocation, courtcategory, courtcasenumber FROM docketwatch.dbo.cases WHERE courttype is not null and courtcasenumber IS NOT NULL")
+    cases = cursor.fetchall()
 
-# Confirm We Reached the Case Search Page
-try:
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "dl2"))
-    )
-    log_message("INFO", "Successfully reached the case search page!")
-except:
-    log_message("ERROR", "Still stuck on CAPTCHA or failed to reach case search page.")
-    driver.quit()
-    exit()
+    for case in cases:
+        case_id, case_number, courttype, courtlocation, courtcategory, courtcasenumber = case
 
-# SEARCHING FOR CASE EVENTS  #
+        log_message("INFO", f"Searching for case: {case_number}", fk_case=case_id)
 
-# Fetch Cases from Database
-cursor.execute("SELECT id, case_number, courttype, courtlocation, courtcategory, courtcasenumber FROM docketwatch.dbo.cases WHERE courttype is not null and courtcasenumber IS NOT NULL")
-cases = cursor.fetchall()
+        # Click on "Case Number Search" Tab
+        try:
+            case_search_tab = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "dl2"))
+            )
+            case_search_tab.click()
+            time.sleep(3)
+        except Exception as e:
+            log_message("ERROR", f"Error clicking 'Case Number Search' tab: {e}")
+            continue
 
-for case in cases:
-    case_id, case_number, courttype, courtlocation, courtcategory, courtcasenumber = case
+        # Enter Case Information
+        try:
+            driver.find_element(By.ID, "courtType").send_keys(courttype)
+            driver.find_element(By.ID, "courtLocation").send_keys(courtlocation)
+            driver.find_element(By.ID, "caseCategory").send_keys(courtcategory)
+            driver.find_element(By.ID, "caseNumber").send_keys(courtcasenumber)
 
-    log_message("INFO", f"Searching for case: {case_number}", fk_case=case_id)
+            # Submit Search
+            driver.find_element(By.ID, "Submit").click()
+            time.sleep(3)
+        except Exception as e:
+            log_message("ERROR", f"Error entering case details: {e}")
+            continue
 
-    # Click on "Case Number Search" Tab
-    try:
-        case_search_tab = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "dl2"))
-        )
-        case_search_tab.click()
-        time.sleep(3)
-    except Exception as e:
-        log_message("ERROR", f"Error clicking 'Case Number Search' tab: {e}")
-        continue
+        # Extract Case Events
+        try:
+            rows = driver.find_elements(By.CSS_SELECTOR, "table.details tr")
+            inserted = 0
+            for row in rows[1:]:
+                cols = row.find_elements(By.TAG_NAME, "td")
+                if len(cols) == 6:
+                    event_date = cols[0].text.strip()
+                    event_description = cols[1].text.strip()
+                    event_result = cols[2].text.strip()
+                    party_type = cols[3].text.strip()
+                    party_number = cols[4].text.strip()
+                    amount = cols[5].text.strip()
 
-    # Enter Case Information
-    try:
-        driver.find_element(By.ID, "courtType").send_keys(courttype)
-        driver.find_element(By.ID, "courtLocation").send_keys(courtlocation)
-        driver.find_element(By.ID, "caseCategory").send_keys(courtcategory)
-        driver.find_element(By.ID, "caseNumber").send_keys(courtcasenumber)
+                    # Insert into case_events table only if the event doesn't already exist
+                    cursor.execute("""
+                        INSERT INTO docketwatch.dbo.case_events (event_date, event_description, event_result, party_type, party_number, amount, fk_cases, created_at)
+                        SELECT ?, ?, ?, ?, ?, ?, ?, GETDATE()
+                        WHERE NOT EXISTS (
+                            SELECT 1 FROM docketwatch.dbo.case_events 
+                            WHERE fk_cases = ? 
+                            AND event_date = ? 
+                            AND event_description = ?
+                        )
+                    """, event_date, event_description, event_result, party_type, party_number, amount, case_id, case_id, event_date, event_description)
 
-        # Submit Search
-        driver.find_element(By.ID, "Submit").click()
-        time.sleep(3)
-    except Exception as e:
-        log_message("ERROR", f"Error entering case details: {e}")
-        continue
+                    conn.commit()
+                    inserted += 1
 
-    # Extract Case Events
-    try:
-        rows = driver.find_elements(By.CSS_SELECTOR, "table.details tr")
-        inserted = 0
-        for row in rows[1:]:
-            cols = row.find_elements(By.TAG_NAME, "td")
-            if len(cols) == 6:
-                event_date = cols[0].text.strip()
-                event_description = cols[1].text.strip()
-                event_result = cols[2].text.strip()
-                party_type = cols[3].text.strip()
-                party_number = cols[4].text.strip()
-                amount = cols[5].text.strip()
+            if inserted > 0:
+                log_message("ALERT", f"Inserted {inserted} new event(s) for {case_number}", fk_case=case_id)
+            else:
+                log_message("INFO", f"No new events inserted for {case_number}", fk_case=case_id)
+            
+        except Exception as e:
+            log_message("ERROR", f"Failed to extract case events for {case_number}: {e}", fk_case=case_id)
+            continue
 
-                # Insert into case_events table only if the event doesn't already exist
-                cursor.execute("""
-                    INSERT INTO docketwatch.dbo.case_events (event_date, event_description, event_result, party_type, party_number, amount, fk_cases, created_at)
-                    SELECT ?, ?, ?, ?, ?, ?, ?, GETDATE()
-                    WHERE NOT EXISTS (
-                        SELECT 1 FROM docketwatch.dbo.case_events 
-                        WHERE fk_cases = ? 
-                        AND event_date = ? 
-                        AND event_description = ?
-                    )
-                """, event_date, event_description, event_result, party_type, party_number, amount, case_id, case_id, event_date, event_description)
+    log_message("INFO", "Script Completed Successfully!")
 
-                conn.commit()
-                inserted += 1
-
-        if inserted > 0:
-            log_message("ALERT", f"Inserted {inserted} new event(s) for {case_number}", fk_case=case_id)
-        else:
-            log_message("INFO", f"No new events inserted for {case_number}", fk_case=case_id)
-        
-    except Exception as e:
-        log_message("ERROR", f"Failed to extract case events for {case_number}: {e}", fk_case=case_id)
-        continue
-
-# Close Browser
-driver.quit()
-log_message("INFO", "Script Completed Successfully!")
+finally:
+    # === Ensure ChromeDriver is always properly closed ===
+    if driver:
+        try:
+            driver.quit()
+            log_message("INFO", "ChromeDriver properly closed.")
+        except Exception as cleanup_error:
+            log_message("ERROR", f"Error during driver cleanup: {str(cleanup_error)}")

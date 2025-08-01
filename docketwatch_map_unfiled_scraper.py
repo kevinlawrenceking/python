@@ -4,6 +4,8 @@ import os
 import sys
 import time
 import json
+import glob
+import tempfile
 from pathlib import Path
 from datetime import datetime
 import requests
@@ -16,6 +18,76 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # --- DocketWatch logging + DB imports ---
 from scraper_base import log_message, get_task_context_by_tool_id, get_db_cursor, setup_logging, insert_documents_for_event
+
+def check_disk_space():
+    """
+    Check available disk space in temp directory and warn if running low.
+    """
+    try:
+        import shutil
+        temp_dir = tempfile.gettempdir()
+        total, used, free = shutil.disk_usage(temp_dir)
+        
+        # Convert to GB for easier reading
+        free_gb = free / (1024**3)
+        total_gb = total / (1024**3)
+        used_percent = (used / total) * 100
+        
+        print(f"Disk space check - Free: {free_gb:.2f} GB, Used: {used_percent:.1f}% of {total_gb:.2f} GB")
+        
+        # Warn if less than 2 GB free or more than 95% used
+        if free_gb < 2.0 or used_percent > 95:
+            print(f"WARNING: Low disk space detected! Free: {free_gb:.2f} GB, Used: {used_percent:.1f}%")
+            return False
+        return True
+        
+    except Exception as e:
+        print(f"Error checking disk space: {e}")
+        return True  # Assume OK if we can't check
+
+def cleanup_temp_chrome_profiles():
+    """
+    Clean up any orphaned Chrome profile directories that might be left behind.
+    This helps prevent disk space issues.
+    """
+    try:
+        temp_dir = tempfile.gettempdir()
+        pattern = os.path.join(temp_dir, "chrome_profile_*")
+        old_profiles = glob.glob(pattern)
+        
+        if old_profiles:
+            print(f"Found {len(old_profiles)} old Chrome profile directories to clean up")
+            for profile_dir in old_profiles:
+                try:
+                    # Only remove directories older than 1 hour to avoid conflicts
+                    if os.path.exists(profile_dir):
+                        dir_age = time.time() - os.path.getctime(profile_dir)
+                        if dir_age > 3600:  # 1 hour in seconds
+                            import shutil
+                            shutil.rmtree(profile_dir, ignore_errors=True)
+                            print(f"Cleaned up old Chrome profile: {profile_dir}")
+                except Exception as e:
+                    print(f"Could not clean up profile {profile_dir}: {e}")
+        
+        # Also clean up any puppeteer_dev_chrome_profile directories
+        puppeteer_pattern = os.path.join(temp_dir, "puppeteer_dev_chrome_profile-*")
+        old_puppeteer_profiles = glob.glob(puppeteer_pattern)
+        
+        if old_puppeteer_profiles:
+            print(f"Found {len(old_puppeteer_profiles)} old Puppeteer profile directories to clean up")
+            for profile_dir in old_puppeteer_profiles:
+                try:
+                    if os.path.exists(profile_dir):
+                        dir_age = time.time() - os.path.getctime(profile_dir)
+                        if dir_age > 3600:  # 1 hour in seconds
+                            import shutil
+                            shutil.rmtree(profile_dir, ignore_errors=True)
+                            print(f"Cleaned up old Puppeteer profile: {profile_dir}")
+                except Exception as e:
+                    print(f"Could not clean up Puppeteer profile {profile_dir}: {e}")
+                    
+    except Exception as e:
+        print(f"Error during temp directory cleanup: {e}")
 
 def download_pdf_for_case(court_case_number, fk_case, auth_cookie, cursor, fk_task_run, max_retries=2):
     """
@@ -126,6 +198,12 @@ script_filename = os.path.splitext(os.path.basename(__file__))[0]
 log_path = rf"\\10.146.176.84\general\docketwatch\python\logs\{script_filename}.log"
 setup_logging(log_path)
 
+# === Clean up any orphaned Chrome profiles from previous runs ===
+cleanup_temp_chrome_profiles()
+
+# === Check available disk space ===
+disk_ok = check_disk_space()
+
 # === Get date param from command line ===
 if len(sys.argv) < 2:
     print("Usage: python docketwatch_map_unfiled_scraper.py MM-DD-YYYY")
@@ -147,6 +225,10 @@ context = get_task_context_by_tool_id(cursor, TOOL_ID)
 fk_task_run = context["fk_task_run"] if context else None
 
 log_message(cursor, fk_task_run, "INFO", f"Started LA Media unfiled scraper for {input_date}")
+log_message(cursor, fk_task_run, "INFO", "Completed temporary Chrome profile cleanup")
+
+if not disk_ok:
+    log_message(cursor, fk_task_run, "WARNING", "Low disk space detected - this may cause PDF download failures")
 
 # === DB: Fetch login credentials (tool id = 26) ===
 try:
