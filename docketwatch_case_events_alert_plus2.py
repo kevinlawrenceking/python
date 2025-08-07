@@ -41,10 +41,10 @@ def get_db_connection():
     """Get database connection with proper encoding handling."""
     try:
         conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
-        # Try to handle encoding issues by using different settings
-        conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8', errors='replace')
-        conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8', errors='replace') 
-        conn.setencoding(encoding='utf-8', errors='replace')
+        # Set encoding for database connection to handle Unicode properly
+        conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+        conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8') 
+        conn.setencoding(encoding='utf-8')
         return conn, conn.cursor()
     except Exception as e:
         error_msg = f"Failed to connect to database: {e}"
