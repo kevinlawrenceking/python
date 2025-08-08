@@ -1,0 +1,23 @@
+2025-08-08 11:30:30,474 - INFO - Starting Show Code Generator v2
+2025-08-08 11:30:30,512 - INFO - Successfully read setup.txt - Length: 181 characters
+2025-08-08 11:30:30,513 - INFO - Setup file has correct length (181 characters). Processing...
+2025-08-08 11:30:30,514 - INFO - Parsing dates from setup file...
+2025-08-08 11:30:30,514 - INFO - Date components - Year: '2025', Month: '08', Day: '18'
+2025-08-08 11:30:30,514 - INFO - Successfully parsed start date: 2025-08-18
+2025-08-08 11:30:30,514 - INFO - Output filenames - Word: 'Encode Information 081825 - 082225.docx', Excel: 'BVS Encode Information 081825 - 082225.xlsx'
+2025-08-08 11:30:30,515 - INFO - Week dates - Mon: 08/18/25, Tue: 08/19/25, Wed: 08/20/25, Thu: 08/21/25, Fri: 08/22/25
+2025-08-08 11:30:30,515 - INFO - Title: 'Encode Information week of 08/18/25 - 08/22/25'
+2025-08-08 11:30:30,515 - INFO - TV Code components - Season: '18', Episode: '301'
+2025-08-08 11:30:30,516 - INFO - TV start code: 18301
+2025-08-08 11:30:30,516 - INFO - Generating TV codes...
+2025-08-08 11:30:30,517 - INFO - Generated 5 TV codes so far
+2025-08-08 11:30:30,517 - INFO - Generating Live codes...
+2025-08-08 11:30:30,517 - INFO - Live Code components - Season: '13', Episode: '251'
+2025-08-08 11:30:30,518 - INFO - Live start code: 13251
+2025-08-08 11:30:30,524 - INFO - Saving Word document...
+2025-08-08 11:30:30,548 - INFO - Successfully saved Word document: Encode Information 081825 - 082225.docx
+2025-08-08 11:30:30,548 - INFO - Updating setup file for next week...
+2025-08-08 11:30:30,550 - INFO - Next week updates - WG: 52, TV Num: 307, Live Num: 256, Date: 08252025
+2025-08-08 11:30:30,553 - INFO - Successfully updated setup.txt for next week
+2025-08-08 11:30:30,565 - INFO - Generated 18 total show codes
+2025-08-08 11:30:30,566 - INFO - Script completed successfully!
