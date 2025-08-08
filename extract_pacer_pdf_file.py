@@ -336,6 +336,10 @@ def main():
                 except Exception as e:
                     log_message(cursor, fk_task_run, "ERROR", f"Error processing PDF content: {str(e)}")
                     failed_downloads += 1
+            
+            except Exception as e:
+                log_message(cursor, fk_task_run, "ERROR", f"Error processing document {doc_id}: {str(e)}")
+                failed_downloads += 1
 
         log_message(cursor, fk_task_run, "INFO", 
             f"Download process completed. Success: {successful_downloads}, Failed: {failed_downloads}")
