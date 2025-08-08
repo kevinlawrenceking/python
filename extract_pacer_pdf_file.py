@@ -20,12 +20,12 @@ INPUT:
 - case_event_id (GUID): ID of the specific case event to process
 
 OUTPUT:
-- Downloads PDF files to: \\10.146.176.84\general\docketwatch\docs\cases\[case_id]\E[doc_id].pdf
+- Downloads PDF files to: \\\\10.146.176.84\\general\\docketwatch\\docs\\cases\\[case_id]\\E[doc_id].pdf
 - Updates documents table: sets rel_path and date_downloaded fields
 
 DOWNLOAD PROCESS:
 - Uses Chrome WebDriver with automatic download configuration
-- Downloads to network share: \\10.146.176.84\general\docketwatch\docs\cases
+- Downloads to network share: \\\\10.146.176.84\\general\\docketwatch\\docs\\cases
 - File naming: E[doc_id].pdf (e.g., E12345.pdf)
 - Directory structure: cases/[case_id]/[filename]
 
@@ -64,6 +64,12 @@ def main():
 
     script_filename = os.path.splitext(os.path.basename(__file__))[0]
     setup_logging(f"u:/docketwatch/python/logs/{script_filename}.log")
+
+    # Initialize variables to prevent undefined variable errors in finally block
+    conn = None
+    cursor = None
+    driver = None
+    fk_task_run = None
 
     try:
         conn, cursor = get_db_cursor()
@@ -338,12 +344,14 @@ def main():
         log_message(cursor, None, "ERROR", f"Unhandled error: {str(e)}")
         traceback.print_exc()
     finally:
-        if 'driver' in locals():
+        if driver:
             driver.quit()
-            log_message(cursor, fk_task_run, "INFO", "Chrome WebDriver closed")
-        if 'conn' in locals():
+            if cursor and fk_task_run:
+                log_message(cursor, fk_task_run, "INFO", "Chrome WebDriver closed")
+        if conn:
             conn.close()
-            log_message(cursor, fk_task_run, "INFO", "Database connection closed")
+            if cursor and fk_task_run:
+                log_message(cursor, fk_task_run, "INFO", "Database connection closed")
 
 if __name__ == "__main__":
     main()
