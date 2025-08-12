@@ -8,7 +8,7 @@ GEMINI_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.6
 MAX_TOKENS = 500  # Increased from 200 to allow fuller responses
 SLEEP_SECONDS = 1.5  # Delay to stay polite and safe
-DEBUG_MODE = True  # Set to False for normal operation
+DEBUG_MODE = False  # Set to False for normal operation
 
 # --- Prompt Setup ---
 PROMPT_RULES_PATH = "\\\\10.146.176.84\\general\\docketwatch\\python\\prompt_rules.txt"
@@ -100,10 +100,27 @@ def main():
         print("ERROR: Gemini API key not found.")
         return
 
+    # Check if the target columns exist
+    try:
+        cursor.execute("""
+            SELECT COLUMN_NAME 
+            FROM INFORMATION_SCHEMA.COLUMNS 
+            WHERE TABLE_NAME = 'damz_test' AND TABLE_SCHEMA = 'dbo'
+            AND COLUMN_NAME IN ('headline_type_v2', 'headline_v2')
+        """)
+        columns = [row[0] for row in cursor.fetchall()]
+        print(f"[DEBUG] Available target columns: {columns}")
+        if 'headline_type_v2' not in columns:
+            print("WARNING: Column 'headline_type_v2' does not exist!")
+        if 'headline_v2' not in columns:
+            print("WARNING: Column 'headline_v2' does not exist!")
+    except Exception as e:
+        print(f"[DEBUG] Could not check columns: {e}")
+
     cursor.execute(f"""
     SELECT TOP {1 if DEBUG_MODE else BATCH_LIMIT} fk_asset, headline, shot_description
     FROM docketwatch.dbo.damz_test
-    WHERE headline_optimized IS NOT NULL
+    WHERE flagged = 1
     """)
     rows = cursor.fetchall()
     
@@ -126,13 +143,36 @@ def main():
         type_final, headline_final = analyze_asset(prompt, gemini_key)
 
         if type_final and headline_final:
+            # First, let's verify the record exists and show current values
+            cursor.execute("""
+                SELECT headline_type_v2, headline_v2 
+                FROM docketwatch.dbo.damz_test 
+                WHERE fk_asset = ?
+            """, (fk_asset,))
+            current_values = cursor.fetchone()
+            print(f"[DEBUG] Current DB values - Type: {current_values[0] if current_values else 'NULL'}, Headline: {current_values[1] if current_values else 'NULL'}")
+            
+            # Now update
             cursor.execute("""
                 UPDATE docketwatch.dbo.damz_test
                 SET headline_type_v2 = ?, 
                     headline_v2 = ?
                 WHERE fk_asset = ?
             """, (type_final, headline_final, fk_asset))
+            
+            rows_affected = cursor.rowcount
             conn.commit()
+            
+            # Verify the update worked
+            cursor.execute("""
+                SELECT headline_type_v2, headline_v2 
+                FROM docketwatch.dbo.damz_test 
+                WHERE fk_asset = ?
+            """, (fk_asset,))
+            updated_values = cursor.fetchone()
+            
+            print(f"[DEBUG] Rows affected: {rows_affected}")
+            print(f"[DEBUG] Updated DB values - Type: {updated_values[0] if updated_values else 'NULL'}, Headline: {updated_values[1] if updated_values else 'NULL'}")
             print(f"✓ Updated: {fk_asset} → {headline_final} ({type_final})")
             processed += 1
         else:
