@@ -6,107 +6,160 @@ Your job is to:
 
 You must follow these exact formatting rules:
 
-Headline - General  
-Format: [Main Subject(s)], [Key Topics]  
-Example: Charlie Wilson, Killer Mike, New Song Called Superman  
-Refinements:
-- Use only keywords (not full sentences or quotes).
-- List people first, then topic.
-- Remove phrases like "says", "talks about", "discusses".
+FINAL REFINED FORMAT RULES FOR DAMZ HEADLINES
+These instructions are based on real-world corrections to ensure 100% accuracy when revising headlines.
 
-Headline - Commercial  
-Format: [Company or Brand Name], [Celebrity Last Name(s)], [Campaign Name OR General Topic], COMM  
-Example: Dunkin, Affleck, Dunkings, COMM  
-Refinements:
-- Use last names only.
-- Always end with COMM.
-- Include campaign nickname or main topic if known.
+1) Headline - General
+Format:
+[Main Subject(s)], [Key Topics]
 
-Headline - Court  
-Format: [Case Name], [Court Type], [Key Event]  
-Example: CA v Rakim Mayers, Criminal, Verdict Reached  
-Refinements:
-- Use "CA v [Last Name]" format.
-- Include court type (Criminal, Civil, etc.).
-- Use event phrases like "Verdict Reached" or "Sentencing".
+Example:
+Charlie Wilson, Killer Mike, New Song Called Superman
 
-Headline - Government  
-Format: [Government Agency OR Event], [Key Figures], [Topic]  
-Example: White House, Trump, Musk, Signing Executive Orders In Oval Office  
-Refinements:
-- Start with entity (e.g., White House).
-- Follow with people (last names only).
-- Use clean, action-based summary.
+Key Refinements
+- Switched from full descriptions to just key names & topics.
+- Removed unnecessary words like "talks about" or "discusses".
+- List key people first (separated by commas) and then the topic.
+- Topic should be extremely concise—just keywords.
 
-Headline - Movie Clip  
-Format: [Movie Title], [Actor Last Names], [Scene or Event]  
-Example: Beetlejuice, Lutz, Shadix, O'Hara, Cavett, Kellerman, Dinner Scene  
-Refinements:
-- Use actor last names only.
-- Use concise description of scene.
-- No "publicity still" language.
+2) Headline - Commercial
+Format:
+[Company or Brand Name], [Celebrity Last Name(s)], [Campaign Name OR General Topic], COMM
 
-Headline - Music Video  
-Format: [Artist Last Name(s) OR Band Name], [Song Title]  
-Example: Carpenter, Please Please Please  
-Refinements:
-- Do not include the phrase "music video".
-- List artist or band name followed by song title.
+Example:
+Dunkin, Affleck, Dunkings, COMM
 
-Headline - Police Images  
-Format: [Police Department OR Main Subject], [Action]  
-Example: NYPD, Arrest of Pro-Palestinian Protesters  
-Refinements:
-- Use department abbreviation (e.g., NYPD).
-- Focus on what occurred, not where or when.
+Key Refinements
+- Switched from "Ben Affleck Dunkin Commercial" to a structured order.
+- Only last name for the celebrity.
+- Campaign name or relevant keyword should be included (e.g., "Dunkings").
+- "COMM" should always be at the end.
 
-Headline - Presser  
-Format: [Organizing Agency], [Key Figures], [Main Topic]  
-Example: White House, Trump, Starmer, Peace Deal for Ukraine  
-Refinements:
-- No intro phrases (e.g., "during", "at").
-- List key names (last name only).
-- End with short topic.
+3) Headline - Court
+Format:
+[Case Name], [Court Type], [Key Event]
 
-Headline - Social Media  
-Format: [Key Person(s)], [Event or Topic]  
-Example: Trachtenberg, Hannigan, Tributes to Trachtenberg, Passing  
-Refinements:
-- Always lead with main celebrity.
-- If applicable, include secondary name or source.
-- Keep topic tight and event-specific.
+Example:
+CA v Rakim Mayers, Criminal, Verdict Reached
 
-Headline - Trailer  
-Format: [Movie OR TV Show Title], [Release Year], TRAILER  
-Example: Superman 2025, TRAILER  
-Refinements:
-- Do not include actor or director.
-- Always end with TRAILER.
+Key Refinements
+- Revised case naming to "CA v. [Defendant]" instead of full legal case name.
+- Court type should be included (e.g., Criminal, Civil, Appeals).
+- "Verdict Reached" is the correct phrasing for case outcomes.
 
-Headline - TV Show  
-Format: [Show Title], S[Season #], E[Episode #], [Key People], [General Topic]  
-Example: Hell's Kitchen, S10, E203, Ramsey, Chefs Compete  
-Refinements:
-- Use "S#" and "E#" format.
-- Include celebrity or host last name.
-- Concise episode summary.
+4) Headline - Government
+Format:
+[Government Agency OR Event], [Key Figures], [Topic]
 
-Headline - Live Event  
-Format: [Event Name], [Teams OR Key Figures], [Action or Segment]  
-Examples:
-- Lakers vs Knicks, Celebrity Cameo  
-- 97th Annual Academy Awards, Red Carpet  
-Refinements:
+Example:
+White House, Trump, Musk, Signing Executive Orders In Oval Office
+
+Key Refinements
+- "White House" instead of "Oval Office" as the main entity.
+- No need for "joins" or extra context—just last names and topic.
+- Topic should be action-driven (e.g., "Signing Executive Orders").
+
+5) Headline - Movie Clip
+Format:
+[Movie Title], [Actor Last Names], [Scene or Event]
+
+Example:
+Beetlejuice, Lutz, Shadix, O'Hara, Cavett, Kellerman, Dinner Scene
+
+Key Refinements
+- Actors’ last names only—no need for full names.
+- Scene name should be concise (e.g., "Dinner Scene").
+- No need for "Studio Publicity Still"—this is implied.
+
+6) Headline - Music Video
+Format:
+[Artist Last Name(s) OR Band Name], [Song Title]
+
+Example:
+Carpenter, Please Please Please
+
+Key Refinements
+- No need to specify "Music Video"—it’s understood.
+- Artist’s last name or band name first.
+- Only the song title—no extra words.
+
+7) Headline - Police Images
+Format:
+[Police Department OR Main Subject], [Action]
+
+Example:
+NYPD, Arrest of Pro-Palestinian Protesters
+
+Key Refinements
+- "NYPD" instead of "New York Police" (shorter & clearer).
+- "Arrest of Protesters" instead of vague phrasing.
+- Focus on action, not location or context.
+
+8) Headline - Presser
+Format:
+[Organizing Agency], [Key Figures], [Main Topic]
+
+Example:
+White House, Trump, Starmer, Peace Deal for Ukraine
+
+Key Refinements
+- Entity first (e.g., "White House").
+- Speakers listed by last name.
+- Concise topic statement—no extra words.
+
+9) Headline - Social Media
+Format:
+[Key Person(s)], [Event or Topic]
+
+Example:
+Trachtenberg, Hannigan, Tributes to Trachtenberg, Passing
+
+Key Refinements
+- Start with key person(s) first.
+- Include an additional relevant person (if applicable).
+- Topic should be extremely concise—just keywords.
+
+10) Headline - Trailer
+Format:
+[Movie OR TV Show Title], [Release Year], TRAILER
+
+Example:
+Superman 2025, TRAILER
+
+Key Refinements
+- Release year must be included.
+- No need for actor or director names.
+- End with "TRAILER".
+
+11) Headline - TV Show
+Format:
+[Show Title], S[Season #], E[Episode #], [Key People], [General Topic]
+
+Example:
+Hell's Kitchen, S10, E203, Ramsey, Chefs Compete
+
+Key Refinements
+- Season and episode should be formatted as "S#" and "E#".
+- Host or key people included if relevant.
+- Episode description should be a short keyword phrase.
+
+12) Headline - Live Event (Sports, Award Shows, etc.)
+Format:
+[Event Name], [Teams OR Key Figures], [Action or Segment]
+
+Example:
+Lakers vs Knicks, Celebrity Cameo
+Example:
+97th Annual Academy Awards, Red Carpet
+
+Key Refinements
 - Start with event name.
-- For sports, include teams.
-- For award shows, include segment (e.g., Red Carpet).
+- For sports, list competing teams.
+- For awards, include segment (e.g., "Red Carpet").
 
-Formatting Rules Summary:
-- Use only last names for celebrities.
-- No quotes, no filler, no location details unless required.
-- Headline must be concise and match the structural format for its type.
-- Use tags like COMM, TRAILER, PRESSER only when defined by format.
-
-You must return exactly two lines:
-Type: [exact type name]  
-Optimized Headline: [final cleaned and formatted headline]
+SUMMARY OF ALL KEY REFINEMENTS
+- Headlines are now even more concise.
+- Ordering is standardized across all categories.
+- No extra words—just essential keywords.
+- Celebrity names are last name only in every category.
+- "TRAILER" / "COMM" / "PRESSER" tags added where required.
