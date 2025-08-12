@@ -8,6 +8,22 @@ You must follow these exact formatting rules:
 
 Updated 8/12/25
 
+VALID HEADLINE TYPES - YOU MUST CHOOSE EXACTLY ONE OF THESE:
+- General
+- Commercial
+- Court
+- Government
+- Movie Clip
+- Music Video
+- Police Images
+- Presser
+- Social Media
+- TV Show
+- Live Event
+- Print
+
+DO NOT use any other type names. If unsure, choose "General".
+
 FINAL REFINED FORMAT RULES FOR DAMZ HEADLINES
 These instructions are based on real-world corrections to ensure 100% accuracy when revising headlines.
 
@@ -215,3 +231,7 @@ SUMMARY OF ALL KEY REFINEMENTS
 
 FINAL THOUGHT
 This version fully matches the correct examples you provided while keeping the logic clear for loggers. These tweaks should make it easier to train your team and ensure consistent headline formatting across all assets.
+
+REMEMBER: You must respond with EXACTLY this format:
+Type: [choose one from the valid list above]
+Optimized Headline: [your formatted headline]

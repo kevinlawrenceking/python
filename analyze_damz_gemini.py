@@ -120,7 +120,7 @@ def main():
     cursor.execute(f"""
     SELECT TOP {1 if DEBUG_MODE else BATCH_LIMIT} fk_asset, headline, shot_description
     FROM docketwatch.dbo.damz_test
-    WHERE flagged = 1
+    WHERE headline_final is not null
     """)
     rows = cursor.fetchall()
     
