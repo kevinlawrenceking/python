@@ -6,7 +6,7 @@ import time
 BATCH_LIMIT = 1000
 GEMINI_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.6
-MAX_TOKENS = 200
+MAX_TOKENS = 500  # Increased from 200 to allow fuller responses
 SLEEP_SECONDS = 1.5  # Delay to stay polite and safe
 DEBUG_MODE = True  # Set to False for normal operation
 
@@ -29,6 +29,10 @@ def build_prompt(rules, headline, description):
 
 Headline: {headline}
 Shot Description: {description}
+
+Please respond in exactly this format:
+Type: [your type classification]
+Optimized Headline: [your optimized headline]
 """
 
 # --- Gemini Call ---
@@ -46,16 +50,31 @@ def analyze_asset(prompt, gemini_key):
         )
 
         text = response.text.strip()
-        print(f"[DEBUG] Gemini Response: {text[:200]}...")  # Show first 200 chars
+        print(f"[DEBUG] Gemini Response: {text}")  # Show full response now
         
         lines = [line.strip() for line in text.splitlines() if line.strip()]
+        
+        # Try to find Type and Optimized Headline lines
         type_line = next((l for l in lines if l.lower().startswith("type:")), None)
         headline_line = next((l for l in lines if l.lower().startswith("optimized headline:")), None)
+        
+        # If standard format not found, try alternative formats
+        if not type_line:
+            # Maybe it's just a single line response, try to parse it
+            if len(lines) == 1 and "," in lines[0]:
+                parts = lines[0].split(",")
+                if len(parts) >= 2:
+                    print(f"[DEBUG] Attempting to parse single-line response: {lines[0]}")
+                    # For now, let's try a simple fallback
+                    type_final = parts[-1].strip()  # Last part might be type
+                    headline_final = ",".join(parts[:-1]).strip()  # Everything else as headline
+                    print(f"[DEBUG] Parsed as - Type: '{type_final}', Headline: '{headline_final}'")
+                    return type_final, headline_final
 
         if not type_line:
-            print(f"[DEBUG] No 'Type:' line found. Available lines: {[l[:50] for l in lines[:3]]}")
+            print(f"[DEBUG] No 'Type:' line found. Available lines: {[l[:100] for l in lines[:5]]}")
         if not headline_line:
-            print(f"[DEBUG] No 'Optimized Headline:' line found. Available lines: {[l[:50] for l in lines[:3]]}")
+            print(f"[DEBUG] No 'Optimized Headline:' line found. Available lines: {[l[:100] for l in lines[:5]]}")
 
         return (
             type_line.split(":", 1)[1].strip() if type_line else None,
@@ -72,6 +91,10 @@ def main():
     cursor = conn.cursor()
 
     rules = load_prompt_rules()
+    print(f"[DEBUG] Prompt rules loaded: {len(rules)} characters")
+    if DEBUG_MODE:
+        print(f"[DEBUG] Prompt rules preview: {rules[:300]}...")
+    
     gemini_key = get_gemini_key(cursor)
     if not gemini_key:
         print("ERROR: Gemini API key not found.")
