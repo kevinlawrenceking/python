@@ -5,10 +5,17 @@ import time
 # --- CONFIG ---
 BATCH_LIMIT = 1000
 GEMINI_MODEL = "gemini-1.5-flash"
-TEMPERATURE = 0.6
+TEMPERATURE = 0.2  # Lower temperature for more consistent, rule-following behavior
 MAX_TOKENS = 500  # Increased from 200 to allow fuller responses
 SLEEP_SECONDS = 1.5  # Delay to stay polite and safe
 DEBUG_MODE = False  # Set to False for normal operation
+
+# Valid headline types from prompt rules
+VALID_TYPES = {
+    "Live Event", "Night Out", "Travel", "Business Meeting", 
+    "TV Show", "Movie", "Sports Team", "Court", "Family Outing", 
+    "Paparazzi", "Social Media", "Red Carpet"
+}
 
 # --- Prompt Setup ---
 PROMPT_RULES_PATH = "\\\\10.146.176.84\\general\\docketwatch\\python\\prompt_rules.txt"
@@ -27,12 +34,20 @@ def get_gemini_key(cursor):
 def build_prompt(rules, headline, description):
     return f"""{rules}
 
-Headline: {headline}
+ANALYZE THIS ASSET:
+Current Headline: {headline}
 Shot Description: {description}
 
-Please respond in exactly this format:
+INSTRUCTIONS:
+1. First determine the correct headline TYPE using the decision priority order above
+2. Then create an optimized headline following the exact format rules for that type
+3. Use the CRITICAL FORMATTING FIXES to avoid common errors
+
+REQUIRED RESPONSE FORMAT (must be exact):
 Type: [your type classification]
 Optimized Headline: [your optimized headline]
+
+REMEMBER: 80% should be Live Event. When in doubt, choose Live Event.
 """
 
 # --- Gemini Call ---
@@ -50,7 +65,7 @@ def analyze_asset(prompt, gemini_key):
         )
 
         text = response.text.strip()
-        print(f"[DEBUG] Gemini Response: {text}")  # Show full response now
+        print(f"[DEBUG] Gemini Response: {text}")
         
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         
@@ -58,28 +73,48 @@ def analyze_asset(prompt, gemini_key):
         type_line = next((l for l in lines if l.lower().startswith("type:")), None)
         headline_line = next((l for l in lines if l.lower().startswith("optimized headline:")), None)
         
-        # If standard format not found, try alternative formats
-        if not type_line:
-            # Maybe it's just a single line response, try to parse it
+        # Extract values
+        type_final = None
+        headline_final = None
+        
+        if type_line:
+            type_final = type_line.split(":", 1)[1].strip()
+            # Validate type against known valid types
+            if type_final not in VALID_TYPES:
+                print(f"[WARNING] Invalid type '{type_final}', defaulting to 'Live Event'")
+                type_final = "Live Event"
+        
+        if headline_line:
+            headline_final = headline_line.split(":", 1)[1].strip()
+            # Basic headline validation - remove quotes if present
+            if headline_final.startswith('"') and headline_final.endswith('"'):
+                headline_final = headline_final[1:-1]
+        
+        # If standard format not found, try alternative parsing
+        if not type_line or not headline_line:
+            print(f"[DEBUG] Standard format not found. Available lines: {[l[:100] for l in lines[:5]]}")
+            
+            # Try single line format
             if len(lines) == 1 and "," in lines[0]:
                 parts = lines[0].split(",")
                 if len(parts) >= 2:
                     print(f"[DEBUG] Attempting to parse single-line response: {lines[0]}")
-                    # For now, let's try a simple fallback
-                    type_final = parts[-1].strip()  # Last part might be type
-                    headline_final = ",".join(parts[:-1]).strip()  # Everything else as headline
-                    print(f"[DEBUG] Parsed as - Type: '{type_final}', Headline: '{headline_final}'")
-                    return type_final, headline_final
+                    potential_type = parts[-1].strip()
+                    potential_headline = ",".join(parts[:-1]).strip()
+                    
+                    if potential_type in VALID_TYPES:
+                        type_final = potential_type
+                        headline_final = potential_headline
+                        print(f"[DEBUG] Successfully parsed single-line - Type: '{type_final}', Headline: '{headline_final}'")
+                    else:
+                        print(f"[DEBUG] Single-line parse failed - invalid type: '{potential_type}'")
 
-        if not type_line:
-            print(f"[DEBUG] No 'Type:' line found. Available lines: {[l[:100] for l in lines[:5]]}")
-        if not headline_line:
-            print(f"[DEBUG] No 'Optimized Headline:' line found. Available lines: {[l[:100] for l in lines[:5]]}")
-
-        return (
-            type_line.split(":", 1)[1].strip() if type_line else None,
-            headline_line.split(":", 1)[1].strip() if headline_line else None
-        )
+        # Final validation
+        if not type_final or not headline_final:
+            print(f"[ERROR] Failed to parse response - Type: {type_final}, Headline: {headline_final}")
+            return None, None
+            
+        return type_final, headline_final
 
     except Exception as e:
         print(f"[ERROR] Gemini API failed: {e}")
@@ -106,14 +141,14 @@ def main():
             SELECT COLUMN_NAME 
             FROM INFORMATION_SCHEMA.COLUMNS 
             WHERE TABLE_NAME = 'damz_test' AND TABLE_SCHEMA = 'dbo'
-            AND COLUMN_NAME IN ('headline_type_v2', 'headline_v2')
+            AND COLUMN_NAME IN ('headline_type_v3', 'headline_v3')
         """)
         columns = [row[0] for row in cursor.fetchall()]
         print(f"[DEBUG] Available target columns: {columns}")
-        if 'headline_type_v2' not in columns:
-            print("WARNING: Column 'headline_type_v2' does not exist!")
-        if 'headline_v2' not in columns:
-            print("WARNING: Column 'headline_v2' does not exist!")
+        if 'headline_type_v3' not in columns:
+            print("WARNING: Column 'headline_type_v3' does not exist!")
+        if 'headline_v3' not in columns:
+            print("WARNING: Column 'headline_v3' does not exist!")
     except Exception as e:
         print(f"[DEBUG] Could not check columns: {e}")
 
@@ -145,7 +180,7 @@ def main():
         if type_final and headline_final:
             # First, let's verify the record exists and show current values
             cursor.execute("""
-                SELECT headline_type_v2, headline_v2 
+                SELECT headline_type_v3, headline_v3 
                 FROM docketwatch.dbo.damz_test 
                 WHERE fk_asset = ?
             """, (fk_asset,))
@@ -155,8 +190,8 @@ def main():
             # Now update
             cursor.execute("""
                 UPDATE docketwatch.dbo.damz_test
-                SET headline_type_v2 = ?, 
-                    headline_v2 = ?
+                SET headline_type_v3 = ?, 
+                    headline_v3 = ?
                 WHERE fk_asset = ?
             """, (type_final, headline_final, fk_asset))
             
@@ -165,7 +200,7 @@ def main():
             
             # Verify the update worked
             cursor.execute("""
-                SELECT headline_type_v2, headline_v2 
+                SELECT headline_type_v3, headline_v3 
                 FROM docketwatch.dbo.damz_test 
                 WHERE fk_asset = ?
             """, (fk_asset,))
