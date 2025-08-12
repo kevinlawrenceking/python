@@ -15,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from scraper_base import insert_documents_for_event
 
 import sys
-lock_path = "download_map_pdfs.lock"
+lock_path = "download_map_pdfs.lorck"
 if os.path.exists(lock_path):
     print("Script already running. Exiting.")
     sys.exit(0)
