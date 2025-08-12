@@ -6,28 +6,36 @@ Your job is to:
 
 You must follow these exact formatting rules:
 
+Updated 8/12/25
+
 FINAL REFINED FORMAT RULES FOR DAMZ HEADLINES
 These instructions are based on real-world corrections to ensure 100% accuracy when revising headlines.
 
 1) Headline - General
 Format:
-[Main Subject(s)], [Key Topics]
+[Main Subject(s) Last Name(s)], [Key Topic]
 
 Example:
-Charlie Wilson, Killer Mike, New Song Called Superman
+Wilson, Killer Mike, New Song Called Superman
+Example:
+Osbourne, Wilson, Engagement
+Example:
+Bradley, Amy and her Brother Brad
 
 Key Refinements
 - Switched from full descriptions to just key names & topics.
 - Removed unnecessary words like "talks about" or "discusses".
 - List key people first (separated by commas) and then the topic.
+- Prioritize famous people names listed first, not alphabetized unless unknown then alphabetize.
 - Topic should be extremely concise—just keywords.
+- Show or stage name is one name; don't split into first and last name.
 
 2) Headline - Commercial
 Format:
-[Company or Brand Name], [Celebrity Last Name(s)], [Campaign Name OR General Topic], COMM
+[Main Subject(s) Last Name(s)], [Company or Brand Name], [Campaign Name OR General Topic], COMM
 
 Example:
-Dunkin, Affleck, Dunkings, COMM
+Affleck, Dunkin, Dunkings, COMM
 
 Key Refinements
 - Switched from "Ben Affleck Dunkin Commercial" to a structured order.
@@ -46,13 +54,14 @@ Key Refinements
 - Revised case naming to "CA v. [Defendant]" instead of full legal case name.
 - Court type should be included (e.g., Criminal, Civil, Appeals).
 - "Verdict Reached" is the correct phrasing for case outcomes.
+- Include more concise detail in case outcomes after court type.
 
 4) Headline - Government
 Format:
-[Government Agency OR Event], [Key Figures], [Topic]
+[Main Subject(s) Last Name(s)], [Government Agency OR Event], [Main Topic]
 
 Example:
-White House, Trump, Musk, Signing Executive Orders In Oval Office
+Trump, Musk, White House, Signing Executive Orders In Oval Office
 
 Key Refinements
 - "White House" instead of "Oval Office" as the main entity.
@@ -61,31 +70,37 @@ Key Refinements
 
 5) Headline - Movie Clip
 Format:
-[Movie Title], [Actor Last Names], [Scene or Event]
+[Movie Title], [Release Year], [Film Type: TRAILER, BTS, FFILM]
 
 Example:
-Beetlejuice, Lutz, Shadix, O'Hara, Cavett, Kellerman, Dinner Scene
+Beetlejuice, 1988, FFILM
+Example:
+Superman, 2025, TRAILER
+Example:
+Highest 2 Lowest, 2025, TRAILER
 
 Key Refinements
-- Actors’ last names only—no need for full names.
-- Scene name should be concise (e.g., "Dinner Scene").
+- Actors’ last names are allowed—only the main two; if more than two, add "And Others".
+- No scene name.
 - No need for "Studio Publicity Still"—this is implied.
+- All caps for film type [Film Type: TRAILER, BTS, FFILM].
+- BTS is for behind the scenes.
+- FFILM is feature film.
 
 6) Headline - Music Video
 Format:
-[Artist Last Name(s) OR Band Name], [Song Title]
+[Last Name(s) OR Band Name], [Song Title], MXV
 
 Example:
-Carpenter, Please Please Please
+Carpenter, Please Please Please, MXV
 
 Key Refinements
-- No need to specify "Music Video"—it’s understood.
+- Specify "Music Video" using abbreviation MXV.
 - Artist’s last name or band name first.
-- Only the song title—no extra words.
 
 7) Headline - Police Images
 Format:
-[Police Department OR Main Subject], [Action]
+[Police Department OR Main Subject], [Main Event or Action]
 
 Example:
 NYPD, Arrest of Pro-Palestinian Protesters
@@ -97,69 +112,106 @@ Key Refinements
 
 8) Headline - Presser
 Format:
-[Organizing Agency], [Key Figures], [Main Topic]
+[Main Subject(s) Last Name(s)], [Organizing Agency], [Main Topic], PRESSER
 
 Example:
-White House, Trump, Starmer, Peace Deal for Ukraine
+Trump, Starmer, White House, Peace Deal for Ukraine, PRESSER
+Example:
+Sanders, On Cancer, PRESSER
 
 Key Refinements
-- Entity first (e.g., "White House").
-- Speakers listed by last name.
+- Entity second (e.g., "White House").
+- Speakers listed by last name, only two main; if more, list "And Others".
 - Concise topic statement—no extra words.
 
 9) Headline - Social Media
 Format:
-[Key Person(s)], [Event or Topic]
+[Main Subject(s) Last Name(s)], [Event or Topic]
 
 Example:
 Trachtenberg, Hannigan, Tributes to Trachtenberg, Passing
+Example:
+Lochte Posts About God And Betrayal
 
 Key Refinements
 - Start with key person(s) first.
 - Include an additional relevant person (if applicable).
 - Topic should be extremely concise—just keywords.
-
-10) Headline - Trailer
-Format:
-[Movie OR TV Show Title], [Release Year], TRAILER
-
-Example:
-Superman 2025, TRAILER
-
-Key Refinements
-- Release year must be included.
-- No need for actor or director names.
-- End with "TRAILER".
+- Topic should include last name of main subject.
+- Include if it’s a Tweet, Post, Comment, or Tribute.
+- If celebrity shares same last name, list last name only once.
 
 11) Headline - TV Show
 Format:
-[Show Title], S[Season #], E[Episode #], [Key People], [General Topic]
+[Show Title], S[Season #], E[Episode #], [Main Subject(s) Last Name(s)], [General Topic]
 
 Example:
 Hell's Kitchen, S10, E203, Ramsey, Chefs Compete
+Example:
+The Kelly Clarkson Show, S6, E147, Affleck, Clarkson
 
 Key Refinements
 - Season and episode should be formatted as "S#" and "E#".
-- Host or key people included if relevant.
+- Host or key people included if relevant; if 3 names, list "And Others".
 - Episode description should be a short keyword phrase.
+- If show name is too long, abbreviate (e.g., Watch What Happens Live With Andy Cohen → WWHL with Andy Cohen).
 
 12) Headline - Live Event (Sports, Award Shows, etc.)
 Format:
-[Event Name], [Teams OR Key Figures], [Action or Segment]
+[Event Name + Year], [Main Subject(s) Last Name(s) OR Competing Teams], [Action or Segment]
 
 Example:
-Lakers vs Knicks, Celebrity Cameo
+Lakers vs Knicks, West, Celebrity Cameo
 Example:
-97th Annual Academy Awards, Red Carpet
+97th Annual Academy Awards, Keaton, Red Carpet
+Example:
+MTV Networks Upfront 2003, Osbourne, Presenting
+Example:
+2016 MTV VMAs, Spears, G Eazy, Performance
+Example:
+I Know What You Did Last Summer, 2025, Cline, Los Angeles Premiere
 
 Key Refinements
-- Start with event name.
-- For sports, list competing teams.
-- For awards, include segment (e.g., "Red Carpet").
+- Start with event name then main subjects’ last names.
+- For sports, list competing teams or first and last name of competitor.
+- For awards, include segment type (e.g., "Red Carpet", "Premiere").
+- If same last name, only use once.
+- If more than two, add "And Others" or "And Cast".
+- Should include event year OR show #.
+
+13) Headline - Print
+Format:
+[Main Subject(s) Last Name(s)], [Title], [Print Type: POSTER, PROMO, PLAYBILL, SKETCH, DOC, ALBUM, SONG, BOOK]
+
+Example:
+Hensel, Bowling, Wedding Certificate, DOC
+Example:
+America’s Got Talent, POSTER
+Example:
+Combs, In the Court Room, SKETCH
+Example:
+'Am I The Drama', ALBUM
+
+Print Type Descriptions:
+POSTER - picture for print, used for advertisement on walls, events, or rooms.
+PROMO - promotional materials used to advertise a product, event, or service.
+PLAYBILL - program given to audiences at theater performance.
+SKETCH - quickly drawn visual or preliminary drawing.
+DOC - contracts, certificates, reports, legal filings, official notices.
+ALBUM - cover art for album.
+SONG - cover art for song.
+BOOK - cover for a book or manual.
+
+Key Refinements
+- Song and Album type should have single quotation marks around the title.
+- Type should be in AP style for consistency.
 
 SUMMARY OF ALL KEY REFINEMENTS
 - Headlines are now even more concise.
 - Ordering is standardized across all categories.
 - No extra words—just essential keywords.
-- Celebrity names are last name only in every category.
+- Celebrity names are last name only.
 - "TRAILER" / "COMM" / "PRESSER" tags added where required.
+
+FINAL THOUGHT
+This version fully matches the correct examples you provided while keeping the logic clear for loggers. These tweaks should make it easier to train your team and ensure consistent headline formatting across all assets.

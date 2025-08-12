@@ -70,9 +70,9 @@ def main():
         return
 
     cursor.execute(f"""
-        SELECT TOP {BATCH_LIMIT} fk_asset, headline, shot_description
-        FROM docketwatch.dbo.damz_test
-        WHERE headline_optimized IS NULL
+    SELECT TOP {BATCH_LIMIT} fk_asset, headline, shot_description
+    FROM docketwatch.dbo.damz_test
+    WHERE headline_optimized IS NOT NULL
     """)
     rows = cursor.fetchall()
 
@@ -88,13 +88,10 @@ def main():
         if type_final and headline_final:
             cursor.execute("""
                 UPDATE docketwatch.dbo.damz_test
-                SET
-                    headline_type = ?,
-                    headline_type_final = ?,
-                    headline_optimized = ?,
-                    headline_final = ?
+                SET headline_type_v2 = ?, 
+                    headline_v2 = ?
                 WHERE fk_asset = ?
-            """, (type_final, type_final, headline_final, headline_final, fk_asset))
+            """, (type_final, headline_final, fk_asset))
             conn.commit()
             print(f"✓ Updated: {fk_asset} → {headline_final} ({type_final})")
             processed += 1

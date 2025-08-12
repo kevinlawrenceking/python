@@ -64,7 +64,7 @@ def analyze_asset(headline, description):
 cursor.execute(f"""
     SELECT TOP {BATCH_LIMIT} fk_asset, headline, shot_description
     FROM docketwatch.dbo.damz_test
-    WHERE headline_optimized IS NULL
+    WHERE headline_optimized IS NOT NULL
 """)
 rows = cursor.fetchall()
 
@@ -81,13 +81,10 @@ for row in rows:
     if type_final and headline_final:
         cursor.execute("""
             UPDATE docketwatch.dbo.damz_test
-            SET 
-                headline_type = ?, 
-                headline_type_final = ?, 
-                headline_optimized = ?, 
-                headline_final = ?
+            SET headline_type_v2 = ?, 
+                headline_v2 = ?
             WHERE fk_asset = ?
-        """, (type_final, type_final, headline_final, headline_final, fk_asset))
+        """, (type_final, headline_final, fk_asset))
         conn.commit()
         processed += 1
         total_prompt_tokens += p_tokens
@@ -95,7 +92,7 @@ for row in rows:
         print(f"✓ Updated {fk_asset} | Prompt: {p_tokens}, Output: {c_tokens}")
     else:
         skipped += 1
-        print(f"⚠ Skipped: {fk_asset}")
+        print(f"Skipped: {fk_asset}")
 
     time.sleep(1.5)
 
