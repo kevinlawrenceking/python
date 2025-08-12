@@ -8,6 +8,7 @@ GEMINI_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.6
 MAX_TOKENS = 200
 SLEEP_SECONDS = 1.5  # Delay to stay polite and safe
+DEBUG_MODE = True  # Set to False for normal operation
 
 # --- Prompt Setup ---
 PROMPT_RULES_PATH = "\\\\10.146.176.84\\general\\docketwatch\\python\\prompt_rules.txt"
@@ -45,9 +46,16 @@ def analyze_asset(prompt, gemini_key):
         )
 
         text = response.text.strip()
+        print(f"[DEBUG] Gemini Response: {text[:200]}...")  # Show first 200 chars
+        
         lines = [line.strip() for line in text.splitlines() if line.strip()]
         type_line = next((l for l in lines if l.lower().startswith("type:")), None)
         headline_line = next((l for l in lines if l.lower().startswith("optimized headline:")), None)
+
+        if not type_line:
+            print(f"[DEBUG] No 'Type:' line found. Available lines: {[l[:50] for l in lines[:3]]}")
+        if not headline_line:
+            print(f"[DEBUG] No 'Optimized Headline:' line found. Available lines: {[l[:50] for l in lines[:3]]}")
 
         return (
             type_line.split(":", 1)[1].strip() if type_line else None,
@@ -70,19 +78,28 @@ def main():
         return
 
     cursor.execute(f"""
-    SELECT TOP {BATCH_LIMIT} fk_asset, headline, shot_description
+    SELECT TOP {1 if DEBUG_MODE else BATCH_LIMIT} fk_asset, headline, shot_description
     FROM docketwatch.dbo.damz_test
     WHERE headline_optimized IS NOT NULL
     """)
     rows = cursor.fetchall()
+    
+    if DEBUG_MODE:
+        print(f"[DEBUG MODE] Processing only 1 record for testing...")
+    
+    print(f"Found {len(rows)} records to process")
 
     processed, skipped = 0, 0
 
     for row in rows:
         fk_asset, headline, shot_description = row
         print(f"\nAnalyzing asset: {fk_asset}")
+        print(f"[DEBUG] Headline: {headline[:100]}...")
+        print(f"[DEBUG] Description: {shot_description[:100] if shot_description else 'None'}...")
 
         prompt = build_prompt(rules, headline, shot_description)
+        print(f"[DEBUG] Prompt length: {len(prompt)} characters")
+        
         type_final, headline_final = analyze_asset(prompt, gemini_key)
 
         if type_final and headline_final:
@@ -96,7 +113,7 @@ def main():
             print(f"✓ Updated: {fk_asset} → {headline_final} ({type_final})")
             processed += 1
         else:
-            print(f"⚠ Skipped: {fk_asset} — invalid response")
+            print(f"⚠ Skipped: {fk_asset} — Type: {type_final}, Headline: {headline_final}")
             skipped += 1
 
         time.sleep(SLEEP_SECONDS)
