@@ -162,7 +162,7 @@ def main():
         CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
         chrome_options = Options()
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless=new")
+        ### chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-dev-shm-usage")
         service = Service(CHROMEDRIVER_PATH)
         driver = webdriver.Chrome(service=service, options=chrome_options)

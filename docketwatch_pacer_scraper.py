@@ -9,6 +9,8 @@ import unicodedata
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
@@ -231,8 +233,60 @@ try:
 
         driver.get(case_url)
         human_pause(3, 5)
-        driver.find_element(By.PARTIAL_LINK_TEXT, "Docket Report").click()
-        human_pause(3, 5)
+        
+        # Wait for page to fully load
+        try:
+            wait = WebDriverWait(driver, 10)
+            wait.until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+            human_pause(2, 3)  # Additional pause for JavaScript to finish
+        except:
+            log_message("WARNING", f"Page may not have fully loaded for case {case_name}")
+        
+        # Try multiple variations of the Docket Report link
+        docket_link = None
+        possible_texts = ["Docket Report", "Docket Sheet", "Docket", "View Docket"]
+        
+        for text in possible_texts:
+            try:
+                docket_link = driver.find_element(By.PARTIAL_LINK_TEXT, text)
+                log_message("INFO", f"Found docket link with text: '{text}'")
+                break
+            except:
+                continue
+        
+        # If partial link text fails, try other methods
+        if not docket_link:
+            try:
+                # Try by link text (exact match)
+                docket_link = driver.find_element(By.LINK_TEXT, "Docket Report")
+            except:
+                try:
+                    # Try XPath approach
+                    docket_link = driver.find_element(By.XPATH, "//a[contains(text(), 'Docket') and contains(text(), 'Report')]")
+                except:
+                    try:
+                        # Try CSS selector
+                        docket_link = driver.find_element(By.CSS_SELECTOR, "a[href*='docket']")
+                    except:
+                        pass
+        
+        if docket_link:
+            docket_link.click()
+            human_pause(3, 5)
+            log_message("INFO", "Successfully clicked docket report link")
+        else:
+            # If still not found, save debug info and skip this case
+            log_message("ERROR", f"Could not find 'Docket Report' link for case {case_name}")
+            
+            # Save page source for debugging
+            debug_filename = f"debug_docket_report_{case_id}_{int(time.time())}.html"
+            debug_path = f"\\\\10.146.176.84\\general\\docketwatch\\python\\logs\\{debug_filename}"
+            with open(debug_path, "w", encoding="utf-8") as f:
+                f.write(driver.page_source)
+            log_message("INFO", f"Saved debug HTML to: {debug_filename}")
+            
+            # Skip to next case instead of crashing
+            continue
 
         for checkbox_name in ["list_of_parties_and_counsel", "terminated_parties"]:
             try:
