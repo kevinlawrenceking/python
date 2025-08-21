@@ -164,17 +164,17 @@ def main():
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_NAME = 'damz_test' AND TABLE_SCHEMA = 'dbo'
-              AND COLUMN_NAME IN ('headline_v5','shot_description','shot_description_new')
+              AND COLUMN_NAME IN ('headline_v5','shot_description','shot_description_new_2')
         """)
         cols = {row[0] for row in cursor.fetchall()}
         if 'headline_v5' not in cols:
             print("WARNING: Column 'headline_v5' not found.")
-        if 'shot_description_new' not in cols:
-            print("WARNING: Column 'shot_description_new' not found.")
+        if 'shot_description_new_2' not in cols:
+            print("WARNING: Column 'shot_description_new_2' not found.")
     except Exception as e:
         print(f"[DEBUG] Column check failed: {e}")
 
-    # Pull rows where headline_v5 is not null and shot_description_new is null
+    # Pull rows where headline_v5 is not null and shot_description_new_2 is null
     cursor.execute(f"""
         SELECT TOP {1 if DEBUG_MODE else BATCH_LIMIT}
                fk_asset,
@@ -182,7 +182,7 @@ def main():
                shot_description
         FROM docketwatch.dbo.damz_test
         WHERE headline_v5 IS NOT NULL
-          AND shot_description_new IS NULL
+          AND shot_description_new_2 IS NULL
         ORDER BY fk_asset
     """)
     rows = cursor.fetchall()
@@ -215,7 +215,7 @@ def main():
         if cleaned:
             # Show current before update
             cursor.execute("""
-                SELECT shot_description_new
+                SELECT shot_description_new_2
                 FROM docketwatch.dbo.damz_test
                 WHERE fk_asset = ?
             """, (fk_asset,))
@@ -225,14 +225,14 @@ def main():
 
             cursor.execute("""
                 UPDATE docketwatch.dbo.damz_test
-                SET shot_description_new = ?
+                SET shot_description_new_2 = ?
                 WHERE fk_asset = ?
             """, (cleaned, fk_asset))
             conn.commit()
 
             # Verify
             cursor.execute("""
-                SELECT shot_description_new
+                SELECT shot_description_new_2
                 FROM docketwatch.dbo.damz_test
                 WHERE fk_asset = ?
             """, (fk_asset,))
