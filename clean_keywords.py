@@ -151,15 +151,16 @@ def main():
     except Exception as e:
         print(f"[DEBUG] Column check failed: {e}")
 
-    # Pull rows where shot_description_new is not null and keywords_new is null
+    # Pull rows where shot_description_new is not null and keywords_new is null/empty
     cursor.execute(f"""
         SELECT TOP {1 if DEBUG_MODE else BATCH_LIMIT}
                fk_asset,
                keywords
         FROM docketwatch.dbo.damz_test
         WHERE shot_description_new IS NOT NULL
-          AND keywords_new IS NULL
+          AND (keywords_new IS NULL OR keywords_new = '')
           AND keywords IS NOT NULL
+          AND keywords <> ''
         ORDER BY fk_asset
     """)
     rows = cursor.fetchall()
