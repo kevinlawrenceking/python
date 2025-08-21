@@ -3,18 +3,18 @@ import google.generativeai as genai
 import time
 
 # --- CONFIG ---
-BATCH_LIMIT = 1000
+BATCH_LIMIT = 5000
 GEMINI_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.2  # Lower temperature for more consistent, rule-following behavior
 MAX_TOKENS = 500  # Increased from 200 to allow fuller responses
-SLEEP_SECONDS = 1.5  # Delay to stay polite and safe
+SLEEP_SECONDS = .5  # Delay to stay polite and safe
 DEBUG_MODE = False  # Set to False for normal operation
 
 # Valid headline types from prompt rules
 VALID_TYPES = {
-    "Live Event", "Night Out", "Travel", "Business Meeting", 
-    "TV Show", "Movie", "Sports Team", "Court", "Family Outing", 
-    "Paparazzi", "Social Media", "Red Carpet"
+    "General", "Stock", "Presser", "Commercial", "Government", 
+    "Police Footage", "Court", "Movie", "Music Video", "Social Media", 
+    "TV Show", "Live Sports Event", "Live Event", "Print"
 }
 
 # --- Prompt Setup ---
@@ -141,14 +141,14 @@ def main():
             SELECT COLUMN_NAME 
             FROM INFORMATION_SCHEMA.COLUMNS 
             WHERE TABLE_NAME = 'damz_test' AND TABLE_SCHEMA = 'dbo'
-            AND COLUMN_NAME IN ('headline_type_v3', 'headline_v3')
+            AND COLUMN_NAME IN ('headline_type_V5', 'headline_V5')
         """)
         columns = [row[0] for row in cursor.fetchall()]
         print(f"[DEBUG] Available target columns: {columns}")
-        if 'headline_type_v3' not in columns:
-            print("WARNING: Column 'headline_type_v3' does not exist!")
-        if 'headline_v3' not in columns:
-            print("WARNING: Column 'headline_v3' does not exist!")
+        if 'headline_type_V5' not in columns:
+            print("WARNING: Column 'headline_type_V5' does not exist!")
+        if 'headline_V5' not in columns:
+            print("WARNING: Column 'headline_V5' does not exist!")
     except Exception as e:
         print(f"[DEBUG] Could not check columns: {e}")
 
@@ -180,7 +180,7 @@ def main():
         if type_final and headline_final:
             # First, let's verify the record exists and show current values
             cursor.execute("""
-                SELECT headline_type_v3, headline_v3 
+                SELECT headline_type_V5, headline_V5 
                 FROM docketwatch.dbo.damz_test 
                 WHERE fk_asset = ?
             """, (fk_asset,))
@@ -190,8 +190,8 @@ def main():
             # Now update
             cursor.execute("""
                 UPDATE docketwatch.dbo.damz_test
-                SET headline_type_v3 = ?, 
-                    headline_v3 = ?
+                SET headline_type_V5 = ?, 
+                    headline_V5 = ?
                 WHERE fk_asset = ?
             """, (type_final, headline_final, fk_asset))
             
@@ -200,7 +200,7 @@ def main():
             
             # Verify the update worked
             cursor.execute("""
-                SELECT headline_type_v3, headline_v3 
+                SELECT headline_type_V5, headline_V5 
                 FROM docketwatch.dbo.damz_test 
                 WHERE fk_asset = ?
             """, (fk_asset,))
