@@ -112,7 +112,11 @@ def clean_keywords(prompt, gemini_key):
                 keywords_array = json.loads(json_match.group())
                 if isinstance(keywords_array, list):
                     cleaned = post_clean_keywords(keywords_array)
-                    return json.dumps(cleaned) if cleaned else None
+                    if cleaned:
+                        # Return compact JSON without spaces after commas
+                        return json.dumps(cleaned, separators=(',', ':'))
+                    else:
+                        return None
         except Exception as e:
             if DEBUG_MODE:
                 print(f"[DEBUG] JSON parse failed: {e}")

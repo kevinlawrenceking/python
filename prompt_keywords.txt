@@ -14,7 +14,7 @@ Rules:
    - Beer/Alcohol/Drink → Beer (keep brand separately)
 7) Keep strong context: Location hierarchy, Subject, Activity, Objects, Brand. Max 10–15 items.
 8) PRESERVE SPACES within multi-word keywords. Examples: "Young Adult Man", "Acoustic Guitar", "Red Carpet"
-9) Return a compact JSON array with no spaces after commas in the array structure, but maintain spaces within individual keyword strings.
+9) Return a compact JSON array with NO spaces after commas. Format exactly like this: ["Keyword One","Keyword Two","Keyword Three"]
 
 Examples:
 
