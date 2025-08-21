@@ -6,6 +6,8 @@ Formatting rules:
 - Output should be 15-30 words, providing rich visual detail.
 - Use complete descriptive phrases that paint a picture of the scene.
 - Include physical actions, clothing details, expressions, poses, and setting details.
+- ALWAYS preserve celebrity mood and facial expressions (smiling, laughing, serious, concerned, etc.).
+- ALWAYS keep location information when present (cities, venues, countries, states).
 - Use last names only for people; stage names remain as a single token.
 - Keep essential event name, location, and year if clearly present.
 - Strip editor notes and credits entirely.
@@ -28,14 +30,14 @@ Examples:
 Input:
 UNSPECIFIED, UNSPECIFIED - CIRCA 1988 EDITOR'S NOTE Image has been retouched. Hulk Hogan poses for a studio shot while with the WWE in 1988. Photo by WWE via Getty Images
 Output:
-Hogan stands confidently in wrestling attire against neutral studio backdrop, flexing signature pose for WWE promotional portrait, 1988
+Hogan stands confidently with intense expression in wrestling attire against neutral studio backdrop, flexing signature pose for WWE promotional portrait, 1988
 
 Input:
 PONTIAC, MICHIGAN - MARCH 29 Hulk Hogan poses in the ring during WrestleMania III on March 29, 1987 at the Silverdome in Pontiac, Michigan. Photo by WWE via Getty Images
 Output:
-Hogan strikes dramatic victory pose center ring at packed Silverdome during historic WrestleMania III, crowd visible in background, 1987
+Hogan strikes dramatic victory pose with triumphant smile center ring at packed Silverdome Pontiac Michigan during historic WrestleMania III, 1987
 
 Input:
 NEW YORK, NEW YORK - MARCH 31 Muhammad Ali guest referees Hulk Hogan and Roddy Piper during WrestleMania I on March 31, 1985 at Madison Square Garden in New York, New York. Photo by WWE via Getty Images
 Output:
-Ali stands between wrestling opponents Hogan and Piper as special guest referee, wearing striped shirt at Madison Square Garden, 1985
+Ali stands with serious focused expression between wrestling opponents Hogan and Piper as special guest referee at Madison Square Garden New York, 1985
