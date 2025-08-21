@@ -8,7 +8,7 @@ Formatting rules:
 - Include physical actions, clothing details, expressions, poses, and setting details.
 - ALWAYS preserve celebrity mood and facial expressions (smiling, laughing, serious, concerned, etc.).
 - ALWAYS keep location information when present (cities, venues, countries, states).
-- Use last names only for people; stage names remain as a single token.
+- Keep full names of celebrities.
 - Keep essential event name, location, and year if clearly present.
 - Strip editor notes and credits entirely.
 - Remove placeholders such as "UNSPECIFIED".
