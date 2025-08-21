@@ -13,8 +13,8 @@ Rules:
    - Sunglasses/Shades → Sunglasses
    - Beer/Alcohol/Drink → Beer (keep brand separately)
 7) Keep strong context: Location hierarchy, Subject, Activity, Objects, Brand. Max 10–15 items.
-8) Return a compact JSON array of strings only. No explanations
-9) no spaces between values (no space after commas)
+8) PRESERVE SPACES within multi-word keywords. Examples: "Young Adult Man", "Acoustic Guitar", "Red Carpet"
+9) Return a compact JSON array with no spaces after commas in the array structure, but maintain spaces within individual keyword strings.
 
 Examples:
 
@@ -29,6 +29,6 @@ Output:
 ["Red Carpet","Premiere","Actor","Celebrity","Formal Wear","Tuxedo","Dress"]
 
 Input:
-["new york", "NYC", "manhattan", "times square", "restaurant", "resturant", "dining", "foods", "italian food", "pasta", "wine", "drinks"]
+["young adult man", "young adult woman", "acoustic guitar", "musical instrument", "hippie", "hippies", "couple", "two people", "sitting", "indoor", "lifestyle"]
 Output:
-["New York","Manhattan","Times Square","Restaurant","Dining","Italian Food","Pasta","Wine"]
+["Young Adult Man","Young Adult Woman","Acoustic Guitar","Musical Instrument","Hippie","Couple","Sitting","Indoor","Lifestyle"]

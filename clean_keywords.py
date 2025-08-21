@@ -42,21 +42,24 @@ def post_clean_keywords(keywords_array):
         if not keyword or not isinstance(keyword, str):
             continue
             
-        # Basic cleanup
-        kw = keyword.strip().lower()
+        # Preserve original keyword with proper spacing
+        original_keyword = keyword.strip()
+        
+        # Use lowercase for deduplication check only
+        kw_lower = original_keyword.lower()
         
         # Skip vague terms
-        if kw in VAGUE_TERMS:
+        if kw_lower in VAGUE_TERMS:
             continue
             
         # Skip if too short or too long
-        if len(kw) < 2 or len(kw) > 50:
+        if len(original_keyword) < 2 or len(original_keyword) > 50:
             continue
             
-        # Deduplicate (case insensitive)
-        if kw not in seen:
-            seen.add(kw)
-            cleaned.append(keyword.strip())
+        # Deduplicate (case insensitive) but preserve original spacing
+        if kw_lower not in seen:
+            seen.add(kw_lower)
+            cleaned.append(original_keyword)
     
     # Limit to 15 keywords max
     return cleaned[:15]
