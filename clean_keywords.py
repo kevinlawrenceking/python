@@ -161,6 +161,7 @@ def main():
           AND (keywords_new IS NULL OR keywords_new = '')
           AND keywords IS NOT NULL
           AND keywords <> ''
+          AND keywords <> '[]'
         ORDER BY fk_asset
     """)
     rows = cursor.fetchall()
