@@ -1,5 +1,6 @@
 import pyodbc
 import google.generativeai as genai
+import json
 import re
 import time
 
@@ -7,12 +8,12 @@ import time
 BATCH_LIMIT = 5000
 GEMINI_MODEL = "gemini-1.5-flash"
 TEMPERATURE = 0.2  # low for rule-following
-MAX_TOKENS = 400   # increased for detailed descriptions
+MAX_TOKENS = 300   # for keyword arrays
 SLEEP_SECONDS = 0.5
 DEBUG_MODE = False
 
 # --- Prompt Setup ---
-PROMPT_RULES_PATH = r"\\10.146.176.84\general\docketwatch\python\prompt_shotdesc.txt"
+PROMPT_RULES_PATH = r"\\10.146.176.84\general\docketwatch\python\prompt_keywords.txt"
 
 def load_prompt_rules():
     with open(PROMPT_RULES_PATH, "r", encoding="utf-8") as f:
@@ -24,57 +25,66 @@ def get_gemini_key(cursor):
     row = cursor.fetchone()
     return row[0] if row and row[0] else None
 
-# --- Optional local cleanup in case the model misses something ---
-CREDIT_PATTERNS = [
-    r"photo by [^,]+(,|\.)?.*$",
-    r"via getty images.*$",
-    r"getty images.*$",
-    r"ap photo.*$",
-    r"reuters.*$",
-]
-EDITOR_PATTERNS = [
-    r"editor'?s note.*?$",
-    r"unspecified(?:,|\s|-).*?",
-    r"image has been retouched.*?$",
-]
+# --- Optional local cleanup for keywords ---
+VAGUE_TERMS = {
+    "body", "torso", "booze", "object", "thing", "nice", "cool", 
+    "stuff", "item", "piece", "element", "part", "area", "section"
+}
 
-def post_clean(text):
-    if not text:
-        return text
-
-    s = text.strip()
-
-    # kill credits and editor notes if any slipped through
-    for pat in CREDIT_PATTERNS + EDITOR_PATTERNS:
-        s = re.sub(pat, "", s, flags=re.IGNORECASE)
-
-    # collapse spaces, commas
-    s = re.sub(r"\s+", " ", s)
-    s = re.sub(r"\s*,\s*", ", ", s)
-    s = s.strip(" ,")
-
-    # max ~30 words for detailed descriptions
-    words = s.split()
-    if len(words) > 30:
-        s = " ".join(words[:30])
-
-    return s
+def post_clean_keywords(keywords_array):
+    if not keywords_array:
+        return []
+    
+    cleaned = []
+    seen = set()
+    
+    for keyword in keywords_array:
+        if not keyword or not isinstance(keyword, str):
+            continue
+            
+        # Basic cleanup
+        kw = keyword.strip().lower()
+        
+        # Skip vague terms
+        if kw in VAGUE_TERMS:
+            continue
+            
+        # Skip if too short or too long
+        if len(kw) < 2 or len(kw) > 50:
+            continue
+            
+        # Deduplicate (case insensitive)
+        if kw not in seen:
+            seen.add(kw)
+            cleaned.append(keyword.strip())
+    
+    # Limit to 15 keywords max
+    return cleaned[:15]
 
 # --- Prompt Builder ---
-def build_prompt(rules, headline_v5, shot_description):
-    # Headline gives context for names/event normalization. Keep it brief.
-    headline_v5 = headline_v5 or ""
-    shot_description = shot_description or ""
-
+def build_prompt(rules, keywords_raw):
+    # Parse keywords from string if needed
+    if isinstance(keywords_raw, str):
+        # Try to parse as JSON first
+        try:
+            keywords_list = json.loads(keywords_raw)
+        except:
+            # Fall back to splitting by common delimiters
+            keywords_list = re.split(r'[,;|]', keywords_raw)
+    else:
+        keywords_list = keywords_raw or []
+    
+    # Clean up the list
+    keywords_list = [kw.strip() for kw in keywords_list if kw and kw.strip()]
+    
     return f"""{rules}
 
 INPUT
-Headline: {headline_v5}
-Raw_Shot_Description: {shot_description}
+{json.dumps(keywords_list)}
 """
 
 # --- Gemini Call ---
-def clean_shot_description(prompt, gemini_key):
+def clean_keywords(prompt, gemini_key):
     try:
         genai.configure(api_key=gemini_key)
         model = genai.GenerativeModel(GEMINI_MODEL)
@@ -91,17 +101,20 @@ def clean_shot_description(prompt, gemini_key):
         if DEBUG_MODE:
             print(f"[DEBUG] Gemini raw: {text}")
 
-        # Use first non-empty line only
-        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-        if not lines:
-            return None
-
-        cleaned = lines[0]
-        # defensive strip of quotes and trailing punctuation
-        cleaned = cleaned.strip(" '\"")
-        cleaned = post_clean(cleaned)
-
-        return cleaned if cleaned else None
+        # Try to parse as JSON
+        try:
+            # Find JSON array in response
+            json_match = re.search(r'\[.*\]', text, re.DOTALL)
+            if json_match:
+                keywords_array = json.loads(json_match.group())
+                if isinstance(keywords_array, list):
+                    cleaned = post_clean_keywords(keywords_array)
+                    return json.dumps(cleaned) if cleaned else None
+        except Exception as e:
+            if DEBUG_MODE:
+                print(f"[DEBUG] JSON parse failed: {e}")
+        
+        return None
 
     except Exception as e:
         print(f"[ERROR] Gemini API failed: {e}")
@@ -128,25 +141,25 @@ def main():
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_NAME = 'damz_test' AND TABLE_SCHEMA = 'dbo'
-              AND COLUMN_NAME IN ('headline_v5','shot_description','shot_description_new')
+              AND COLUMN_NAME IN ('shot_description_new','keywords','keywords_new')
         """)
         cols = {row[0] for row in cursor.fetchall()}
-        if 'headline_v5' not in cols:
-            print("WARNING: Column 'headline_v5' not found.")
         if 'shot_description_new' not in cols:
             print("WARNING: Column 'shot_description_new' not found.")
+        if 'keywords_new' not in cols:
+            print("WARNING: Column 'keywords_new' not found.")
     except Exception as e:
         print(f"[DEBUG] Column check failed: {e}")
 
-    # Pull rows where headline_v5 is not null and shot_description_new is null
+    # Pull rows where shot_description_new is not null and keywords_new is null
     cursor.execute(f"""
         SELECT TOP {1 if DEBUG_MODE else BATCH_LIMIT}
                fk_asset,
-               headline_v5,
-               shot_description
+               keywords
         FROM docketwatch.dbo.damz_test
-        WHERE headline_v5 IS NOT NULL
-          AND shot_description_new IS NULL
+        WHERE shot_description_new IS NOT NULL
+          AND keywords_new IS NULL
+          AND keywords IS NOT NULL
         ORDER BY fk_asset
     """)
     rows = cursor.fetchall()
@@ -157,19 +170,18 @@ def main():
     print(f"Found {len(rows)} records to process")
     processed, skipped = 0, 0
 
-    for fk_asset, headline_v5, shot_description in rows:
+    for fk_asset, keywords_raw in rows:
         print(f"\nAsset: {fk_asset}")
         if DEBUG_MODE:
-            print(f"[DEBUG] headline_v5: {str(headline_v5)[:140]}")
-            print(f"[DEBUG] shot_description: {str(shot_description)[:140]}")
+            print(f"[DEBUG] keywords: {str(keywords_raw)[:140]}")
 
-        prompt = build_prompt(rules, headline_v5, shot_description)
-        cleaned = clean_shot_description(prompt, gemini_key)
+        prompt = build_prompt(rules, keywords_raw)
+        cleaned = clean_keywords(prompt, gemini_key)
 
         if cleaned:
             # Show current before update
             cursor.execute("""
-                SELECT shot_description_new
+                SELECT keywords_new
                 FROM docketwatch.dbo.damz_test
                 WHERE fk_asset = ?
             """, (fk_asset,))
@@ -179,19 +191,19 @@ def main():
 
             cursor.execute("""
                 UPDATE docketwatch.dbo.damz_test
-                SET shot_description_new = ?
+                SET keywords_new = ?
                 WHERE fk_asset = ?
             """, (cleaned, fk_asset))
             conn.commit()
 
             # Verify
             cursor.execute("""
-                SELECT shot_description_new
+                SELECT keywords_new
                 FROM docketwatch.dbo.damz_test
                 WHERE fk_asset = ?
             """, (fk_asset,))
             after = cursor.fetchone()
-            print(f"OK: {fk_asset} -> {after[0] if after else cleaned}")
+            print(f"OK: {fk_asset} -> {after[0][:100] if after and after[0] else cleaned[:100]}")
             processed += 1
         else:
             print(f"SKIP: {fk_asset} (no cleaned output)")
