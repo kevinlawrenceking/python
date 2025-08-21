@@ -2,6 +2,7 @@ import pyodbc
 import google.generativeai as genai
 import re
 import time
+import os
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
@@ -23,6 +24,17 @@ def get_gemini_key(cursor):
     cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
     row = cursor.fetchone()
     return row[0] if row and row[0] else None
+
+# --- Get Image Path ---
+def get_image_path(cursor, fk_asset):
+    cursor.execute("""
+        SELECT u.path + i.path AS full_path
+        FROM damz.dbo.asset_image i
+        JOIN damz.dbo.storage_unit u ON u.id = i.fk_storage_unit
+        WHERE i.fk_asset = ?
+    """, (fk_asset,))
+    row = cursor.fetchone()
+    return row[0] if row else None
 
 # --- Optional local cleanup in case the model misses something ---
 CREDIT_PATTERNS = [
@@ -68,19 +80,37 @@ def build_prompt(rules, headline_v5, shot_description):
 
     return f"""{rules}
 
-INPUT
+ANALYZE THIS IMAGE to create a detailed shot description.
+
+Context (for reference only):
 Headline: {headline_v5}
-Raw_Shot_Description: {shot_description}
+Original_Description: {shot_description}
+
+Please analyze the actual image and provide a detailed, visual shot description following the formatting rules above.
 """
 
-# --- Gemini Call ---
-def clean_shot_description(prompt, gemini_key):
+# --- Gemini Call with Vision ---
+def clean_shot_description(prompt, image_path, gemini_key):
     try:
         genai.configure(api_key=gemini_key)
         model = genai.GenerativeModel(GEMINI_MODEL)
 
+        # Check if image file exists
+        if not image_path or not os.path.exists(image_path):
+            print(f"[WARNING] Image not found: {image_path}")
+            return None
+
+        # Upload image to Gemini
+        try:
+            image_file = genai.upload_file(path=image_path)
+            if DEBUG_MODE:
+                print(f"[DEBUG] Image uploaded: {image_file.name}")
+        except Exception as e:
+            print(f"[ERROR] Failed to upload image {image_path}: {e}")
+            return None
+
         response = model.generate_content(
-            prompt,
+            [prompt, image_file],
             generation_config={
                 "temperature": TEMPERATURE,
                 "max_output_tokens": MAX_TOKENS
@@ -100,6 +130,12 @@ def clean_shot_description(prompt, gemini_key):
         # defensive strip of quotes and trailing punctuation
         cleaned = cleaned.strip(" '\"")
         cleaned = post_clean(cleaned)
+
+        # Clean up uploaded file
+        try:
+            genai.delete_file(image_file.name)
+        except:
+            pass  # Don't fail if cleanup fails
 
         return cleaned if cleaned else None
 
@@ -163,8 +199,18 @@ def main():
             print(f"[DEBUG] headline_v5: {str(headline_v5)[:140]}")
             print(f"[DEBUG] shot_description: {str(shot_description)[:140]}")
 
+        # Get image path
+        image_path = get_image_path(cursor, fk_asset)
+        if not image_path:
+            print(f"SKIP: {fk_asset} (no image path found)")
+            skipped += 1
+            continue
+
+        if DEBUG_MODE:
+            print(f"[DEBUG] image_path: {image_path}")
+
         prompt = build_prompt(rules, headline_v5, shot_description)
-        cleaned = clean_shot_description(prompt, gemini_key)
+        cleaned = clean_shot_description(prompt, image_path, gemini_key)
 
         if cleaned:
             # Show current before update
