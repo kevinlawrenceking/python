@@ -14,6 +14,7 @@ Rules:
    - Beer/Alcohol/Drink → Beer (keep brand separately)
 7) Keep strong context: Location hierarchy, Subject, Activity, Objects, Brand. Max 10–15 items.
 8) Return a compact JSON array of strings only. No explanations
+9) no spaces between values (no space after commas)
 
 Examples:
 
