@@ -33,7 +33,7 @@ while True:
 
         # --- Get Case Events Missing Document Records ---
         cursor.execute("""
-            SELECT top 10 id
+            SELECT top 100 id
             FROM docketwatch.dbo.case_events
             WHERE event_url IS NOT NULL
               AND id NOT IN (
