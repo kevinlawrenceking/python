@@ -202,16 +202,16 @@ class PacerEventProcessor:
     def check_and_process_missing_summaries(self):
         """Check for PDFs without summaries and process them."""
         try:
-            # Query for PDFs that don't have summaries
+            # Query for PDFs that don't have summaries - CORRECTED COLUMN NAMES
             self.cursor.execute("""
-                SELECT d.id, d.rel_path, d.file_path, d.pages
+                SELECT d.doc_uid, d.rel_path, d.total_pages
                 FROM docketwatch.dbo.documents d
-                WHERE d.fk_case_event= ?
+                WHERE d.fk_case_event = ?
                 AND d.rel_path LIKE '%.pdf'
-                AND d.is_valid = 1
-                AND (d.summary IS NULL OR d.summary = '')
-                AND d.file_path IS NOT NULL
-                ORDER BY d.id
+                AND d.isfound = 1
+                AND (d.summary_ai IS NULL OR d.summary_ai = '')
+                AND d.rel_path IS NOT NULL
+                ORDER BY d.doc_uid
             """, (self.case_event_id,))
             
             missing_summaries = self.cursor.fetchall()
@@ -225,27 +225,27 @@ class PacerEventProcessor:
             processed_count = 0
             for doc in missing_summaries:
                 try:
-                    logging.info(f"Processing summary for document {doc.id}: {doc.filename}")
+                    logging.info(f"Processing summary for document {doc.doc_uid}: {doc.rel_path}")
                     
                     # Use the workflow manager to generate summary
-                    result = self.workflow.process_pdf_summary(doc.id)
+                    result = self.workflow.process_pdf_summary(doc.doc_uid)
                     
                     if result and result.get('status') == 'success':
-                        logging.info(f"Successfully generated summary for document {doc.id}")
+                        logging.info(f"Successfully generated summary for document {doc.doc_uid}")
                         processed_count += 1
                         
                         # Log the success
                         log_case_message(self.cursor, self.fk_task_run, "INFO", 
-                                       f"Generated missing summary for {doc.filename}")
+                                       f"Generated missing summary for {doc.rel_path}")
                     else:
-                        logging.warning(f"Failed to generate summary for document {doc.id}")
+                        logging.warning(f"Failed to generate summary for document {doc.doc_uid}")
                         log_case_message(self.cursor, self.fk_task_run, "WARNING", 
-                                       f"Failed to generate summary for {doc.filename}")
+                                       f"Failed to generate summary for {doc.rel_path}")
                         
                 except Exception as e:
-                    logging.error(f"Error processing summary for document {doc.id}: {str(e)}")
+                    logging.error(f"Error processing summary for document {doc.doc_uid}: {str(e)}")
                     log_case_message(self.cursor, self.fk_task_run, "ERROR", 
-                                   f"Summary error for {doc.filename}: {str(e)}")
+                                   f"Summary error for {doc.rel_path}: {str(e)}")
             
             logging.info(f"Processed summaries for {processed_count}/{len(missing_summaries)} documents")
             return processed_count
@@ -378,31 +378,31 @@ def check_missing_summaries_batch(cursor, case_event_ids=None, limit=None):
     """
     try:
         if case_event_ids:
-            # Check specific events
+            # Check specific events - CORRECTED COLUMN NAMES
             placeholders = ','.join(['?' for _ in case_event_ids])
             query = f"""
-                SELECT d.fk_case_event, d.id, d.rel_path, d.file_path, d.pages
+                SELECT d.fk_case_event, d.doc_uid, d.rel_path, d.total_pages
                 FROM docketwatch.dbo.documents d
                 WHERE d.fk_case_event IN ({placeholders})
                 AND d.rel_path LIKE '%.pdf'
-                AND d.is_valid = 1
-                AND (d.summary IS NULL OR d.summary = '')
-                AND d.file_path IS NOT NULL
-                ORDER BY d.fk_case_event, d.id
+                AND d.isfound = 1
+                AND (d.summary_ai IS NULL OR d.summary_ai = '')
+                AND d.rel_path IS NOT NULL
+                ORDER BY d.fk_case_event, d.doc_uid
             """
             if limit:
                 query += f" OFFSET 0 ROWS FETCH NEXT {limit} ROWS ONLY"
             cursor.execute(query, case_event_ids)
         else:
-            # Check all events
+            # Check all events - CORRECTED COLUMN NAMES
             query = """
-                SELECT d.fk_case_event, d.id, d.rel_path, d.file_path, d.pages
+                SELECT d.fk_case_event, d.doc_uid, d.rel_path, d.total_pages
                 FROM docketwatch.dbo.documents d
                 WHERE d.rel_path LIKE '%.pdf'
-                AND d.is_valid = 1
-                AND (d.summary IS NULL OR d.summary = '')
-                AND d.file_path IS NOT NULL
-                ORDER BY d.fk_case_event, d.id
+                AND d.isfound = 1
+                AND (d.summary_ai IS NULL OR d.summary_ai = '')
+                AND d.rel_path IS NOT NULL
+                ORDER BY d.fk_case_event, d.doc_uid
             """
             if limit:
                 query += f" OFFSET 0 ROWS FETCH NEXT {limit} ROWS ONLY"
@@ -420,9 +420,9 @@ def check_missing_summaries_batch(cursor, case_event_ids=None, limit=None):
             if event_id not in events_summary:
                 events_summary[event_id] = []
             events_summary[event_id].append({
-                'doc_id': doc.id,
-                'filename': doc.filename,
-                'pages': doc.pages
+                'doc_uid': doc.doc_uid,
+                'rel_path': doc.rel_path,
+                'total_pages': doc.total_pages
             })
         
         return {
