@@ -95,7 +95,7 @@ class PacerEventProcessor:
     def setup_selenium(self):
         """Setup Chrome WebDriver for PACER interaction."""
         opts = Options()
-        opts.add_argument("--headless=new")
+        # headless opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
@@ -204,10 +204,10 @@ class PacerEventProcessor:
         try:
             # Query for PDFs that don't have summaries
             self.cursor.execute("""
-                SELECT d.id, d.filename, d.file_path, d.pages
+                SELECT d.id, d.rel_path, d.file_path, d.pages
                 FROM docketwatch.dbo.documents d
-                WHERE d.fk_case_events = ?
-                AND d.filename LIKE '%.pdf'
+                WHERE d.fk_case_event= ?
+                AND d.rel_path LIKE '%.pdf'
                 AND d.is_valid = 1
                 AND (d.summary IS NULL OR d.summary = '')
                 AND d.file_path IS NOT NULL
@@ -381,14 +381,14 @@ def check_missing_summaries_batch(cursor, case_event_ids=None, limit=None):
             # Check specific events
             placeholders = ','.join(['?' for _ in case_event_ids])
             query = f"""
-                SELECT d.fk_case_events, d.id, d.filename, d.file_path, d.pages
+                SELECT d.fk_case_event, d.id, d.rel_path, d.file_path, d.pages
                 FROM docketwatch.dbo.documents d
-                WHERE d.fk_case_events IN ({placeholders})
-                AND d.filename LIKE '%.pdf'
+                WHERE d.fk_case_event IN ({placeholders})
+                AND d.rel_path LIKE '%.pdf'
                 AND d.is_valid = 1
                 AND (d.summary IS NULL OR d.summary = '')
                 AND d.file_path IS NOT NULL
-                ORDER BY d.fk_case_events, d.id
+                ORDER BY d.fk_case_event, d.id
             """
             if limit:
                 query += f" OFFSET 0 ROWS FETCH NEXT {limit} ROWS ONLY"
@@ -396,13 +396,13 @@ def check_missing_summaries_batch(cursor, case_event_ids=None, limit=None):
         else:
             # Check all events
             query = """
-                SELECT d.fk_case_events, d.id, d.filename, d.file_path, d.pages
+                SELECT d.fk_case_event, d.id, d.rel_path, d.file_path, d.pages
                 FROM docketwatch.dbo.documents d
-                WHERE d.filename LIKE '%.pdf'
+                WHERE d.rel_path LIKE '%.pdf'
                 AND d.is_valid = 1
                 AND (d.summary IS NULL OR d.summary = '')
                 AND d.file_path IS NOT NULL
-                ORDER BY d.fk_case_events, d.id
+                ORDER BY d.fk_case_event, d.id
             """
             if limit:
                 query += f" OFFSET 0 ROWS FETCH NEXT {limit} ROWS ONLY"
@@ -416,7 +416,7 @@ def check_missing_summaries_batch(cursor, case_event_ids=None, limit=None):
         # Group by case_event_id
         events_summary = {}
         for doc in missing_docs:
-            event_id = doc.fk_case_events
+            event_id = doc.fk_case_event
             if event_id not in events_summary:
                 events_summary[event_id] = []
             events_summary[event_id].append({
