@@ -68,7 +68,7 @@ def parse_doc_row(tr, base_url, pdf_type, default_pdf_title):
             pdf_url = base_url + pdf_url
 
         match = re.search(r'/doc1/(\d+)', pdf_url)
-        doc_id = int(match.group(1)) if match else None
+        doc_id = match.group(1) if match else None  # Return as string, not int
 
         pdf_no = int(a_tag.text.strip()) if a_tag.text.strip().isdigit() else 0
         desc = default_pdf_title if pdf_type == "Docket" else " ".join(td.get_text(strip=True) for td in tds[2:4])
@@ -195,10 +195,11 @@ def main():
             log_message(cursor, fk_task_run, "INFO", "No document table found - attempting fallback extraction")
             match = re.search(r'/doc1/(\d+)', event_url)
             if match:
-                doc_id = int(match.group(1))
+                doc_id = match.group(1)  # Keep as string for varchar column
                 log_message(cursor, fk_task_run, "INFO", f"Extracted doc_id {doc_id} from event URL")
                 cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
                 if cursor.fetchone()[0] == 0:
+                    # NOTE: doc_id changed from int to varchar - now passed as string
                     cursor.execute("""
                         INSERT INTO docketwatch.dbo.documents (
                             fk_case, fk_case_event, fk_tool, doc_id, pdf_url,

@@ -28,7 +28,7 @@ def parse_doc_row(tr, base_url, pdf_type, default_pdf_title):
             pdf_url = base_url + pdf_url
 
         match = re.search(r'/doc1/(\d+)', pdf_url)
-        doc_id = int(match.group(1)) if match else None
+        doc_id = str(match.group(1)) if match else None  # Convert to string for varchar schema
 
         pdf_no = int(a_tag.text.strip()) if a_tag.text.strip().isdigit() else 0
         desc = default_pdf_title if pdf_type == "Docket" else " ".join(td.get_text(strip=True) for td in tds[2:4])
@@ -144,9 +144,10 @@ def main():
         if not doc_rows:
             match = re.search(r'/doc1/(\d+)', event_url)
             if match:
-                doc_id = int(match.group(1))
+                doc_id = str(match.group(1))  # Convert to string for varchar schema
                 cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
                 if cursor.fetchone()[0] == 0:
+                    # INSERT into documents table - doc_id is varchar, isfound defaults to NULL
                     cursor.execute("""
                         INSERT INTO docketwatch.dbo.documents (
                             fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
@@ -165,6 +166,7 @@ def main():
                     continue
                 cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_data["doc_id"],))
                 if cursor.fetchone()[0] == 0:
+                    # INSERT into documents table - doc_id is varchar, isfound defaults to NULL
                     cursor.execute("""
                         INSERT INTO docketwatch.dbo.documents (
                             fk_case, fk_case_event, fk_tool, doc_id, pdf_url,

@@ -118,26 +118,28 @@ def main():
                     print(f"    - FILE NOT FOUND (will clean database record)")
                 
                 # Delete database record
+                # Note: doc_id is now varchar type in schema
                 try:
+                    # DELETE from documents table - doc_id parameter is varchar
                     delete_query = "DELETE FROM [docketwatch].[dbo].[documents] WHERE doc_id = ?"
                     cursor.execute(delete_query, doc_id)
                     conn.commit()
                     db_deleted = True
                     total_db_deleted += 1
-                    print(f"    ✓ DATABASE RECORD DELETED")
+                    print(f"    DATABASE RECORD DELETED")
                 except Exception as e:
                     conn.rollback()
-                    print(f"    ✗ DATABASE DELETE ERROR: {e}")
+                    print(f"    DATABASE DELETE ERROR: {e}")
                 
                 # Summary for this file
                 if file_deleted and db_deleted:
-                    print(f"    ✓ COMPLETE: File and database record deleted")
+                    print(f"    COMPLETE: File and database record deleted")
                 elif not file_exists and db_deleted:
-                    print(f"    ✓ CLEANED: Database record deleted (file was missing)")
+                    print(f"    CLEANED: Database record deleted (file was missing)")
                 elif file_deleted and not db_deleted:
-                    print(f"    ⚠ PARTIAL: File deleted but database record remains")
+                    print(f"     PARTIAL: File deleted but database record remains")
                 else:
-                    print(f"    ✗ FAILED: Could not complete deletion")
+                    print(f"    FAILED: Could not complete deletion")
                 
                 total_processed += 1
             

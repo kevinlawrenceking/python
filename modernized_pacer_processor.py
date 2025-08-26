@@ -19,12 +19,15 @@ import os
 import time
 import traceback
 import logging
+import zipfile
+import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
 
 # Import our new modular components (from same directory)
 from workflows.workflow_manager import DocketWatchWorkflow
@@ -112,6 +115,100 @@ class PacerEventProcessor:
         self.driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
         return WebDriverWait(self.driver, 15)
     
+    def discover_missing_event_url(self, event_info):
+        """
+        Discover and populate missing event_url by scraping PACER docket page.
+        This handles cases where event_url is NULL but we have basic event info.
+        """
+        try:
+            # Get additional event details for URL construction
+            self.cursor.execute("""
+                SELECT e.event_no, e.event_date, e.fk_cases, c.pacer_id, ps.url as pacer_site_url
+                FROM docketwatch.dbo.case_events e
+                INNER JOIN docketwatch.dbo.cases c ON c.id = e.fk_cases
+                INNER JOIN docketwatch.dbo.pacer_sites ps ON ps.id = c.fk_pacer_site
+                WHERE e.id = ?
+            """, (self.case_event_id,))
+            
+            row = self.cursor.fetchone()
+            if not row:
+                raise ValueError(f"Could not get event details for {self.case_event_id}")
+            
+            event_no, event_date, fk_cases, pacer_id, pacer_site_url = row
+            
+            if not event_no or not pacer_id:
+                raise ValueError(f"Missing event_no ({event_no}) or pacer_id ({pacer_id}) - cannot discover URL")
+            
+            log_case_message(self.cursor, self.fk_task_run, "INFO", 
+                           f"Attempting to discover event_url for event_no {event_no} in case {pacer_id}")
+            
+            # Construct docket report URL to find the event
+            docket_url = f"{pacer_site_url}/cgi-bin/DktRpt.pl?{pacer_id}"
+            
+            self.driver.get(docket_url)
+            time.sleep(3)
+            
+            # Handle CSRF form if present
+            if "referrer_form" in self.driver.page_source:
+                try:
+                    self.driver.find_element(By.ID, "referrer_form").submit()
+                    time.sleep(3)
+                    log_case_message(self.cursor, self.fk_task_run, "INFO", "PACER CSRF form submitted during URL discovery")
+                except Exception as e:
+                    log_case_message(self.cursor, self.fk_task_run, "WARNING", f"CSRF form submission failed: {str(e)}")
+            
+            # Parse the docket page to find the event
+            soup = BeautifulSoup(self.driver.page_source, "html.parser")
+            
+            # Look for event number in table rows
+            event_url_found = None
+            for tr in soup.find_all("tr"):
+                # Check if this row contains our event number
+                cells = tr.find_all("td")
+                if len(cells) >= 2:
+                    # First cell often contains event number
+                    first_cell_text = cells[0].get_text(strip=True)
+                    if first_cell_text == str(event_no):
+                        # Look for document links in this row
+                        for a_tag in tr.find_all("a", href=re.compile(r"doc1")):
+                            href = a_tag.get('href')
+                            if href:
+                                # Construct full URL if relative
+                                if not href.startswith("http"):
+                                    event_url_found = pacer_site_url + href
+                                else:
+                                    event_url_found = href
+                                break
+                        if event_url_found:
+                            break
+            
+            if event_url_found:
+                # Update the database with discovered URL
+                self.cursor.execute("""
+                    UPDATE docketwatch.dbo.case_events
+                    SET event_url = ?
+                    WHERE id = ?
+                """, (event_url_found, self.case_event_id))
+                self.conn.commit()
+                
+                log_case_message(self.cursor, self.fk_task_run, "INFO", 
+                               f"Discovered and updated event_url: {event_url_found}")
+                
+                # Update our event_info with the discovered URL
+                event_info['event_url'] = event_url_found
+                event_info['base_url'] = event_url_found.split('.gov')[0] + '.gov' if '.gov' in event_url_found else pacer_site_url
+                
+                return event_url_found
+            else:
+                log_case_message(self.cursor, self.fk_task_run, "WARNING", 
+                               f"Could not find document link for event_no {event_no} on docket page")
+                return None
+                
+        except Exception as e:
+            log_case_message(self.cursor, self.fk_task_run, "ERROR", 
+                           f"Failed to discover event_url: {str(e)}")
+            return None
+
     def get_event_info(self):
         """Get case event information from database."""
         self.cursor.execute("""
@@ -128,11 +225,33 @@ class PacerEventProcessor:
         if not row:
             raise ValueError(f"No event found for ID {self.case_event_id}")
         
-        # Validate that event_url is not None, empty, or invalid
-        if not row.event_url:
-            raise ValueError(f"Event {self.case_event_id} has no event_url - cannot process")
+        event_info = {
+            'case_id': row.case_id,
+            'pacer_id': row.pacer_id,
+            'base_url': row.base_url,
+            'event_description': row.event_description,
+            'event_url': row.event_url
+        }
         
-        event_url = str(row.event_url).strip()
+        # Check if event_url is missing and try to discover it
+        if not row.event_url:
+            log_case_message(self.cursor, self.fk_task_run, "INFO", 
+                           f"Event {self.case_event_id} has no event_url - attempting to discover")
+            
+            # Setup selenium for URL discovery
+            if not self.driver:
+                self.setup_selenium()
+                # Login to PACER for URL discovery
+                self.login_to_pacer(WebDriverWait(self.driver, 15))
+            
+            # Try to discover the missing URL
+            discovered_url = self.discover_missing_event_url(event_info)
+            
+            if not discovered_url:
+                raise ValueError(f"Event {self.case_event_id} has no event_url and could not discover one - cannot process")
+        
+        # Validate that we now have a valid event_url
+        event_url = str(event_info['event_url']).strip() if event_info['event_url'] else ''
         if not event_url:
             raise ValueError(f"Event {self.case_event_id} has empty event_url - cannot process")
         
@@ -142,13 +261,7 @@ class PacerEventProcessor:
         
         logging.info(f"Processing event {self.case_event_id} with URL: {event_url}")
         
-        return {
-            'case_id': row.case_id,
-            'pacer_id': row.pacer_id,
-            'base_url': row.base_url,
-            'event_description': row.event_description,
-            'event_url': event_url
-        }
+        return event_info
     
     def login_to_pacer(self, wait):
         """Login to PACER using stored credentials."""
@@ -174,7 +287,7 @@ class PacerEventProcessor:
         log_case_message(self.cursor, self.fk_task_run, "INFO", "PACER login completed")
     
     def process_pacer_documents(self, event_info):
-        """Process PACER documents for the event."""
+        """Process PACER documents for the event - includes discovery, insertion, and downloading."""
         # Navigate to the event page
         self.driver.get(event_info['event_url'])
         time.sleep(2)
@@ -189,15 +302,227 @@ class PacerEventProcessor:
                 log_case_message(self.cursor, self.fk_task_run, "ERROR", 
                                f"Referrer form submission failed: {str(e)}")
 
-        # Here you would implement the document discovery and download logic
-        # This is where the original script would parse the page for documents
-        # and create database records
-        
-        # For demonstration, we'll log that this is where the processing would happen
-        log_case_message(self.cursor, self.fk_task_run, "INFO", 
-                       "PACER document processing completed (placeholder)")
+        # Extract and insert document metadata
+        soup = BeautifulSoup(self.driver.page_source, "html.parser")
+        doc_rows = self.extract_doc_rows(soup)
+        inserted = 0
+
+        if not doc_rows:
+            # Fallback: extract doc_id from URL
+            import re
+            match = re.search(r'/doc1/(\d+)', event_info['event_url'])
+            if match:
+                doc_id = str(match.group(1))  # Convert to string for varchar schema
+                self.cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
+                if self.cursor.fetchone()[0] == 0:
+                    # INSERT into documents table - doc_id is varchar, isfound defaults to NULL
+                    self.cursor.execute("""
+                        INSERT INTO docketwatch.dbo.documents (
+                            fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
+                            pdf_title, pdf_type, pdf_no, rel_path, date_downloaded
+                        ) VALUES (?, ?, ?, ?, ?, ?, 'Docket', 0, 'pending', GETDATE())
+                    """, (
+                        event_info['case_id'], self.case_event_id, 2, doc_id, 
+                        event_info['event_url'], event_info['event_description']
+                    ))
+                    self.conn.commit()
+                    log_case_message(self.cursor, self.fk_task_run, "INFO", f"Inserted fallback docket PDF {doc_id}")
+        else:
+            # Process document rows found on page
+            for i, tr in enumerate(doc_rows):
+                pdf_type = "Docket" if i == 0 else "Attachment"
+                doc_data = self.parse_doc_row(tr, event_info['base_url'], pdf_type, event_info['event_description'])
+                if not doc_data or not doc_data["doc_id"]:
+                    continue
+                    
+                self.cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_data["doc_id"],))
+                if self.cursor.fetchone()[0] == 0:
+                    # INSERT into documents table - doc_id is varchar, isfound defaults to NULL
+                    self.cursor.execute("""
+                        INSERT INTO docketwatch.dbo.documents (
+                            fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
+                            pdf_title, pdf_type, pdf_no, rel_path, date_downloaded
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())
+                    """, (
+                        event_info['case_id'], self.case_event_id, 2,
+                        doc_data["doc_id"], doc_data["pdf_url"],
+                        doc_data["pdf_title"], doc_data["pdf_type"],
+                        doc_data["pdf_no"], doc_data["rel_path"]
+                    ))
+                    inserted += 1
+            self.conn.commit()
+            log_case_message(self.cursor, self.fk_task_run, "INFO", f"Inserted metadata for {inserted} documents")
+
+        # Now download the actual PDFs
+        self.download_pending_pdfs()
         
         return True
+
+    def extract_doc_rows(self, soup):
+        """Extract document rows from PACER page HTML."""
+        import re
+        return [tr for tr in soup.find_all("tr") if tr.find("a", href=re.compile("doc1")) and 'document_' in str(tr)]
+
+    def parse_doc_row(self, tr, base_url, pdf_type, default_pdf_title):
+        """Parse individual document row to extract metadata."""
+        import re
+        tds = tr.find_all("td")
+        try:
+            a_tag = tr.find("a", href=re.compile(r'doc1'))
+            if not a_tag:
+                return None
+
+            pdf_url = a_tag['href']
+            if not pdf_url.startswith("http"):
+                pdf_url = base_url + pdf_url
+
+            match = re.search(r'/doc1/(\d+)', pdf_url)
+            doc_id = str(match.group(1)) if match else None  # Convert to string for varchar schema
+
+            pdf_no = int(a_tag.text.strip()) if a_tag.text.strip().isdigit() else 0
+            desc = default_pdf_title if pdf_type == "Docket" else " ".join(td.get_text(strip=True) for td in tds[2:4])
+
+            return {
+                "doc_id": doc_id,
+                "pdf_url": pdf_url,
+                "pdf_title": desc,
+                "pdf_type": pdf_type,
+                "pdf_no": pdf_no,
+                "rel_path": "pending"
+            }
+        except:
+            return None
+
+    def download_pending_pdfs(self):
+        """Download PDFs for documents with rel_path = 'pending'."""
+        import zipfile
+        import re
+        
+        # Query for pending documents using the complex download URL logic from original
+        self.cursor.execute("""
+            SELECT 
+                c.pacer_id AS case_id,
+                c.id AS fk_case,
+                LEFT(e.event_url, CHARINDEX('.gov', e.event_url) + 3) AS base_url,
+                e.event_description,
+                e.event_url,
+                e.arr_de_seq_nums,
+                p.doc_uid,
+                ps.url,
+                p.doc_id,
+                RIGHT(CAST(p.doc_id AS VARCHAR), 8) AS doc_id_str,
+                p.pdf_type,
+                ps.url + '/cgi-bin/show_multidocs.pl?caseid=' + 
+                CAST(c.pacer_id AS VARCHAR) +
+                '&arr_de_seq_nums=' + 
+                CAST(e.arr_de_seq_nums AS VARCHAR) +
+                '&pdf_header=2&pdf_toggle_possible=1' +
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 
+                        FROM docketwatch.dbo.documents p2 
+                        WHERE p2.fk_case_event = e.id 
+                        AND p2.doc_id <> p.doc_id
+                    )
+                    THEN '&exclude_attachments=' + ISNULL((
+                        STUFF((
+                            SELECT ',' + RIGHT(CAST(p2.doc_id AS VARCHAR), 8)
+                            FROM docketwatch.dbo.documents p2
+                            WHERE p2.fk_case_event = e.id 
+                            AND p2.doc_id <> p.doc_id
+                            FOR XML PATH(''), TYPE
+                        ).value('.', 'NVARCHAR(MAX)'), 1, 1, '')
+                    ), '')
+                    ELSE ''
+                END +
+                '&zipit=1' AS download_url
+            FROM docketwatch.dbo.case_events e
+            INNER JOIN docketwatch.dbo.cases c ON c.id = e.fk_cases
+            INNER JOIN docketwatch.dbo.pacer_sites ps ON ps.id = c.fk_pacer_site
+            INNER JOIN docketwatch.dbo.documents p ON p.fk_case_event = e.id
+            WHERE e.id = ? AND p.rel_path = 'pending'
+        """, (self.case_event_id,))
+        
+        rows = self.cursor.fetchall()
+        
+        for row in rows:
+            doc_id = row.doc_id
+            doc_uid = row.doc_uid
+            fk_case = row.fk_case
+            download_url = row.download_url
+            filename = f"E{doc_id}.pdf"
+            case_dir = os.path.join(FINAL_PDF_DIR, str(fk_case))
+            os.makedirs(case_dir, exist_ok=True)
+            dest_path = os.path.join(case_dir, filename)
+
+            try:
+                log_case_message(self.cursor, self.fk_task_run, "INFO", f"Download URL for doc_id {doc_id}: {download_url}")
+                self.driver.get(download_url)
+                time.sleep(8)
+
+                # Handle CSRF referrer form if present
+                if "Warning:" in self.driver.page_source and "referrer_form" in self.driver.page_source:
+                    try:
+                        form = self.driver.find_element(By.ID, "referrer_form")
+                        self.driver.execute_script("arguments[0].submit();", form)
+                        time.sleep(3)
+                        log_case_message(self.cursor, self.fk_task_run, "INFO", "Submitted CSRF referrer form")
+                    except Exception as e:
+                        log_case_message(self.cursor, self.fk_task_run, "ERROR", f"CSRF form submission failed: {str(e)}")
+
+                # Click download button
+                try:
+                    download_button = self.driver.find_element(By.XPATH, "//input[@type='button' and @value='Download Documents']")
+                    self.driver.execute_script("arguments[0].click();", download_button)
+                    time.sleep(3)
+                except:
+                    log_case_message(self.cursor, self.fk_task_run, "WARNING", f"Download button not found for {filename}")
+
+                # Wait for ZIP file to download
+                zip_file = None
+                start_time = time.time()
+                while time.time() - start_time < 30:
+                    zips = [f for f in os.listdir(FINAL_PDF_DIR) if f.endswith(".zip")]
+                    if zips:
+                        latest = max([os.path.join(FINAL_PDF_DIR, f) for f in zips], key=os.path.getctime)
+                        if not os.path.exists(latest + ".crdownload"):
+                            zip_file = latest
+                            break
+                    time.sleep(1)
+
+                # Extract and process downloaded ZIP
+                if zip_file:
+                    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+                        zip_ref.extractall(FINAL_PDF_DIR)
+                        for name in zip_ref.namelist():
+                            extracted_pdf = os.path.join(FINAL_PDF_DIR, name)
+                            if os.path.exists(extracted_pdf):
+                                file_size = os.path.getsize(extracted_pdf)
+                                if file_size < 2048:
+                                    log_case_message(self.cursor, self.fk_task_run, "WARNING", 
+                                                   f"Downloaded file too small (<2KB): {filename} ({file_size} bytes)")
+                                    os.remove(extracted_pdf)
+                                    continue
+
+                                # Move to correct location and update database
+                                os.rename(extracted_pdf, dest_path)
+                                rel_path = f"cases\\{fk_case}\\{filename}"
+                                self.cursor.execute("""
+                                    UPDATE docketwatch.dbo.documents
+                                    SET rel_path = ?, date_downloaded = GETDATE()
+                                    WHERE doc_uid = ?
+                                """, (rel_path, doc_uid))
+                                self.conn.commit()
+                                log_case_message(self.cursor, self.fk_task_run, "INFO", 
+                                               f"Downloaded and saved: {filename} ({file_size} bytes)")
+
+                    # Clean up ZIP file
+                    os.remove(zip_file)
+                else:
+                    log_case_message(self.cursor, self.fk_task_run, "WARNING", f"ZIP not found for {filename}")
+
+            except Exception as ex:
+                log_case_message(self.cursor, self.fk_task_run, "ERROR", f"Download failed for {filename}: {str(ex)}")
     
     def check_and_process_missing_summaries(self):
         """Check for PDFs without summaries and process them."""

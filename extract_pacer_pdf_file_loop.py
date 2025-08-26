@@ -9,6 +9,7 @@ while True:
         cursor = conn.cursor()
 
         # Query to find applicable case_event IDs
+        # Note: documents table now has doc_id as varchar type
         cursor.execute("""
         SELECT DISTINCT TOP 10 e.[id] AS case_id, created_at
         FROM [docketwatch].[dbo].[case_events] e 

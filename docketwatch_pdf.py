@@ -117,6 +117,8 @@ def main():
 
         doc_uid = str(uuid.uuid4())
 
+        # NOTE: doc_id changed from int to varchar - setting to NULL here since 
+        # this script processes local files without PACER doc_id values
         cursor.execute("""
             INSERT INTO docketwatch.dbo.documents
                 (doc_uid,
@@ -124,7 +126,6 @@ def main():
                  fk_tool,
                  doc_id,
                  rel_path,
-                 file_name,
                  file_size,
                  total_pages,
                  date_downloaded,
@@ -135,14 +136,14 @@ def main():
                  summary_ai,
                  summary_ai_html,
                  is_storyworthy,
-                 ai_processed_at)
-            VALUES (?, ?, ?, NULL, ?, ?, ?, NULL, ?, NULL, NULL, ?, ?, NULL, NULL, NULL, NULL)
+                 ai_processed_at,
+                 isfound)
+            VALUES (?, ?, ?, NULL, ?, ?, NULL, ?, NULL, NULL, ?, ?, NULL, NULL, NULL, NULL, 1)
         """, (
             doc_uid,
             fk_case,
             TOOL_ID,
             rel_path,
-            fname,
             file_size,
             date_downloaded,
             ocr_text_raw,

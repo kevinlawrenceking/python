@@ -37,9 +37,12 @@ Key Refinements
 - Switched from full descriptions to just key names & topics.
 - Removed unnecessary words like "talks about" or "discusses".
 - List key people first (separated by commas) and then the topic.
-Prioritize - Famous people names listed first - not alphabetized unless unknown then alphabetize 
+- Prioritize - Famous people names listed first - not alphabetized unless unknown then alphabetize 
 - Topic should be extremely concise—just keywords.
-Show or stage name is one name, don't split into first last name. 
+- Show or stage name is one name, don't split into first last name.
+- If family members share same last name, only list last name once
+- Use full stage names (e.g., "A$AP Rocky" not "Rocky")
+- For stock images, keep original title and add "Stock" to keywords 
 
 2) Stock
 Format:
@@ -47,6 +50,10 @@ Format:
 
 Example:
 Judge wearing virtual reality headset are decide the case
+
+Key Refinements
+- For stock footage, keep original filename and add "Stock" to keywords
+- Do not change original title for stock images
 
 3) Presser
 Format:
@@ -79,6 +86,7 @@ Key Refinements
 - "White House" instead of "Oval Office" as the main entity.
 - No need for "joins" or extra context—just last names and topic.
 - Topic should be action-driven (e.g., "Signing Executive Orders").
+- Keep professional titles with city names (e.g., "Chicago Mayor Emanuel")
 
 6) Police Footage
 Format:
@@ -103,8 +111,9 @@ Key Refinements
 - Revised case naming to "CA v. [Defendant]" instead of full legal case name.
 - Court type should be included (e.g., Criminal, Civil, Appeals).
 - "Verdict Reached" is the correct phrasing for case outcomes.
-Include more concise detail in case outcomes after court type
-If Celebrity Last Names are the Court Case Name, don't include.  
+- Include more concise detail in case outcomes after court type
+- If Celebrity Last Names are the Court Case Name, don't include.
+- Include case details when there is a court case  
 
 8) Movie 
 Format:
@@ -121,9 +130,10 @@ Key Refinements
 - Actors' last names ok - only the Main Two, if more than two add And Others
 - No scene name 
 - No need for "Studio Publicity Still"—this is implied.
-All caps for film type [Two Film Types: TRAILER, BTS]
-BTS is for behind the scenes stills
-TRAILER stills from promotional video for that feature film
+- All caps for film type [Two Film Types: TRAILER, BTS]
+- BTS is for behind the scenes stills
+- TRAILER stills from promotional video for that feature film
+- Include organization names (e.g., Netflix, YouTube Originals)
 
 9) Music Video
 Format:
@@ -135,6 +145,8 @@ Carpenter, Please Please Please, MXV
 Key Refinements
 - Specify "Music Video" using abbreviation MXV
 - Artist's last name or band name first.
+- Don't include band names in keywords
+- Use full stage names consistently
 
 10) Presser
 Format:
@@ -181,7 +193,9 @@ Key Refinements
 - Season and episode should be formatted as "S#" and "E#".
 - Host or key people included if relevant. If 3 names, list "and Others"
 - Episode description should be a short keyword phrase.
-If show name is too long abbreviate (ex. Watch What Happens Live With Andy Cohen, WWHL with Andy Cohen
+- If show name is too long abbreviate (ex. Watch What Happens Live With Andy Cohen, WWHL with Andy Cohen)
+- Don't include episode number if unknown - leave blank
+- If same last name family members, indicate relationship (e.g., "Clarkson, With Daughter Rose")
 
 13) Live Sports Event 
 Format:
@@ -194,10 +208,11 @@ Key Refinements
 - Start with event name then main subjects last names
 - For sports, list competing teams or first and last name of competitor
 - For awards, include segment type (e.g., "Red Carpet", "Premiere").
-If same last name only use one last  name
-If more than two, add "And Others" or "And Cast"
-Should include event name
-If two competing subjects use last name vs last name
+- If same last name only use one last  name
+- If more than two, add "And Others" or "And Cast"
+- Should include event name
+- If two competing subjects use last name vs last name
+- Include team or individual that won the game and score when applicable
 
 14) Live Event 
 Format:
@@ -216,9 +231,13 @@ Key Refinements
 - Start with event name then main subjects last names
 - For sports, list competing teams or first and last name of competitor
 - For awards, include segment type (e.g., "Red Carpet", "Premiere").
-If same last name only use one last  name
-If more than two, add "And Others" or "And Cast"
-Should include event year OR show # 
+- If same last name only use one last  name
+- If more than two, add "And Others" or "And Cast"
+- Should include event year OR show # 
+- Keep Day # if it's part of the event name (e.g., "Day 1")
+- Include specific birthday numbers (e.g., "61st Birthday Celebration")
+- Keep full event names including sponsors/presenters
+- Use full stage names (e.g., "Charli XCX" not "XCX") 
 
 15) Print
 Format:
@@ -252,10 +271,33 @@ SUMMARY OF ALL KEY REFINEMENTS
 - NO EXTRA WORDS—JUST ESSENTIAL KEYWORDS.
 - **CELEBRITY NAMES ARE LAST NAME ONLY.**
 - "TRAILER" / "COMM" / "PRESSER" TAGS ADDED WHERE REQUIRED.
-Type should be in AP style for consistency 
+- Type should be in AP style for consistency 
+
+KEYWORD GUIDELINES:
+- NO celebrity names as keywords
+- NO year keywords (e.g., "2024", "2025") 
+- NO city names as keywords
+- NO band names for individual performers
+- ADD "Stock" keyword for all stock footage
+- Use full stage names in headlines consistently
+- If family members share same last name, only list once
+- Keep professional titles with locations (e.g., "Chicago Mayor")
+- Include organization names in headlines when relevant 
 
 FINAL THOUGHT
 This version fully matches the correct examples you provided while keeping the logic clear for loggers. These tweaks should make it easier to train your team and ensure consistent headline formatting across all assets.
+
+SPECIFIC FIXES FROM ANALYSIS:
+- Keep "Day #" when it's part of official event names
+- Preserve organization names and sponsors in event titles
+- Use full stage names consistently (A$AP Rocky, Charli XCX, Trick Daddy)
+- For TV shows without known episode numbers, don't include "E[UNSPECIFIED]"
+- Include specific details like birthday numbers ("61st Birthday")
+- For sports events, include winner and score when available
+- For court cases, always include case name and outcome
+- For family members with same last name, use relationship descriptors
+- For premieres and events, classify as Live Event not Movie
+- Don't put celebrity names in keywords - focus on descriptive terms
 
 REMEMBER: You must respond with EXACTLY this format:
 Type: [choose one from the valid list above]

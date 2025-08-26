@@ -149,6 +149,7 @@ def get_case_celebs(cursor, case_id):
 def get_event_documents(cursor, case_id):
     """Get event documents with proper error handling for encoding issues."""
     try:
+        # NOTE: doc_id changed from int to varchar - query automatically handles this
         cursor.execute("""
             SELECT e.id AS event_id, e.event_description, e.event_date, e.created_at, d.doc_uid, d.fk_case_event, d.rel_path, d.pdf_title, d.summary_ai_html, d.doc_id
             FROM docketwatch.dbo.case_events e

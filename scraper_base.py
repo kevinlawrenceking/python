@@ -459,14 +459,15 @@ def insert_documents_for_event(cursor, case_event_id, tool_id=2):
     documents_created = 0
     
     for pdf_file in pdf_files:
-        # Generate a unique doc_id based on timestamp and randomness
+        # Generate a unique doc_id - Note: doc_id is now varchar type in schema
         cursor.execute("SELECT GETDATE()")
         timestamp = cursor.fetchone()[0]
-        unique_doc_id = int(timestamp.timestamp() * 1000) + random.randint(1, 999)
+        unique_doc_id = str(int(timestamp.timestamp() * 1000) + random.randint(1, 999))
         
         # Create relative path
         rel_path = f"cases\\{case_id}\\{pdf_file}"
         
+        # INSERT into documents table - doc_id parameter is varchar, isfound will default to NULL
         cursor.execute("""
             INSERT INTO docketwatch.dbo.documents (
                 fk_case_event, fk_case, fk_tool, pdf_title, rel_path, 

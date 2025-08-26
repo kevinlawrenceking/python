@@ -73,7 +73,7 @@ def check_document_exists(cursor, case_id, filename):
             SELECT COUNT(*) 
             FROM docketwatch.dbo.documents 
             WHERE doc_id = ?
-        """, (doc_id,))
+        """, (doc_id,))  # doc_id is now a string
         
         if cursor.fetchone()[0] > 0:
             return True
@@ -92,12 +92,12 @@ def check_document_exists(cursor, case_id, filename):
 def extract_doc_id_from_filename(filename):
     """
     Extract document ID from filename if it follows pattern E{doc_id}.pdf
-    Returns doc_id as integer or None if pattern doesn't match.
+    Returns doc_id as string or None if pattern doesn't match.
     """
     import re
     match = re.match(r'^E(\d+)\.pdf$', filename, re.IGNORECASE)
     if match:
-        return int(match.group(1))
+        return match.group(1)  # Return as string, not int
     return None
 
 def get_case_info(cursor, case_id):

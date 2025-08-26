@@ -67,6 +67,7 @@ def delete_file_safely(file_path):
 def delete_database_record(cursor, doc_id):
     """Delete the database record"""
     try:
+        # NOTE: doc_id changed from int to varchar - parameterized query handles this automatically
         query = "DELETE FROM [docketwatch].[dbo].[documents] WHERE doc_id = ?"
         cursor.execute(query, doc_id)
         return True, "Database record deleted"

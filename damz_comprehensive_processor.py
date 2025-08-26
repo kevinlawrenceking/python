@@ -178,19 +178,46 @@ ANALYZE THIS IMAGE along with the provided text data to perform ALL of the follo
 TASK 1: HEADLINE TYPE & OPTIMIZATION
 {headline_rules}
 
-TASK 2: SHOT DESCRIPTION CLEANING
+**CRITICAL HEADLINE REQUIREMENTS FROM ANALYSIS:**
+- Include MAIN EVENT description (not just names and locations)
+- For family photos: include relationship context like "with Daughters" 
+- For sports: include team/player that won and activity
+- For court cases: include "Criminal", "Sentencing", or case type
+- For TV shows: include episode type like "Interview", "Monologue"
+- Keep Day # if it's part of the event name
+- Use full stage names like "A$AP Rocky" not shortened versions
+
+TASK 2: SHOT DESCRIPTION CLEANING  
 {shotdesc_rules}
+
+**CRITICAL SHOT DESCRIPTION REQUIREMENTS FROM ANALYSIS:**
+- ALWAYS use first AND last names (not just last names)
+- Include specific clothing details: "light-blue Alo onesie", "red Trump 2024 campaign shirt"
+- Describe actions: "rips open his shirt", "exchanges punches", "celebrates wildly"
+- Include facial expressions: "smiling broadly", "serious expression", "jubilant expressions"
+- Preserve venue names: "Hackney Town Hall", "Citizens Bank Park", "Dorothy Chandler Pavilion"
+- Include relationship context: "with daughters Sami and Eloise", "with boyfriend Henry Junior"
+- Describe setting: "on stage", "on red carpet", "at defense table", "on beach"
 
 TASK 3: KEYWORD CLEANING
 {keywords_rules}
 
+**CRITICAL KEYWORD REQUIREMENTS FROM ANALYSIS:**
+- REMOVE ALL celebrity names, band names, years, dates, and specific city names
+- REMOVE overly specific phrases like "Famously Super Slim Cut", "Big Tech Boyfriend Ted Dhanik"
+- FOCUS ON: clothing, actions, expressions, objects, general settings
+- FIX MISSPELLINGS: "Oesie" → "Onesie"
+- CONSOLIDATE: "Flops", "Flip-flops" → "Flip Flops"
+- MAX 10-15 keywords focusing on visual elements only
+
 TASK 4: EMOTION CLASSIFICATION
-Analyze the primary emotion(s) displayed by the main subject(s) in the image and classify using ONLY these emotions:
+Analyze facial expressions and body language in the image. Use ONLY these emotions:
 HAPPY, EXCITED, SERIOUS, CONFIDENT, SURPRISED, ANGRY, SAD, CONCERNED, CONTEMPLATIVE, RELAXED, PLAYFUL, NEUTRAL
 
 Rules for emotion classification:
-- Focus on the most prominent person's emotion
-- If multiple people show different emotions, list up to 3 most prominent emotions
+- Focus on the most prominent person's facial expression
+- Look for: smile intensity, eye contact, posture, gesture
+- If multiple people show different emotions, list up to 3 most prominent
 - Return as JSON array with emotions in ALL CAPS
 - Examples: ["HAPPY"], ["SERIOUS","CONFIDENT"], ["EXCITED","PLAYFUL"]
 
@@ -200,25 +227,31 @@ Current Shot Description: {shot_description}
 Current Keywords: {json.dumps(keywords_list)}
 
 INSTRUCTIONS:
-1. ANALYZE the actual image to understand the visual content
-2. Use the image analysis to determine the correct headline type
-3. Create an optimized headline following the format rules
-4. Generate a detailed shot description based on what you see in the image
-5. Clean and optimize the keywords based on visual content and existing keywords
-6. Classify the emotion(s) displayed by analyzing facial expressions and body language
+1. ANALYZE the actual image first - look at faces, clothing, setting, actions
+2. Determine correct headline type (80% should be "Live Event")
+3. Create optimized headline with MAIN EVENT included (not just names/locations)
+4. Generate detailed shot description with first+last names, specific details, relationships
+5. Clean keywords to remove names/dates/cities, focus on visual elements only
+6. Classify emotions based on actual facial expressions in the image
 
 REQUIRED RESPONSE FORMAT (must be exact):
 Type: [headline type from valid list]
-Optimized_Headline: [optimized headline]
-Shot_Description: [detailed visual description]
-Keywords: [compact JSON array with no spaces after commas]
+Optimized_Headline: [optimized headline with main event described]
+Shot_Description: [detailed visual description with first+last names and specifics]
+Keywords: [compact JSON array with no spaces after commas, visual elements only]
 Emotion: [JSON array of emotions in ALL CAPS with no spaces after commas]
 
+ANALYSIS-BASED EXAMPLES:
+- Headline: "2025, Corrigan, Beverly Hills" → "Corrigan Leaves Workout in Skintight Blue Onesie, Sparking Pregnancy Rumors with Visible Bump"
+- Shot Description: Include "Joy Corrigan" not just "Corrigan", "light-blue Alo onesie", "visible baby bump"
+- Keywords: Remove "Joy Corrigan","Beverly Hills","2025" → Keep "Pregnant","Baby Bump","Onesie","Light Blue","Sunglasses"
+- Emotion: Look at her actual facial expression in the image
+
 REMEMBER: 
-- Use the IMAGE as the primary source of truth
-- 80% should be Live Event type when in doubt
-- Preserve celebrity expressions and locations
-- Include visual details not in the original text
+- Use the IMAGE as the primary source of truth for all decisions
+- Include WHAT IS HAPPENING (main event) not just WHO and WHERE
+- Remove all celebrity names from keywords - focus on visual descriptors only
+- Be specific about clothing, expressions, and actions you can see
 """
 
 # --- Comprehensive Gemini Analysis ---
