@@ -392,7 +392,7 @@ def main():
                shot_description,
                keywords
         FROM docketwatch.dbo.damz_test
-        WHERE headline IS NOT NULL
+        WHERE headline IS NOT NULL and [version] = 2
           AND (headline_type IS NULL OR headline_new IS NULL OR shot_description_new IS NULL OR keywords_new IS NULL OR emotion IS NULL)
         ORDER BY fk_asset
     """)
