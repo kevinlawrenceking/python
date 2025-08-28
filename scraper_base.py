@@ -35,6 +35,188 @@ from pdf2image.exceptions import PDFPageCountError
 import google.generativeai as genai
 import markdown2
 
+# === GEMINI API LOGGING AND UTILITIES ===
+
+def get_gemini_key(cursor):
+    """Retrieve Gemini API key from utilities table"""
+    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
+    row = cursor.fetchone()
+    return row[0] if row and row[0] else None
+
+def log_gemini_call(cursor, script_name, model_name, fk_asset, prompt_length, response_length, 
+                   success, error_message=None, processing_time_ms=None, input_tokens=None, 
+                   output_tokens=None, total_tokens=None, temperature=None, max_tokens=None):
+    """
+    Log Gemini API call details to database
+    
+    Args:
+        cursor: Database cursor
+        script_name: Name of the calling script
+        model_name: Gemini model used
+        fk_asset: Asset ID (if applicable)
+        prompt_length: Length of prompt in characters
+        response_length: Length of response in characters
+        success: Boolean indicating success/failure
+        error_message: Error message if failed
+        processing_time_ms: Processing time in milliseconds
+        input_tokens: Input tokens used
+        output_tokens: Output tokens used
+        total_tokens: Total tokens used
+        temperature: Model temperature setting
+        max_tokens: Max tokens setting
+    """
+    try:
+        # Calculate cost estimate based on model pricing
+        cost_estimate = None
+        if total_tokens:
+            # Gemini pricing (approximate $0.002 per 1K tokens for Flash models)
+            if "flash" in model_name.lower():
+                cost_estimate = (total_tokens / 1000) * 0.002
+            elif "pro" in model_name.lower():
+                cost_estimate = (total_tokens / 1000) * 0.01  # Pro models are more expensive
+        
+        cursor.execute("""
+            INSERT INTO docketwatch.dbo.gemini_api_log 
+            (script_name, model_name, fk_asset, prompt_length, response_length, 
+             input_tokens, output_tokens, total_tokens, temperature, max_tokens, 
+             success, error_message, processing_time_ms, cost_estimate)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            script_name, model_name, fk_asset, prompt_length, response_length,
+            input_tokens, output_tokens, total_tokens, temperature, max_tokens,
+            success, error_message, processing_time_ms, cost_estimate
+        ))
+        cursor.connection.commit()
+        
+        logging.info(f"[GEMINI] Logged API call - Tokens: {total_tokens}, Cost: ${cost_estimate:.6f}" if cost_estimate else "[GEMINI] Logged API call")
+            
+    except Exception as e:
+        logging.warning(f"[GEMINI] Failed to log API call: {e}")
+
+def get_gemini_usage_stats(cursor, script_name=None, days=7):
+    """
+    Get recent Gemini usage statistics
+    
+    Args:
+        cursor: Database cursor
+        script_name: Optional script name filter
+        days: Number of days to look back
+        
+    Returns:
+        Dictionary with usage statistics or None if error
+    """
+    try:
+        query = """
+            SELECT 
+                COUNT(*) as total_calls,
+                SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successful_calls,
+                SUM(ISNULL(total_tokens, 0)) as total_tokens,
+                SUM(ISNULL(cost_estimate, 0)) as estimated_cost,
+                AVG(processing_time_ms) as avg_processing_time
+            FROM docketwatch.dbo.gemini_api_log 
+            WHERE call_timestamp >= DATEADD(day, -?, GETDATE())
+        """
+        params = [days]
+        
+        if script_name:
+            query += " AND script_name = ?"
+            params.append(script_name)
+            
+        cursor.execute(query, params)
+        row = cursor.fetchone()
+        if row:
+            return {
+                'total_calls': row[0] or 0,
+                'successful_calls': row[1] or 0,
+                'total_tokens': row[2] or 0,
+                'estimated_cost': float(row[3] or 0),
+                'avg_processing_time': float(row[4] or 0)
+            }
+    except Exception as e:
+        logging.warning(f"[GEMINI] Failed to get usage stats: {e}")
+    
+    return None
+
+def gemini_api_call_with_logging(cursor, script_name, model_name, prompt, fk_asset=None, 
+                                temperature=0.2, max_tokens=350, **generation_config):
+    """
+    Make a Gemini API call with automatic logging
+    
+    Args:
+        cursor: Database cursor
+        script_name: Name of calling script
+        model_name: Gemini model to use
+        prompt: Prompt text
+        fk_asset: Optional asset ID
+        temperature: Model temperature
+        max_tokens: Maximum tokens
+        **generation_config: Additional generation config parameters
+        
+    Returns:
+        Tuple of (response_text, success) where success is boolean
+    """
+    from datetime import datetime
+    
+    start_time = datetime.now()
+    prompt_length = len(prompt)
+    response_length = 0
+    success = False
+    error_message = None
+    input_tokens = None
+    output_tokens = None
+    total_tokens = None
+    response_text = None
+    
+    try:
+        # Get API key
+        gemini_key = get_gemini_key(cursor)
+        if not gemini_key:
+            raise Exception("Gemini API key not found in utilities table")
+            
+        # Configure and call Gemini
+        genai.configure(api_key=gemini_key)
+        model = genai.GenerativeModel(model_name)
+        
+        # Build generation config
+        config = {
+            "temperature": temperature,
+            "max_output_tokens": max_tokens
+        }
+        config.update(generation_config)
+
+        response = model.generate_content(prompt, generation_config=config)
+        response_text = response.text.strip()
+        response_length = len(response_text)
+        
+        # Try to extract token usage if available
+        try:
+            if hasattr(response, 'usage_metadata'):
+                usage = response.usage_metadata
+                input_tokens = getattr(usage, 'prompt_token_count', None)
+                output_tokens = getattr(usage, 'candidates_token_count', None)
+                total_tokens = getattr(usage, 'total_token_count', None)
+        except Exception as e:
+            logging.debug(f"[GEMINI] Could not extract token usage: {e}")
+        
+        success = True
+        
+    except Exception as e:
+        error_message = str(e)
+        logging.error(f"[GEMINI] API call failed: {e}")
+    
+    finally:
+        # Calculate processing time and log the call
+        end_time = datetime.now()
+        processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+        
+        log_gemini_call(
+            cursor, script_name, model_name, fk_asset, prompt_length, response_length, 
+            success, error_message, processing_time_ms, input_tokens, output_tokens, 
+            total_tokens, temperature, max_tokens
+        )
+    
+    return response_text, success
+
 DEFAULT_CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
 
 def send_case_update_alert(cursor, case_update_id):
@@ -119,16 +301,9 @@ def generate_ai_summary_for_documents(cursor, case_event_id, docs_root_dir):
     Updates summary_ai and summary_ai_html in the database.
     Returns the number of documents summarized.
     """
-    # Load Gemini API key
-    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
-    key_row = cursor.fetchone()
-    if not key_row or not key_row[0]:
-        logging.warning("Gemini API key not found in dbo.utilities.")
-        return 0
-    gemini_key = key_row[0]
-    genai.configure(api_key=gemini_key)
-    model = genai.GenerativeModel("gemini-2.5-pro")
-
+    script_name = os.path.basename(__file__)
+    model_name = "gemini-2.5-pro"
+    
     # Get target documents
     cursor.execute("""
         SELECT 
@@ -174,20 +349,27 @@ Description: {event_desc}
 --- DOCUMENT TEXT ---
 {ocr_text.strip()[:10000]}
 """
-        try:
-            response = model.generate_content(context[:16000])
-            text_output = response.text.strip()
-            html_output = markdown2.markdown(text_output)
-
-            cursor.execute("""
-                UPDATE docketwatch.dbo.documents
-                SET summary_ai = ?, summary_ai_html = ?, ai_processed_at = GETDATE()
-                WHERE doc_uid = ?
-            """, (text_output, html_output, doc_uid))
-            cursor.connection.commit()
-            summarized += 1
-        except Exception as e:
-            logging.warning(f"[Gemini] Summary failed for doc_uid {doc_uid}: {e}")
+        
+        # Use the new logging wrapper
+        response_text, success = gemini_api_call_with_logging(
+            cursor, script_name, model_name, context[:16000], 
+            fk_asset=doc_uid, temperature=0.2, max_tokens=500
+        )
+        
+        if success and response_text:
+            try:
+                html_output = markdown2.markdown(response_text)
+                cursor.execute("""
+                    UPDATE docketwatch.dbo.documents
+                    SET summary_ai = ?, summary_ai_html = ?, ai_processed_at = GETDATE()
+                    WHERE doc_uid = ?
+                """, (response_text, html_output, doc_uid))
+                cursor.connection.commit()
+                summarized += 1
+            except Exception as e:
+                logging.warning(f"[DB] Failed to update summary for doc_uid {doc_uid}: {e}")
+        else:
+            logging.warning(f"[GEMINI] Summary failed for doc_uid {doc_uid}")
 
     return summarized
 
@@ -197,16 +379,10 @@ def summarize_case_update_old(cursor, case_update_id):
     Summarizes the full case_update using Gemini.
     Returns (summary_ap, summary_tmz_html, is_storyworthy).
     """
-    # 1. Load Gemini API key
-    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
-    row = cursor.fetchone()
-    if not row or not row[0]:
-        logging.warning("Gemini API key not found in dbo.utilities.")
-        return None, None, False
-    genai.configure(api_key=row[0])
-    model = genai.GenerativeModel("gemini-2.5-pro")
-
-    # 2. Load all documents for the case_update
+    script_name = os.path.basename(__file__)
+    model_name = "gemini-2.5-pro"
+    
+    # 1. Load all documents for the case_update
     cursor.execute("""
         SELECT d.summary_ai, d.summary_ai_html, d.pdf_title, d.ocr_text
         FROM docketwatch.dbo.documents d
@@ -219,7 +395,7 @@ def summarize_case_update_old(cursor, case_update_id):
         logging.warning(f"No documents found for case_update {case_update_id}")
         return None, None, False
 
-    # 3. Load case info
+    # 2. Load case info
     cursor.execute("""
         SELECT c.id, c.case_number, c.case_name, c.summarize
         FROM docketwatch.dbo.case_updates u
@@ -232,14 +408,14 @@ def summarize_case_update_old(cursor, case_update_id):
 
     case_id, case_number, case_name, case_summary = case_row
 
-    # 4. Build event and document context
+    # 3. Build event and document context
     combined_summary_texts = []
     for summary, _, title, _ in docs:
         if summary:
             combined_summary_texts.append(f"Title: {title or '(Untitled)'}\n{summary.strip()}")
     full_text = "\n\n".join(combined_summary_texts)
 
-    # 5. Gemini AP prompt
+    # 4. Gemini AP prompt
     ap_prompt = f"""
 You are an Associated Press journalist. Write a concise, factual bulletin based on the following case update.
 Use plain language. Do not exaggerate or add speculation.
@@ -253,7 +429,7 @@ DOCUMENT SUMMARIES:
 {full_text[:9000]}
 """
 
-    # 6. Gemini TMZ-style prompt
+    # 5. Gemini TMZ-style prompt
     tmz_prompt = f"""
 You are writing a story for TMZ. Be punchy, dramatic, and focused on the celebrity or legal angle.
 Use this format:
@@ -267,11 +443,23 @@ DOCUMENT SUMMARIES:
 """
 
     try:
-        ap_response = model.generate_content(ap_prompt)
-        ap_summary = ap_response.text.strip()
+        # Use the new logging wrapper for both calls
+        ap_response, ap_success = gemini_api_call_with_logging(
+            cursor, script_name, model_name, ap_prompt, 
+            fk_asset=case_update_id, temperature=0.2, max_tokens=400
+        )
+        
+        tmz_response, tmz_success = gemini_api_call_with_logging(
+            cursor, script_name, model_name, tmz_prompt,
+            fk_asset=case_update_id, temperature=0.3, max_tokens=300
+        )
+        
+        if not (ap_success and tmz_success):
+            logging.error(f"Gemini API calls failed for case_update {case_update_id}")
+            return None, None, False
 
-        tmz_response = model.generate_content(tmz_prompt)
-        tmz_raw = tmz_response.text.strip()
+        ap_summary = ap_response.strip()
+        tmz_raw = tmz_response.strip()
 
         # Format TMZ output
         headline = body = None

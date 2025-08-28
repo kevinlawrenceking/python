@@ -9,7 +9,7 @@ import google.generativeai as genai
 DSN = "Docketwatch"
 script_filename = os.path.splitext(os.path.basename(__file__))[0]  # no .py
 LOG_FILE = rf"\\10.146.176.84\general\docketwatch\python\logs\{script_filename}.log"
-GEMINI_MODEL_NAME = "gemini-1.5-flash"  # Or use "gemini-1.5-pro" if needed
+GEMINI_MODEL_NAME = "gemini-2.5-flash"  # Or use "gemini-1.5-pro" if needed
 
 # === Logging Setup ===
 import logging

@@ -6,9 +6,9 @@ import time
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 TEMPERATURE = 0.2  # low for rule-following
-MAX_TOKENS = 300   # for keyword arrays
+MAX_TOKENS = 350   # for keyword arrays
 SLEEP_SECONDS = 0.5
 DEBUG_MODE = False
 

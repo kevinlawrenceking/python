@@ -6,7 +6,7 @@ import os
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 TEMPERATURE = 0.2  # low for rule-following
 MAX_TOKENS = 400   # increased for detailed descriptions
 SLEEP_SECONDS = 0.5

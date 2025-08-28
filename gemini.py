@@ -66,7 +66,7 @@ def call_gemini_generate_content(api_key, model_name, prompt):
 gemini_api_key = "AIzaSyDYoUOVLnzw8JHIpVwcEknMRccLSlFuxBc"
 
 # Try using a known good model for content generation
-# You can also try "gemini-1.5-pro" or "gemini-1.5-flash"
+# You can also try "gemini-1.5-pro" or "gemini-2.5-flash"
 model_to_use = "gemini-2.0-flash" 
 user_prompt = "Tell me a short, inspiring quote about perseverance."
 

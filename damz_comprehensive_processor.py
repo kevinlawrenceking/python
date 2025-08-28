@@ -7,9 +7,9 @@ import json
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 TEMPERATURE = 0.2  # low for rule-following
-MAX_TOKENS = 800   # increased for comprehensive analysis
+MAX_TOKENS = 300   # increased for comprehensive analysis
 SLEEP_SECONDS = 1.0  # slightly longer for complex processing
 DEBUG_MODE = False
 

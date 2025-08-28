@@ -1,14 +1,17 @@
 import pyodbc
 import google.generativeai as genai
 import time
+import os
+from datetime import datetime
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
-GEMINI_MODEL = "gemini-1.5-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 TEMPERATURE = 0.2  # Lower temperature for more consistent, rule-following behavior
-MAX_TOKENS = 500  # Increased from 200 to allow fuller responses
+MAX_TOKENS = 350  # Increased from 200 to allow fuller responses
 SLEEP_SECONDS = .5  # Delay to stay polite and safe
 DEBUG_MODE = False  # Set to False for normal operation
+SCRIPT_NAME = "analyze_damz_gemini.py"  # For logging purposes
 
 # Valid headline types from prompt rules
 VALID_TYPES = {
@@ -29,6 +32,65 @@ def get_gemini_key(cursor):
     cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
     row = cursor.fetchone()
     return row[0] if row and row[0] else None
+
+# --- Gemini API Logging ---
+def log_gemini_call(cursor, fk_asset, prompt_length, response_length, success, error_message=None, processing_time_ms=None, input_tokens=None, output_tokens=None, total_tokens=None):
+    """Log Gemini API call details to database"""
+    try:
+        # Calculate cost estimate based on model pricing (approximate)
+        cost_estimate = None
+        if total_tokens:
+            # Gemini 2.5 Flash pricing (as of 2025) - approximate $0.002 per 1K tokens
+            cost_estimate = (total_tokens / 1000) * 0.002
+        
+        cursor.execute("""
+            INSERT INTO docketwatch.dbo.gemini_api_log 
+            (script_name, model_name, fk_asset, prompt_length, response_length, 
+             input_tokens, output_tokens, total_tokens, temperature, max_tokens, 
+             success, error_message, processing_time_ms, cost_estimate)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            SCRIPT_NAME, GEMINI_MODEL, fk_asset, prompt_length, response_length,
+            input_tokens, output_tokens, total_tokens, TEMPERATURE, MAX_TOKENS,
+            success, error_message, processing_time_ms, cost_estimate
+        ))
+        cursor.connection.commit()
+        
+        if DEBUG_MODE:
+            print(f"[DEBUG] Logged API call - Tokens: {total_tokens}, Cost: ${cost_estimate:.6f}" if cost_estimate else "[DEBUG] Logged API call")
+            
+    except Exception as e:
+        print(f"[WARNING] Failed to log API call: {e}")
+
+# --- Get Usage Statistics ---
+def get_usage_stats(cursor, days=7):
+    """Get recent usage statistics"""
+    try:
+        cursor.execute("""
+            SELECT 
+                COUNT(*) as total_calls,
+                SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successful_calls,
+                SUM(ISNULL(total_tokens, 0)) as total_tokens,
+                SUM(ISNULL(cost_estimate, 0)) as estimated_cost,
+                AVG(processing_time_ms) as avg_processing_time
+            FROM docketwatch.dbo.gemini_api_log 
+            WHERE call_timestamp >= DATEADD(day, -?, GETDATE())
+            AND script_name = ?
+        """, (days, SCRIPT_NAME))
+        
+        row = cursor.fetchone()
+        if row:
+            return {
+                'total_calls': row[0] or 0,
+                'successful_calls': row[1] or 0,
+                'total_tokens': row[2] or 0,
+                'estimated_cost': float(row[3] or 0),
+                'avg_processing_time': float(row[4] or 0)
+            }
+    except Exception as e:
+        print(f"[WARNING] Failed to get usage stats: {e}")
+    
+    return None
 
 # --- Prompt Builder ---
 def build_prompt(rules, headline, description):
@@ -51,7 +113,16 @@ REMEMBER: 80% should be Live Event. When in doubt, choose Live Event.
 """
 
 # --- Gemini Call ---
-def analyze_asset(prompt, gemini_key):
+def analyze_asset(prompt, gemini_key, cursor, fk_asset):
+    start_time = datetime.now()
+    prompt_length = len(prompt)
+    response_length = 0
+    success = False
+    error_message = None
+    input_tokens = None
+    output_tokens = None
+    total_tokens = None
+    
     try:
         genai.configure(api_key=gemini_key)
         model = genai.GenerativeModel(GEMINI_MODEL)
@@ -65,6 +136,22 @@ def analyze_asset(prompt, gemini_key):
         )
 
         text = response.text.strip()
+        response_length = len(text)
+        
+        # Try to extract token usage if available
+        try:
+            if hasattr(response, 'usage_metadata'):
+                usage = response.usage_metadata
+                input_tokens = getattr(usage, 'prompt_token_count', None)
+                output_tokens = getattr(usage, 'candidates_token_count', None)
+                total_tokens = getattr(usage, 'total_token_count', None)
+                
+                if DEBUG_MODE and total_tokens:
+                    print(f"[DEBUG] Token usage - Input: {input_tokens}, Output: {output_tokens}, Total: {total_tokens}")
+        except Exception as e:
+            if DEBUG_MODE:
+                print(f"[DEBUG] Could not extract token usage: {e}")
+        
         print(f"[DEBUG] Gemini Response: {text}")
         
         lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -112,13 +199,28 @@ def analyze_asset(prompt, gemini_key):
         # Final validation
         if not type_final or not headline_final:
             print(f"[ERROR] Failed to parse response - Type: {type_final}, Headline: {headline_final}")
-            return None, None
+            error_message = f"Failed to parse response - Type: {type_final}, Headline: {headline_final}"
+        else:
+            success = True
             
-        return type_final, headline_final
-
     except Exception as e:
         print(f"[ERROR] Gemini API failed: {e}")
-        return None, None
+        error_message = str(e)
+        type_final = None
+        headline_final = None
+    
+    finally:
+        # Calculate processing time
+        end_time = datetime.now()
+        processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+        
+        # Log the API call
+        log_gemini_call(
+            cursor, fk_asset, prompt_length, response_length, success, 
+            error_message, processing_time_ms, input_tokens, output_tokens, total_tokens
+        )
+    
+    return type_final, headline_final
 
 # --- Main Logic ---
 def main():
@@ -134,6 +236,17 @@ def main():
     if not gemini_key:
         print("ERROR: Gemini API key not found.")
         return
+
+    # Show recent usage statistics
+    stats = get_usage_stats(cursor, days=7)
+    if stats:
+        print(f"\n=== RECENT USAGE (Last 7 days) ===")
+        print(f"Total calls: {stats['total_calls']}")
+        print(f"Successful calls: {stats['successful_calls']}")
+        print(f"Total tokens used: {stats['total_tokens']:,}")
+        print(f"Estimated cost: ${stats['estimated_cost']:.6f}")
+        print(f"Avg processing time: {stats['avg_processing_time']:.1f}ms")
+        print("=" * 40)
 
     # Check if the target columns exist
     try:
@@ -175,7 +288,7 @@ def main():
         prompt = build_prompt(rules, headline, shot_description)
         print(f"[DEBUG] Prompt length: {len(prompt)} characters")
         
-        type_final, headline_final = analyze_asset(prompt, gemini_key)
+        type_final, headline_final = analyze_asset(prompt, gemini_key, cursor, fk_asset)
 
         if type_final and headline_final:
             # First, let's verify the record exists and show current values
@@ -215,6 +328,15 @@ def main():
             skipped += 1
 
         time.sleep(SLEEP_SECONDS)
+
+    # Show final usage statistics
+    final_stats = get_usage_stats(cursor, days=1)
+    if final_stats:
+        print(f"\n=== TODAY'S USAGE ===")
+        print(f"Total calls today: {final_stats['total_calls']}")
+        print(f"Successful calls: {final_stats['successful_calls']}")
+        print(f"Total tokens used today: {final_stats['total_tokens']:,}")
+        print(f"Estimated cost today: ${final_stats['estimated_cost']:.6f}")
 
     print("\n=== BATCH COMPLETE ===")
     print(f"Processed: {processed}")

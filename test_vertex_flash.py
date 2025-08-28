@@ -14,7 +14,7 @@ vertexai.init(
 )
 
 # Run test
-model = GenerativeModel("gemini-1.5-flash")
+model = GenerativeModel("gemini-2.5-flash")
 response = model.generate_content("Summarize the case United States v. Trump.")
 
 print("\n=== Gemini Flash Response ===\n")
