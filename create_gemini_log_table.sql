@@ -25,7 +25,7 @@ CREATE INDEX IX_gemini_api_log_script ON docketwatch.dbo.gemini_api_log(script_n
 CREATE INDEX IX_gemini_api_log_asset ON docketwatch.dbo.gemini_api_log(fk_asset);
 
 -- Create a view for daily usage summary
-CREATE VIEW docketwatch.dbo.v_gemini_daily_usage AS
+CREATE VIEW v_gemini_daily_usage AS
 SELECT 
     CAST(call_timestamp AS DATE) as call_date,
     script_name,
