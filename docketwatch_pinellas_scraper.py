@@ -25,9 +25,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from bs4 import BeautifulSoup
 
-# Import from scraper_base for consistent logging
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from scraper_base import log_message
+# Import from scraper_base for consistent logging (if needed)
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# from scraper_base import log_message
 
 # --- CONFIGURATION ---
 SEARCH_URL = "https://courtrecords.mypinellasclerk.gov/MyCr/Cases/Search"
@@ -107,7 +107,7 @@ def send_email(subject, body, html_body=None):
         logging.error(f"Failed to send email: {e}")
         return False
 
-def search_individual(driver, cursor, fk_task_run, target):
+def search_individual(driver, cursor, target):
     """Search for a specific individual"""
     try:
         first_name = target["first_name"]
@@ -115,7 +115,7 @@ def search_individual(driver, cursor, fk_task_run, target):
         middle_name = target.get("middle_name", "")
         dob = target.get("dob", "")
         
-        log_message(cursor, fk_task_run, "INFO", f"Searching for {first_name} {last_name}")
+        logging.info(f"Searching for {first_name} {last_name}")
         
         # Navigate to search page
         driver.get(SEARCH_URL)
@@ -163,100 +163,86 @@ def search_individual(driver, cursor, fk_task_run, target):
         time.sleep(5)
         
         # Check for results
-        results_found = check_for_results(driver, cursor, fk_task_run, target)
+        results_found = check_for_results(driver, cursor, target)
         
         return results_found
         
     except TimeoutException:
         error_msg = f"Timeout while searching for {target['first_name']} {target['last_name']}"
-        log_message(cursor, fk_task_run, "ERROR", error_msg)
         logging.error(error_msg)
         return False
         
     except Exception as e:
         error_msg = f"Error searching for {target['first_name']} {target['last_name']}: {str(e)}"
-        log_message(cursor, fk_task_run, "ERROR", error_msg)
         logging.error(error_msg)
         return False
 
-def check_for_results(driver, cursor, fk_task_run, target):
+def check_for_results(driver, cursor, target):
     """Check if search returned any results and process them"""
     try:
-        # Look for various indicators of results
+        # Look for results using the specific HTML structure
         page_source = driver.page_source
         soup = BeautifulSoup(page_source, 'html.parser')
         
-        # Check for common result indicators
-        result_indicators = [
-            'search-results',
-            'case-result',
-            'result-row',
-            'results-table',
-            'case-number',
-            'case-link'
-        ]
-        
-        has_results = False
-        results_html = ""
-        results_text = ""
-        
-        # Look for result containers
-        for indicator in result_indicators:
-            elements = soup.find_all(class_=lambda x: x and indicator in x) if soup else []
-            if elements:
-                has_results = True
-                break
-        
-        # Also check for table rows that might contain case data
-        if not has_results:
-            tables = soup.find_all('table') if soup else []
-            for table in tables:
-                rows = table.find_all('tr')
-                if len(rows) > 1:  # More than just header row
-                    has_results = True
-                    break
-        
-        # Look for specific text patterns that indicate results
-        if not has_results:
-            result_patterns = [
-                'case found',
-                'search returned',
-                'total cases',
-                'case number',
-                'filing date'
-            ]
-            
-            page_text = soup.get_text().lower() if soup else ""
-            for pattern in result_patterns:
-                if pattern in page_text:
-                    has_results = True
-                    break
-        
-        # Check for "no results" messages
-        no_result_patterns = [
-            'no cases found',
-            'no results',
-            'no matches',
-            '0 cases found',
-            'search returned 0'
-        ]
-        
-        page_text = soup.get_text().lower() if soup else ""
-        for pattern in no_result_patterns:
-            if pattern in page_text:
-                has_results = False
-                break
-        
-        if has_results:
-            # Extract results for email
-            results_html = str(soup) if soup else page_source
-            results_text = soup.get_text() if soup else "Results found but could not parse content"
-            
+        # Check for "no results" message first
+        no_results_alert = soup.find('div', class_='alert alert-warning')
+        if no_results_alert and "No cases were found" in no_results_alert.get_text():
             target_name = f"{target['first_name']} {target['last_name']}"
-            log_message(cursor, fk_task_run, "INFO", f"Results found for {target_name}")
+            logging.info(f"No results found for {target_name}")
+            return False
+        
+        # Look for the case list table
+        case_table = soup.find('table', id='caseList')
+        if not case_table:
+            target_name = f"{target['first_name']} {target['last_name']}"
+            logging.info(f"No case table found for {target_name}")
+            return False
+        
+        # Check if there are any case rows in the tbody
+        tbody = case_table.find('tbody')
+        if not tbody:
+            target_name = f"{target['first_name']} {target['last_name']}"
+            logging.info(f"No case data found for {target_name}")
+            return False
+        
+        # Find all case rows (excluding empty rows)
+        case_rows = tbody.find_all('tr', role='row')
+        if not case_rows:
+            target_name = f"{target['first_name']} {target['last_name']}"
+            logging.info(f"No case rows found for {target_name}")
+            return False
+        
+        # Extract case information
+        cases = []
+        for row in case_rows:
+            cells = row.find_all('td')
+            if len(cells) >= 4:  # Make sure we have enough columns
+                case_number_cell = cells[1]  # Case# column
+                description_cell = cells[3]  # Style/Description column
+                
+                # Extract case number (look for link text or cell text)
+                case_link = case_number_cell.find('a')
+                case_number = case_link.get_text().strip() if case_link else case_number_cell.get_text().strip()
+                
+                # Extract description
+                description = description_cell.get_text().strip()
+                
+                if case_number and description:
+                    cases.append({
+                        'case_number': case_number,
+                        'description': description
+                    })
+        
+        if cases:
+            target_name = f"{target['first_name']} {target['last_name']}"
+            logging.info(f"Found {len(cases)} case(s) for {target_name}")
             
             # Send email notification
             subject = f"Pinellas County Court Records Found: {target_name}"
+            
+            # Build case list for email body
+            case_list_text = "\n".join([f"{case['case_number']} -- {case['description']}" for case in cases])
+            case_list_html = "<br>".join([f"{case['case_number']} -- {case['description']}" for case in cases])
             
             email_body = f"""
 Search Results Found for {target_name}
@@ -269,8 +255,8 @@ Search Details:
 - Search Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 - Source: Pinellas County Court Records
 
-Results:
-{results_text[:2000]}...
+Cases Found ({len(cases)}):
+{case_list_text}
 
 View full results at: {driver.current_url}
 """
@@ -291,10 +277,10 @@ View full results at: {driver.current_url}
     <li><strong>Source:</strong> Pinellas County Court Records</li>
 </ul>
 
-<h3>Results:</h3>
-<div style="border: 1px solid #ccc; padding: 10px; max-height: 400px; overflow-y: auto;">
-{results_html[:5000]}...
-</div>
+<h3>Cases Found ({len(cases)}):</h3>
+<p>
+{case_list_html}
+</p>
 
 <p><a href="{driver.current_url}">View full results</a></p>
 </body>
@@ -305,12 +291,11 @@ View full results at: {driver.current_url}
             return True
         else:
             target_name = f"{target['first_name']} {target['last_name']}"
-            log_message(cursor, fk_task_run, "INFO", f"No results found for {target_name}")
+            logging.info(f"No valid cases found for {target_name}")
             return False
             
     except Exception as e:
         error_msg = f"Error checking results for {target['first_name']} {target['last_name']}: {str(e)}"
-        log_message(cursor, fk_task_run, "ERROR", error_msg)
         logging.error(error_msg)
         return False
 
@@ -319,7 +304,6 @@ def main():
     driver = None
     conn = None
     cursor = None
-    fk_task_run = None
     
     try:
         # Setup database connection
@@ -328,16 +312,7 @@ def main():
         conn.setencoding(encoding='utf-8')
         cursor = conn.cursor()
         
-        # Create task run record
-        cursor.execute("""
-            INSERT INTO docketwatch.dbo.task_runs (fk_scheduled_task, started_at, status)
-            VALUES ((SELECT id FROM docketwatch.dbo.scheduled_tasks WHERE script_name = ?), GETDATE(), 'running')
-        """, (SCRIPT_NAME,))
-        
-        fk_task_run = cursor.execute("SELECT @@IDENTITY").fetchone()[0]
-        conn.commit()
-        
-        log_message(cursor, fk_task_run, "INFO", "Starting Pinellas County scraper")
+        logging.info("Starting Pinellas County scraper")
         
         # Setup WebDriver
         driver = setup_chrome_driver()
@@ -348,7 +323,7 @@ def main():
         # Search for each target individual
         for target in SEARCH_TARGETS:
             try:
-                if search_individual(driver, cursor, fk_task_run, target):
+                if search_individual(driver, cursor, target):
                     results_found_count += 1
                 
                 # Wait between searches to be respectful
@@ -356,38 +331,15 @@ def main():
                 
             except Exception as e:
                 error_msg = f"Failed to search for {target['first_name']} {target['last_name']}: {str(e)}"
-                log_message(cursor, fk_task_run, "ERROR", error_msg)
                 logging.error(error_msg)
                 continue
         
-        # Update task run status
-        cursor.execute("""
-            UPDATE docketwatch.dbo.task_runs 
-            SET completed_at = GETDATE(), status = 'completed', 
-                notes = ? 
-            WHERE id = ?
-        """, (f"Searched {total_searches} targets, found results for {results_found_count}", fk_task_run))
-        conn.commit()
-        
         final_msg = f"Pinellas County scraper completed. Searched {total_searches} targets, found results for {results_found_count}"
-        log_message(cursor, fk_task_run, "INFO", final_msg)
         logging.info(final_msg)
         
     except Exception as e:
         error_msg = f"Fatal error in Pinellas County scraper: {str(e)}"
         logging.error(error_msg)
-        
-        if cursor and fk_task_run:
-            try:
-                log_message(cursor, fk_task_run, "ERROR", error_msg)
-                cursor.execute("""
-                    UPDATE docketwatch.dbo.task_runs 
-                    SET completed_at = GETDATE(), status = 'failed', notes = ? 
-                    WHERE id = ?
-                """, (error_msg, fk_task_run))
-                conn.commit()
-            except:
-                pass
     
     finally:
         # Cleanup
