@@ -70,27 +70,21 @@ SEARCH_TARGETS = [
 def setup_chrome_driver():
     """Initialize Chrome WebDriver with appropriate options"""
     chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run in headless mode
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--incognito")  # Use incognito mode to avoid prefs files
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins")
-    chrome_options.add_argument("--disable-background-timer-throttling")
-    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
-    chrome_options.add_argument("--disable-renderer-backgrounding")
-    chrome_options.add_argument("--disable-features=TranslateUI")
-    chrome_options.add_argument("--disable-ipc-flooding-protection")
-    chrome_options.add_argument("--no-first-run")
-    chrome_options.add_argument("--no-default-browser-check")
-    chrome_options.add_argument("--disable-default-apps")
-    chrome_options.add_argument("--disable-popup-blocking")
-    chrome_options.add_argument("--ignore-certificate-errors")
-    chrome_options.add_argument("--ignore-ssl-errors")
-    chrome_options.add_argument("--allow-running-insecure-content")
-    # Remove user data directory to avoid file permission issues
+    chrome_options.add_argument("--disable-images")  # Speed up loading
+    chrome_options.add_argument("--disable-javascript")  # May need to remove this if JS is required
     chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    
+    # Try to avoid all file operations
+    chrome_options.add_experimental_option("useAutomationExtension", False)
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
