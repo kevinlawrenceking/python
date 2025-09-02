@@ -74,13 +74,13 @@ def setup_chrome_driver():
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
-    ## chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--headless")  # Run in headless mode
     chrome_options.add_argument("--disable-web-security")
     chrome_options.add_argument("--disable-features=VizDisplayCompositor")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins")
-    chrome_options.add_argument("--disable-images")
     chrome_options.add_argument("--user-data-dir=C:/temp/chrome_pinellas_scraper")  # Unique user data directory
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
@@ -180,8 +180,19 @@ def search_individual(driver, cursor, target):
         
         submit_button.click()
         
-        # Wait for results page to load
-        time.sleep(5)
+        # Wait for results page to load with explicit waits
+        time.sleep(8)  # Increased wait time for headless mode
+        
+        # Additional wait for dynamic content to load
+        try:
+            # Wait for either results table or no results message
+            WebDriverWait(driver, 15).until(
+                lambda d: d.find_element(By.ID, "caseList") or 
+                         d.find_element(By.CSS_SELECTOR, ".alert.alert-warning") or
+                         "No cases were found" in d.page_source
+            )
+        except TimeoutException:
+            logging.warning(f"Timeout waiting for results page to load for {target['first_name']} {target['last_name']}")
         
         # Check for results
         results_found = check_for_results(driver, cursor, target)
@@ -205,18 +216,34 @@ def check_for_results(driver, cursor, target):
         page_source = driver.page_source
         soup = BeautifulSoup(page_source, 'html.parser')
         
+        target_name = f"{target['first_name']} {target['last_name']}"
+        
+        # Debug logging for headless mode
+        logging.info(f"Checking results for {target_name} - Page title: {driver.title}")
+        logging.info(f"Current URL: {driver.current_url}")
+        
         # Check for "no results" message first
         no_results_alert = soup.find('div', class_='alert alert-warning')
         if no_results_alert and "No cases were found" in no_results_alert.get_text():
-            target_name = f"{target['first_name']} {target['last_name']}"
-            logging.info(f"No results found for {target_name}")
+            logging.info(f"No results found for {target_name} - Found 'No cases were found' alert")
+            return False
+        
+        # Also check for the text directly in page source
+        if "No cases were found" in page_source:
+            logging.info(f"No results found for {target_name} - Found 'No cases were found' in page source")
             return False
         
         # Look for the case list table
         case_table = soup.find('table', id='caseList')
         if not case_table:
-            target_name = f"{target['first_name']} {target['last_name']}"
             logging.info(f"No case table found for {target_name}")
+            # Additional debug - check what tables exist
+            all_tables = soup.find_all('table')
+            logging.info(f"Found {len(all_tables)} tables on page")
+            for i, table in enumerate(all_tables):
+                table_id = table.get('id', 'no-id')
+                table_class = table.get('class', 'no-class')
+                logging.info(f"Table {i}: id='{table_id}', class='{table_class}'")
             return False
         
         # Check if there are any case rows in the tbody
