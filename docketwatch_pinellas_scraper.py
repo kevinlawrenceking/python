@@ -34,7 +34,7 @@ SEARCH_URL = "https://courtrecords.mypinellasclerk.gov/MyCr/Cases/Search"
 SCRIPT_NAME = "docketwatch_pinellas_scraper.py"
 
 # Date range for search
-START_DATE = "08/01/2015"  # On or After date
+START_DATE = "08/01/2002"  # On or After date
 END_DATE = "09/01/2026"    # On or Before date
 
 # Email configuration
