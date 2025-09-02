@@ -35,7 +35,7 @@ SCRIPT_NAME = "docketwatch_pinellas_scraper.py"
 
 # Date range for search
 START_DATE = "08/01/2002"  # On or After date
-END_DATE = "09/01/2026"    # On or Before date
+END_DATE = "09/01/2028"    # On or Before date
 
 # Email configuration
 FROM_EMAIL = "it@tmz.com"
