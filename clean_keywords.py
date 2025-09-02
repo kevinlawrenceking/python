@@ -3,6 +3,16 @@ import google.generativeai as genai
 import json
 import re
 import time
+import sys
+import os
+
+# Import centralized Gemini logging functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from scraper_base import (
+    get_gemini_key,
+    gemini_api_call_with_logging,
+    get_gemini_usage_stats
+)
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
@@ -11,6 +21,7 @@ TEMPERATURE = 0.2  # low for rule-following
 MAX_TOKENS = 350   # for keyword arrays
 SLEEP_SECONDS = 0.5
 DEBUG_MODE = False
+SCRIPT_NAME = "clean_keywords.py"  # For Gemini logging purposes
 
 # --- Prompt Setup ---
 PROMPT_RULES_PATH = r"\\10.146.176.84\general\docketwatch\python\prompt_keywords.txt"
@@ -18,12 +29,6 @@ PROMPT_RULES_PATH = r"\\10.146.176.84\general\docketwatch\python\prompt_keywords
 def load_prompt_rules():
     with open(PROMPT_RULES_PATH, "r", encoding="utf-8") as f:
         return f.read()
-
-# --- Gemini Key Retrieval ---
-def get_gemini_key(cursor):
-    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
-    row = cursor.fetchone()
-    return row[0] if row and row[0] else None
 
 # --- Optional local cleanup for keywords ---
 VAGUE_TERMS = {
@@ -87,45 +92,46 @@ INPUT
 """
 
 # --- Gemini Call ---
-def clean_keywords(prompt, gemini_key):
+def clean_keywords(prompt, cursor, fk_asset):
+    """Clean keywords using Gemini with centralized logging"""
+    
+    # Use the centralized Gemini API call with logging
+    response_text, success = gemini_api_call_with_logging(
+        cursor=cursor,
+        script_name=SCRIPT_NAME,
+        model_name=GEMINI_MODEL,
+        prompt=prompt,
+        fk_asset=fk_asset,
+        temperature=TEMPERATURE,
+        max_tokens=MAX_TOKENS
+    )
+    
+    if not success or not response_text:
+        print(f"[ERROR] Gemini API call failed for asset {fk_asset}")
+        return None
+
+    text = response_text.strip()
+    if DEBUG_MODE:
+        print(f"[DEBUG] Gemini raw: {text}")
+
+    # Try to parse as JSON
     try:
-        genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel(GEMINI_MODEL)
-
-        response = model.generate_content(
-            prompt,
-            generation_config={
-                "temperature": TEMPERATURE,
-                "max_output_tokens": MAX_TOKENS
-            }
-        )
-
-        text = (response.text or "").strip()
-        if DEBUG_MODE:
-            print(f"[DEBUG] Gemini raw: {text}")
-
-        # Try to parse as JSON
-        try:
-            # Find JSON array in response
-            json_match = re.search(r'\[.*\]', text, re.DOTALL)
-            if json_match:
-                keywords_array = json.loads(json_match.group())
-                if isinstance(keywords_array, list):
-                    cleaned = post_clean_keywords(keywords_array)
-                    if cleaned:
-                        # Return compact JSON without spaces after commas
-                        return json.dumps(cleaned, separators=(',', ':'))
-                    else:
-                        return None
-        except Exception as e:
-            if DEBUG_MODE:
-                print(f"[DEBUG] JSON parse failed: {e}")
-        
-        return None
-
+        # Find JSON array in response
+        json_match = re.search(r'\[.*\]', text, re.DOTALL)
+        if json_match:
+            keywords_array = json.loads(json_match.group())
+            if isinstance(keywords_array, list):
+                cleaned = post_clean_keywords(keywords_array)
+                if cleaned:
+                    # Return compact JSON without spaces after commas
+                    return json.dumps(cleaned, separators=(',', ':'))
+                else:
+                    return None
     except Exception as e:
-        print(f"[ERROR] Gemini API failed: {e}")
-        return None
+        if DEBUG_MODE:
+            print(f"[DEBUG] JSON parse failed: {e}")
+    
+    return None
 
 # --- Main Logic ---
 def main():
@@ -141,6 +147,17 @@ def main():
     if not gemini_key:
         print("ERROR: Gemini API key not found.")
         return
+
+    # Show recent usage statistics
+    stats = get_gemini_usage_stats(cursor, days=7)
+    if stats:
+        print(f"\n=== RECENT USAGE (Last 7 days) ===")
+        print(f"Total calls: {stats['total_calls']}")
+        print(f"Successful calls: {stats['successful_calls']}")
+        print(f"Total tokens used: {stats['total_tokens']:,}")
+        print(f"Estimated cost: ${stats['total_cost']:.4f}")
+        print(f"Average response time: {stats['avg_response_time_ms']:.1f}ms")
+        print("=" * 50)
 
     # Confirm target column exists
     try:
@@ -185,7 +202,7 @@ def main():
             print(f"[DEBUG] keywords: {str(keywords_raw)[:140]}")
 
         prompt = build_prompt(rules, keywords_raw)
-        cleaned = clean_keywords(prompt, gemini_key)
+        cleaned = clean_keywords(prompt, cursor, fk_asset)
 
         if cleaned:
             # Show current before update
@@ -223,6 +240,16 @@ def main():
     print("\n=== BATCH COMPLETE ===")
     print(f"Processed: {processed}")
     print(f"Skipped:   {skipped}")
+
+    # Show final usage statistics
+    final_stats = get_gemini_usage_stats(cursor, days=1)
+    if final_stats:
+        print(f"\n=== TODAY'S USAGE ===")
+        print(f"Total calls today: {final_stats['total_calls']}")
+        print(f"Successful calls: {final_stats['successful_calls']}")
+        print(f"Total tokens used today: {final_stats['total_tokens']:,}")
+        print(f"Estimated cost today: ${final_stats['total_cost']:.4f}")
+        print(f"Average response time: {final_stats['avg_response_time_ms']:.1f}ms")
 
     cursor.close()
     conn.close()

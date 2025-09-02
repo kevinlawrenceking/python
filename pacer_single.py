@@ -26,8 +26,16 @@ import time
 import google.generativeai as genai
 from google.api_core import exceptions as google_exceptions
 
-# Assuming these are from scraper_base.py (not provided, but needed for context)
-from scraper_base import extract_and_store_pacer_billing, mark_case_not_found, mark_case_found, log_message
+# Import functions from scraper_base.py including centralized Gemini logging
+from scraper_base import (
+    extract_and_store_pacer_billing, 
+    mark_case_not_found, 
+    mark_case_found, 
+    log_message,
+    get_gemini_key,
+    gemini_api_call_with_logging,
+    get_gemini_usage_stats
+)
 
 # --- GLOBAL CONFIGURATION ---
 FROM_EMAIL = "it@tmz.com"
@@ -58,6 +66,7 @@ fk_task_run = None
 # Gemini model configuration
 GEMINI_MODEL_NAME = "gemini-1.5-pro" # Using the current high-capability model. Change if a new model ID becomes available.
 MAX_HTML_CHARS_TO_SEND = 16000 # Truncate input HTML to manage context window.
+SCRIPT_NAME = "pacer_single.py"  # For Gemini logging purposes
 
 # --- UTILITY FUNCTIONS ---
 
@@ -162,14 +171,12 @@ MAX_HTML_CHARS_TO_SEND = 32000 # Increased from 16000
 
 # --- FUNCTION DEFINITIONS (snippet) ---
 
-def summarize_case_html(html_text: str, api_key: str, cursor, fk_task_run, fk_case) -> str | None:
+def summarize_case_html_v1(html_text: str, cursor, fk_task_run, fk_case) -> str | None:
     """
     Summarizes legal HTML content using the Google Gemini 1.5 Pro API with an enhanced prompt.
+    Uses centralized logging functions.
     """
-    # --- CHANGED: Enhanced Prompt for Gemini 1.5 Pro ---
-    # This new prompt is more structured to guide the model effectively. It defines a role,
-    # a clear task, step-by-step instructions, and explicit delimiters for input and output.
-    # This reduces hallucinations and improves the quality and consistency of the summary.
+    # Enhanced Prompt for Gemini 1.5 Pro
     PROMPT_TEMPLATE = """
 **Role:** You are an expert legal analyst for a major entertainment news organization.
 
@@ -201,61 +208,36 @@ def summarize_case_html(html_text: str, api_key: str, cursor, fk_task_run, fk_ca
         return None
 
     truncated_html = html_text[:MAX_HTML_CHARS_TO_SEND]
-    
-    # --- FIXED: Correctly format the prompt with the HTML content ---
     full_prompt = PROMPT_TEMPLATE.format(html_content=truncated_html)
 
-    try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
-        
-        # Adjusted generation config for factual summarization
-        generation_config = {
-            "temperature": 0.5,       # Lower temperature for more factual, less creative output
-            "top_p": 0.95,
-            "top_k": 40,
-            "max_output_tokens": 1024 # Sufficient for a detailed summary
-        }
-        
-        response = model.generate_content(full_prompt, generation_config=generation_config)
-        
-        # Add safety check for empty or blocked response
-        if not response.parts:
-             log_message(cursor, fk_task_run, "WARNING", "Gemini response was blocked or empty. Check safety settings in Google AI Studio.", fk_case=fk_case)
-             return None
+    # Use centralized Gemini API call with logging
+    response_text, success = gemini_api_call_with_logging(
+        cursor=cursor,
+        script_name=SCRIPT_NAME,
+        model_name=GEMINI_MODEL_NAME,
+        prompt=full_prompt,
+        fk_asset=fk_case,  # Use case ID as asset identifier
+        temperature=0.5,
+        max_tokens=1024
+    )
+    
+    if not success or not response_text:
+        log_message(cursor, fk_task_run, "ERROR", "Gemini summarization failed", fk_case=fk_case)
+        return None
+    
+    log_message(cursor, fk_task_run, "INFO", "Gemini summary generated successfully", fk_case=fk_case)
+    return response_text.strip()
 
-        return response.text.strip()
-
-    except google_exceptions.InvalidArgument as e:
-        error_message = f"Gemini API Error (InvalidArgument): {e}. Check API key or model name."
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
-        return None
-    except google_exceptions.ResourceExhausted as e:
-        error_message = f"Gemini API Error (ResourceExhausted): {e}. Quota/rate limit may have been reached."
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
-        return None
-    except google_exceptions.GoogleAPIError as e:
-        error_message = f"Gemini API Error (GoogleAPIError): {e}. A general API error occurred."
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
-        return None
-    except Exception as e:
-        # Catch the potential KeyError from a bad prompt format, and other unexpected errors
-        error_message = f"An unexpected error occurred during Gemini API call: {e}"
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
-        return None
-
-def summarize_case_html(html_text: str, api_key: str, cursor, fk_task_run, fk_case) -> str | None:
+def summarize_case_html(html_text: str, cursor, fk_task_run, fk_case) -> str | None:
     """
     Summarizes a legal case's HTML docket report using the Google Gemini 1.5 Pro API,
     following the specific structured output format required by the DocketWatch system instructions.
+    Uses centralized logging functions.
 
     Important Note: This function is designed to summarize the overall docket report HTML,
     not the OCR'd text of a single PDF document. The prompt is tailored for that purpose.
     """
-    # --- REVISED: Prompt Aligned with System Instructions ---
-    # This prompt is specifically engineered to generate the multi-part analysis
-    # required by the DocketWatch project guidelines. It clearly defines the role,
-    # context, and the exact output structure, including the required headers.
+    # Prompt aligned with System Instructions
     PROMPT_TEMPLATE = """
 **Role:** You are a senior legal analyst and news editor for TMZ, operating the DocketWatch system.
 
@@ -297,38 +279,23 @@ def summarize_case_html(html_text: str, api_key: str, cursor, fk_task_run, fk_ca
     truncated_html = html_text[:MAX_HTML_CHARS_TO_SEND]
     full_prompt = PROMPT_TEMPLATE.format(html_content=truncated_html)
 
-    try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
-        
-        generation_config = {
-            "temperature": 0.6,       # A bit of creativity for the "STORY" section is good
-            "top_p": 0.95,
-            "top_k": 40,
-            "max_output_tokens": 2048 # Increased to allow for the more detailed, structured response
-        }
-        
-        response = model.generate_content(full_prompt, generation_config=generation_config)
-        
-        if not response.parts:
-             log_message(cursor, fk_task_run, "WARNING", "Gemini response was blocked or empty. Check safety settings.", fk_case=fk_case)
-             return None
-
-        # The model should start its response directly with "EVENT SUMMARY"
-        return response.text.strip()
-
-    except google_exceptions.InvalidArgument as e:
-        error_message = f"Gemini API Error (InvalidArgument): {e}. Check API key or model name."
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
+    # Use centralized Gemini API call with logging
+    response_text, success = gemini_api_call_with_logging(
+        cursor=cursor,
+        script_name=SCRIPT_NAME,
+        model_name=GEMINI_MODEL_NAME,
+        prompt=full_prompt,
+        fk_asset=fk_case,  # Use case ID as asset identifier
+        temperature=0.6,
+        max_tokens=2048
+    )
+    
+    if not success or not response_text:
+        log_message(cursor, fk_task_run, "ERROR", "Gemini structured analysis failed", fk_case=fk_case)
         return None
-    except google_exceptions.GoogleAPIError as e:
-        error_message = f"Gemini API Error: {e}. A general API error occurred."
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
-        return None
-    except Exception as e:
-        error_message = f"An unexpected error occurred during Gemini API call: {e}"
-        log_message(cursor, fk_task_run, "ERROR", error_message, fk_case=fk_case)
-        return None
+    
+    log_message(cursor, fk_task_run, "INFO", "Gemini structured analysis generated successfully", fk_case=fk_case)
+    return response_text.strip()
 
 # --- MAIN SCRIPT LOGIC ---
 

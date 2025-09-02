@@ -3,6 +3,16 @@ import google.generativeai as genai
 import re
 import time
 import os
+import sys
+
+# Import centralized Gemini logging functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from scraper_base import (
+    get_gemini_key,
+    gemini_api_call_with_logging,
+    get_gemini_usage_stats,
+    log_gemini_call
+)
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
@@ -11,6 +21,7 @@ TEMPERATURE = 0.2  # low for rule-following
 MAX_TOKENS = 400   # increased for detailed descriptions
 SLEEP_SECONDS = 0.5
 DEBUG_MODE = False
+SCRIPT_NAME = "clean_shot_description.py"  # For Gemini logging purposes
 
 # --- Prompt Setup ---
 PROMPT_RULES_PATH = r"\\10.146.176.84\general\docketwatch\python\prompt_shotdesc.txt"
@@ -18,12 +29,6 @@ PROMPT_RULES_PATH = r"\\10.146.176.84\general\docketwatch\python\prompt_shotdesc
 def load_prompt_rules():
     with open(PROMPT_RULES_PATH, "r", encoding="utf-8") as f:
         return f.read()
-
-# --- Gemini Key Retrieval ---
-def get_gemini_key(cursor):
-    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
-    row = cursor.fetchone()
-    return row[0] if row and row[0] else None
 
 # --- Get Image Path ---
 def get_image_path(cursor, fk_asset):
@@ -90,14 +95,35 @@ Please analyze the actual image and provide a detailed, visual shot description 
 """
 
 # --- Gemini Call with Vision ---
-def clean_shot_description(prompt, image_path, gemini_key):
+def clean_shot_description(prompt, image_path, cursor, fk_asset):
+    """Clean shot description using Gemini Vision with centralized logging"""
+    from datetime import datetime
+    
+    start_time = datetime.now()
+    prompt_length = len(prompt)
+    response_length = 0
+    success = False
+    error_message = None
+    input_tokens = None
+    output_tokens = None
+    total_tokens = None
+    response_text = None
+    
     try:
+        # Get API key using centralized function
+        gemini_key = get_gemini_key(cursor)
+        if not gemini_key:
+            error_message = "Gemini API key not found"
+            print(f"[ERROR] {error_message}")
+            return None
+            
         genai.configure(api_key=gemini_key)
         model = genai.GenerativeModel(GEMINI_MODEL)
 
         # Check if image file exists
         if not image_path or not os.path.exists(image_path):
-            print(f"[WARNING] Image not found: {image_path}")
+            error_message = f"Image not found: {image_path}"
+            print(f"[WARNING] {error_message}")
             return None
 
         # Upload image to Gemini
@@ -106,7 +132,8 @@ def clean_shot_description(prompt, image_path, gemini_key):
             if DEBUG_MODE:
                 print(f"[DEBUG] Image uploaded: {image_file.name}")
         except Exception as e:
-            print(f"[ERROR] Failed to upload image {image_path}: {e}")
+            error_message = f"Failed to upload image {image_path}: {e}"
+            print(f"[ERROR] {error_message}")
             return None
 
         response = model.generate_content(
@@ -117,13 +144,27 @@ def clean_shot_description(prompt, image_path, gemini_key):
             }
         )
 
-        text = (response.text or "").strip()
+        response_text = (response.text or "").strip()
+        response_length = len(response_text)
+        
+        # Try to extract token usage if available
+        try:
+            if hasattr(response, 'usage_metadata'):
+                usage = response.usage_metadata
+                input_tokens = getattr(usage, 'prompt_token_count', None)
+                output_tokens = getattr(usage, 'candidates_token_count', None)
+                total_tokens = getattr(usage, 'total_token_count', None)
+        except Exception as e:
+            if DEBUG_MODE:
+                print(f"[DEBUG] Could not extract token usage: {e}")
+        
         if DEBUG_MODE:
-            print(f"[DEBUG] Gemini raw: {text}")
+            print(f"[DEBUG] Gemini raw: {response_text}")
 
         # Use first non-empty line only
-        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        lines = [ln.strip() for ln in response_text.splitlines() if ln.strip()]
         if not lines:
+            error_message = "No valid response lines"
             return None
 
         cleaned = lines[0]
@@ -137,11 +178,27 @@ def clean_shot_description(prompt, image_path, gemini_key):
         except:
             pass  # Don't fail if cleanup fails
 
-        return cleaned if cleaned else None
+        if cleaned:
+            success = True
+            return cleaned
+        else:
+            error_message = "No cleaned output produced"
+            return None
 
     except Exception as e:
+        error_message = str(e)
         print(f"[ERROR] Gemini API failed: {e}")
         return None
+    
+    finally:
+        # Log the API call using centralized logging function
+        end_time = datetime.now()
+        processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+        
+        log_gemini_call(
+            cursor, fk_asset, prompt_length, response_length, success, 
+            error_message, processing_time_ms, input_tokens, output_tokens, total_tokens
+        )
 
 # --- Main Logic ---
 def main():
@@ -157,6 +214,17 @@ def main():
     if not gemini_key:
         print("ERROR: Gemini API key not found.")
         return
+
+    # Show recent usage statistics
+    stats = get_gemini_usage_stats(cursor, days=7)
+    if stats:
+        print(f"\n=== RECENT USAGE (Last 7 days) ===")
+        print(f"Total calls: {stats['total_calls']}")
+        print(f"Successful calls: {stats['successful_calls']}")
+        print(f"Total tokens used: {stats['total_tokens']:,}")
+        print(f"Estimated cost: ${stats['total_cost']:.4f}")
+        print(f"Average response time: {stats['avg_response_time_ms']:.1f}ms")
+        print("=" * 50)
 
     # Confirm target column exists
     try:
@@ -210,7 +278,7 @@ def main():
             print(f"[DEBUG] image_path: {image_path}")
 
         prompt = build_prompt(rules, headline_v5, shot_description)
-        cleaned = clean_shot_description(prompt, image_path, gemini_key)
+        cleaned = clean_shot_description(prompt, image_path, cursor, fk_asset)
 
         if cleaned:
             # Show current before update
@@ -248,6 +316,16 @@ def main():
     print("\n=== BATCH COMPLETE ===")
     print(f"Processed: {processed}")
     print(f"Skipped:   {skipped}")
+
+    # Show final usage statistics
+    final_stats = get_gemini_usage_stats(cursor, days=1)
+    if final_stats:
+        print(f"\n=== TODAY'S USAGE ===")
+        print(f"Total calls today: {final_stats['total_calls']}")
+        print(f"Successful calls: {final_stats['successful_calls']}")
+        print(f"Total tokens used today: {final_stats['total_tokens']:,}")
+        print(f"Estimated cost today: ${final_stats['total_cost']:.4f}")
+        print(f"Average response time: {final_stats['avg_response_time_ms']:.1f}ms")
 
     cursor.close()
     conn.close()

@@ -10,6 +10,14 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import smtplib
 
+# Import centralized Gemini logging functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from scraper_base import (
+    get_gemini_key, 
+    gemini_api_call_with_logging, 
+    get_gemini_usage_stats
+)
+
 # --- Logging Setup ---
 script_dir = os.path.dirname(os.path.abspath(__file__))
 script_filename = os.path.splitext(os.path.basename(__file__))[0]
@@ -105,16 +113,6 @@ def get_email_recipients(cursor, case_id):
     emails = {row.email for row in cursor.fetchall() if row.email}
     return list(emails)
 
-def get_gemini_key(cursor):
-    """Retrieves the Gemini API key from the database."""
-    try:
-        cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
-        row = cursor.fetchone()
-        return row[0] if row and row[0] else None
-    except pyodbc.Error as ex:
-        logger.error(f"Database error retrieving Gemini API key: {ex}")
-        return None
-
 def get_case_celebrities(cursor, case_id):
     """Retrieves a comma-separated string of celebrity names for a case."""
     cursor.execute("""
@@ -130,6 +128,7 @@ def get_case_celebrities(cursor, case_id):
 # --- Gemini Model Configuration ---
 
 GEMINI_MODEL_NAME = "gemini-2.5-pro"
+SCRIPT_NAME = "docketwatch_case_events_alert_plus.py"  # For logging purposes
 
 def generate_summaries(cursor, case_number, case_name, today_updates, backstory_events, article_refs, celebrities_text):
     """
@@ -184,18 +183,39 @@ Now, write your summary based on this information:
             logger.error("Gemini API key not found in dbo.utilities. Cannot generate summaries.")
             return None, None
 
-        genai.configure(api_key=gemini_api_key)
-        model = genai.GenerativeModel(GEMINI_MODEL_NAME)
+        # AP Summary - Use centralized logging
+        ap_summary, ap_success = gemini_api_call_with_logging(
+            cursor=cursor,
+            script_name=SCRIPT_NAME,
+            model_name=GEMINI_MODEL_NAME,
+            prompt=ap_prompt,
+            fk_asset=case_number,  # Use case_number as identifier
+            temperature=0.5,
+            max_tokens=400
+        )
+        
+        if not ap_success or not ap_summary:
+            logger.error(f"AP summary generation failed for case {case_number}")
+            ap_summary = None
+        else:
+            logger.debug(f"Generated AP summary for {case_number}: {ap_summary[:100]}...")
 
-        ap_generation_config = {"temperature": 0.5, "max_output_tokens": 400}
-        logger.debug(f"Gemini AP Prompt for {case_number}:\n{ap_prompt}")
-        ap_response = model.generate_content(ap_prompt, generation_config=ap_generation_config)
-        ap_summary = ap_response.text.strip()
+        # TMZ Summary - Use centralized logging
+        tmz_raw_output, tmz_success = gemini_api_call_with_logging(
+            cursor=cursor,
+            script_name=SCRIPT_NAME,
+            model_name=GEMINI_MODEL_NAME,
+            prompt=tmz_prompt,
+            fk_asset=case_number,  # Use case_number as identifier
+            temperature=0.7,
+            max_tokens=400
+        )
+        
+        if not tmz_success or not tmz_raw_output:
+            logger.error(f"TMZ summary generation failed for case {case_number}")
+            return ap_summary, None
 
-        tmz_generation_config = {"temperature": 0.7, "max_output_tokens": 400}
-        logger.debug(f"Gemini TMZ Prompt for {case_number}:\n{tmz_prompt}")
-        tmz_response = model.generate_content(tmz_prompt, generation_config=tmz_generation_config)
-        tmz_raw_output = tmz_response.text.strip()
+        logger.debug(f"Generated TMZ raw output for {case_number}: {tmz_raw_output[:100]}...")
 
         tmz_html = None
         match = re.search(r"Headline:(.*)\s*Body:(.*)", tmz_raw_output, re.DOTALL | re.IGNORECASE)

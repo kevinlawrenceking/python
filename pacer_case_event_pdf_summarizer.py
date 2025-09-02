@@ -12,7 +12,12 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from pdf2image import convert_from_path
 from cleantext import clean as clean_unicode
-from scraper_base import log_message
+from scraper_base import (
+    log_message,
+    get_gemini_key,
+    gemini_api_call_with_logging,
+    get_gemini_usage_stats
+)
 import unicodedata
 import google.generativeai as genai
 
@@ -21,6 +26,7 @@ DSN = "Docketwatch"
 POPPLER_PATH = r"C:\\Poppler\\bin"
 TESSERACT_PATH = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 MODEL_NAME = "gemini-2.5-pro"
+SCRIPT_NAME = "pacer_case_event_pdf_summarizer.py"  # For Gemini logging purposes
 RULES = r"""
 SYSTEM: You are an experienced legal journalist. Your task is to analyze the following court document and produce a concise, neutral summary for a general audience.
 
@@ -146,9 +152,8 @@ def clean_ocr_text(txt):
     txt = clean_unicode(txt, fix_unicode=True)
     return normalize_quotes(txt.strip())
 
-def refine_ocr_with_ai(text: str, api_key: str) -> str:
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(MODEL_NAME)
+def refine_ocr_with_ai(text: str, cursor, case_event_id=None) -> str:
+    """Refine OCR text using Gemini AI with centralized logging"""
     prompt = f"""
 SYSTEM: You are an expert legal document cleaner.
 Your job is to correct OCR errors in legal text while preserving original meaning.
@@ -160,15 +165,29 @@ Fix split words, misspellings, and remove junk characters.
 
 Return only the corrected text. Do not summarize or explain.
 """
-    response = model.generate_content(prompt)
-    return response.candidates[0].content.parts[0].text.strip()
+    
+    # Use centralized Gemini API call with logging
+    response_text, success = gemini_api_call_with_logging(
+        cursor=cursor,
+        script_name=SCRIPT_NAME,
+        model_name=MODEL_NAME,
+        prompt=prompt,
+        fk_asset=case_event_id or 0,  # Use case_event_id or 0 as identifier
+        temperature=0.1,  # Low temperature for text correction
+        max_tokens=2048
+    )
+    
+    if not success or not response_text:
+        print(f"[ERROR] OCR refinement failed for case_event {case_event_id}")
+        return text  # Return original text if refinement fails
+    
+    return response_text.strip()
 
-def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(MODEL_NAME)
-
+def ask_gemini(case_summary, event_desc, event_date, pdf_text, cursor, case_event_id=None):
+    """Generate document summary using Gemini AI with centralized logging"""
+    
     # Ensure input size is controlled
-    case_summary = (case_summary or "")[:2000]  # #2: Increased limit to preserve case detail
+    case_summary = (case_summary or "")[:2000]  # Increased limit to preserve case detail
     event_desc = (event_desc or "")[:500]
 
     # Build the body content with event info and PDF text
@@ -179,19 +198,27 @@ def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
     # Replace both placeholders in the rules template
     full_prompt = RULES.replace("{CASE_OVERVIEW}", case_summary).replace("{PDF_BODY}", body_text)
 
-    # Optional debug output (commented out for now)
-    # print("========== GEMINI PROMPT START ==========")
-    # print(full_prompt[:16000])
-    # print("=========== GEMINI PROMPT END ===========")
-
-    # Submit to Gemini and return result
-    response = model.generate_content(full_prompt[:16000])
-    return response.text.strip()
+    # Use centralized Gemini API call with logging
+    response_text, success = gemini_api_call_with_logging(
+        cursor=cursor,
+        script_name=SCRIPT_NAME,
+        model_name=MODEL_NAME,
+        prompt=full_prompt[:16000],
+        fk_asset=case_event_id or 0,  # Use case_event_id as identifier
+        temperature=0.3,  # Low temperature for factual summarization
+        max_tokens=1024
+    )
+    
+    if not success or not response_text:
+        print(f"[ERROR] Document summarization failed for case_event {case_event_id}")
+        return None
+    
+    return response_text.strip()
 
 
 def process_single_pdf(doc_uid: str):
     conn, cur = get_cursor()
-    key = get_util(cur, "gemini_api")
+    key = get_gemini_key(cur)  # Use centralized function
     docs_root = get_util(cur, "docs_root")
     if not (key and docs_root):
         print("Missing Gemini key or docs_root.")
@@ -203,7 +230,8 @@ SELECT
     ISNULL(e.event_description, p.pdf_title) AS event_description,
     CONVERT(char(10), ISNULL(e.event_date, p.date_downloaded), 23) AS event_date,
     p.ocr_text,
-    p.fk_case
+    p.fk_case,
+    p.fk_case_event
 FROM docketwatch.dbo.documents p
 LEFT JOIN docketwatch.dbo.case_events e ON e.id = p.fk_case_event
 JOIN docketwatch.dbo.cases c ON c.id = p.fk_case
@@ -214,7 +242,7 @@ WHERE p.doc_uid = ?
         print("PDF id not found.")
         return
 
-    summ, ev_desc, ev_date, ocr_text, case_id = row
+    summ, ev_desc, ev_date, ocr_text, case_id, case_event_id = row
     cur.execute("""
         SELECT TOP 1 rel_path
         FROM docketwatch.dbo.documents
@@ -228,7 +256,7 @@ WHERE p.doc_uid = ?
         raw = pdf_to_text(abs_path)
         clean = clean_ocr_text(raw)
         try:
-            clean = refine_ocr_with_ai(clean, key)
+            clean = refine_ocr_with_ai(clean, cur, case_event_id)
         except Exception as e:
             log_message(cur, None, "WARNING", f"Refinement failed for {doc_uid}: {e}")
         cur.execute("""
@@ -245,10 +273,14 @@ WHERE p.doc_uid = ?
         return
 
     try:
-        gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text, key)
-        gem = fix_encoding_garbage(gem)
-        gem = normalize_quotes(gem)
-        html = BeautifulSoup(markdown2.markdown(gem), "html.parser").prettify()
+        gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text, cur, case_event_id)
+        if gem:  # Check if summary was generated successfully
+            gem = fix_encoding_garbage(gem)
+            gem = normalize_quotes(gem)
+            html = BeautifulSoup(markdown2.markdown(gem), "html.parser").prettify()
+        else:
+            log_message(cur, None, "ERROR", f"Gemini summary generation failed for {doc_uid}")
+            return
     except Exception as e:
         log_message(cur, None, "ERROR", f"Gemini fail {doc_uid}: {e}")
         return

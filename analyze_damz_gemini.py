@@ -2,7 +2,16 @@ import pyodbc
 import google.generativeai as genai
 import time
 import os
+import sys
 from datetime import datetime
+
+# Import centralized Gemini logging functions
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from scraper_base import (
+    get_gemini_key, 
+    gemini_api_call_with_logging, 
+    get_gemini_usage_stats
+)
 
 # --- CONFIG ---
 BATCH_LIMIT = 5000
@@ -27,71 +36,6 @@ def load_prompt_rules():
     with open(PROMPT_RULES_PATH, "r", encoding="utf-8") as f:
         return f.read()
 
-# --- Gemini Key Retrieval ---
-def get_gemini_key(cursor):
-    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
-    row = cursor.fetchone()
-    return row[0] if row and row[0] else None
-
-# --- Gemini API Logging ---
-def log_gemini_call(cursor, fk_asset, prompt_length, response_length, success, error_message=None, processing_time_ms=None, input_tokens=None, output_tokens=None, total_tokens=None):
-    """Log Gemini API call details to database"""
-    try:
-        # Calculate cost estimate based on model pricing (approximate)
-        cost_estimate = None
-        if total_tokens:
-            # Gemini 2.5 Flash pricing (as of 2025) - approximate $0.002 per 1K tokens
-            cost_estimate = (total_tokens / 1000) * 0.002
-        
-        cursor.execute("""
-            INSERT INTO docketwatch.dbo.gemini_api_log 
-            (script_name, model_name, fk_asset, prompt_length, response_length, 
-             input_tokens, output_tokens, total_tokens, temperature, max_tokens, 
-             success, error_message, processing_time_ms, cost_estimate)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            SCRIPT_NAME, GEMINI_MODEL, fk_asset, prompt_length, response_length,
-            input_tokens, output_tokens, total_tokens, TEMPERATURE, MAX_TOKENS,
-            success, error_message, processing_time_ms, cost_estimate
-        ))
-        cursor.connection.commit()
-        
-        if DEBUG_MODE:
-            print(f"[DEBUG] Logged API call - Tokens: {total_tokens}, Cost: ${cost_estimate:.6f}" if cost_estimate else "[DEBUG] Logged API call")
-            
-    except Exception as e:
-        print(f"[WARNING] Failed to log API call: {e}")
-
-# --- Get Usage Statistics ---
-def get_usage_stats(cursor, days=7):
-    """Get recent usage statistics"""
-    try:
-        cursor.execute("""
-            SELECT 
-                COUNT(*) as total_calls,
-                SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successful_calls,
-                SUM(ISNULL(total_tokens, 0)) as total_tokens,
-                SUM(ISNULL(cost_estimate, 0)) as estimated_cost,
-                AVG(processing_time_ms) as avg_processing_time
-            FROM docketwatch.dbo.gemini_api_log 
-            WHERE call_timestamp >= DATEADD(day, -?, GETDATE())
-            AND script_name = ?
-        """, (days, SCRIPT_NAME))
-        
-        row = cursor.fetchone()
-        if row:
-            return {
-                'total_calls': row[0] or 0,
-                'successful_calls': row[1] or 0,
-                'total_tokens': row[2] or 0,
-                'estimated_cost': float(row[3] or 0),
-                'avg_processing_time': float(row[4] or 0)
-            }
-    except Exception as e:
-        print(f"[WARNING] Failed to get usage stats: {e}")
-    
-    return None
-
 # --- Prompt Builder ---
 def build_prompt(rules, headline, description):
     return f"""{rules}
@@ -114,112 +58,72 @@ REMEMBER: 80% should be Live Event. When in doubt, choose Live Event.
 
 # --- Gemini Call ---
 def analyze_asset(prompt, gemini_key, cursor, fk_asset):
-    start_time = datetime.now()
-    prompt_length = len(prompt)
-    response_length = 0
-    success = False
-    error_message = None
-    input_tokens = None
-    output_tokens = None
-    total_tokens = None
+    """Analyze asset using Gemini with centralized logging"""
     
-    try:
-        genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel(GEMINI_MODEL)
-
-        response = model.generate_content(
-            prompt,
-            generation_config={
-                "temperature": TEMPERATURE,
-                "max_output_tokens": MAX_TOKENS
-            }
-        )
-
-        text = response.text.strip()
-        response_length = len(text)
+    # Use the centralized Gemini API call with logging
+    response_text, success = gemini_api_call_with_logging(
+        cursor=cursor,
+        script_name=SCRIPT_NAME,
+        model_name=GEMINI_MODEL,
+        prompt=prompt,
+        fk_asset=fk_asset,
+        temperature=TEMPERATURE,
+        max_tokens=MAX_TOKENS
+    )
+    
+    if not success or not response_text:
+        print(f"[ERROR] Gemini API call failed for asset {fk_asset}")
+        return None, None
+    
+    print(f"[DEBUG] Gemini Response: {response_text}")
+    
+    lines = [line.strip() for line in response_text.splitlines() if line.strip()]
+    
+    # Try to find Type and Optimized Headline lines
+    type_line = next((l for l in lines if l.lower().startswith("type:")), None)
+    headline_line = next((l for l in lines if l.lower().startswith("optimized headline:")), None)
+    
+    # Extract values
+    type_final = None
+    headline_final = None
+    
+    if type_line:
+        type_final = type_line.split(":", 1)[1].strip()
+        # Validate type against known valid types
+        if type_final not in VALID_TYPES:
+            print(f"[WARNING] Invalid type '{type_final}', defaulting to 'Live Event'")
+            type_final = "Live Event"
+    
+    if headline_line:
+        headline_final = headline_line.split(":", 1)[1].strip()
+        # Basic headline validation - remove quotes if present
+        if headline_final.startswith('"') and headline_final.endswith('"'):
+            headline_final = headline_final[1:-1]
+    
+    # If standard format not found, try alternative parsing
+    if not type_line or not headline_line:
+        print(f"[DEBUG] Standard format not found. Available lines: {[l[:100] for l in lines[:5]]}")
         
-        # Try to extract token usage if available
-        try:
-            if hasattr(response, 'usage_metadata'):
-                usage = response.usage_metadata
-                input_tokens = getattr(usage, 'prompt_token_count', None)
-                output_tokens = getattr(usage, 'candidates_token_count', None)
-                total_tokens = getattr(usage, 'total_token_count', None)
+        # Try single line format
+        if len(lines) == 1 and "," in lines[0]:
+            parts = lines[0].split(",")
+            if len(parts) >= 2:
+                print(f"[DEBUG] Attempting to parse single-line response: {lines[0]}")
+                potential_type = parts[-1].strip()
+                potential_headline = ",".join(parts[:-1]).strip()
                 
-                if DEBUG_MODE and total_tokens:
-                    print(f"[DEBUG] Token usage - Input: {input_tokens}, Output: {output_tokens}, Total: {total_tokens}")
-        except Exception as e:
-            if DEBUG_MODE:
-                print(f"[DEBUG] Could not extract token usage: {e}")
-        
-        print(f"[DEBUG] Gemini Response: {text}")
-        
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
-        
-        # Try to find Type and Optimized Headline lines
-        type_line = next((l for l in lines if l.lower().startswith("type:")), None)
-        headline_line = next((l for l in lines if l.lower().startswith("optimized headline:")), None)
-        
-        # Extract values
-        type_final = None
-        headline_final = None
-        
-        if type_line:
-            type_final = type_line.split(":", 1)[1].strip()
-            # Validate type against known valid types
-            if type_final not in VALID_TYPES:
-                print(f"[WARNING] Invalid type '{type_final}', defaulting to 'Live Event'")
-                type_final = "Live Event"
-        
-        if headline_line:
-            headline_final = headline_line.split(":", 1)[1].strip()
-            # Basic headline validation - remove quotes if present
-            if headline_final.startswith('"') and headline_final.endswith('"'):
-                headline_final = headline_final[1:-1]
-        
-        # If standard format not found, try alternative parsing
-        if not type_line or not headline_line:
-            print(f"[DEBUG] Standard format not found. Available lines: {[l[:100] for l in lines[:5]]}")
-            
-            # Try single line format
-            if len(lines) == 1 and "," in lines[0]:
-                parts = lines[0].split(",")
-                if len(parts) >= 2:
-                    print(f"[DEBUG] Attempting to parse single-line response: {lines[0]}")
-                    potential_type = parts[-1].strip()
-                    potential_headline = ",".join(parts[:-1]).strip()
-                    
-                    if potential_type in VALID_TYPES:
-                        type_final = potential_type
-                        headline_final = potential_headline
-                        print(f"[DEBUG] Successfully parsed single-line - Type: '{type_final}', Headline: '{headline_final}'")
-                    else:
-                        print(f"[DEBUG] Single-line parse failed - invalid type: '{potential_type}'")
+                if potential_type in VALID_TYPES:
+                    type_final = potential_type
+                    headline_final = potential_headline
+                    print(f"[DEBUG] Successfully parsed single-line - Type: '{type_final}', Headline: '{headline_final}'")
+                else:
+                    print(f"[DEBUG] Single-line parse failed - invalid type: '{potential_type}'")
 
-        # Final validation
-        if not type_final or not headline_final:
-            print(f"[ERROR] Failed to parse response - Type: {type_final}, Headline: {headline_final}")
-            error_message = f"Failed to parse response - Type: {type_final}, Headline: {headline_final}"
-        else:
-            success = True
-            
-    except Exception as e:
-        print(f"[ERROR] Gemini API failed: {e}")
-        error_message = str(e)
-        type_final = None
-        headline_final = None
-    
-    finally:
-        # Calculate processing time
-        end_time = datetime.now()
-        processing_time_ms = int((end_time - start_time).total_seconds() * 1000)
+    # Final validation
+    if not type_final or not headline_final:
+        print(f"[ERROR] Failed to parse response - Type: {type_final}, Headline: {headline_final}")
+        return None, None
         
-        # Log the API call
-        log_gemini_call(
-            cursor, fk_asset, prompt_length, response_length, success, 
-            error_message, processing_time_ms, input_tokens, output_tokens, total_tokens
-        )
-    
     return type_final, headline_final
 
 # --- Main Logic ---
@@ -238,7 +142,7 @@ def main():
         return
 
     # Show recent usage statistics
-    stats = get_usage_stats(cursor, days=7)
+    stats = get_gemini_usage_stats(cursor, days=7)
     if stats:
         print(f"\n=== RECENT USAGE (Last 7 days) ===")
         print(f"Total calls: {stats['total_calls']}")
@@ -330,7 +234,7 @@ def main():
         time.sleep(SLEEP_SECONDS)
 
     # Show final usage statistics
-    final_stats = get_usage_stats(cursor, days=1)
+    final_stats = get_gemini_usage_stats(cursor, days=1)
     if final_stats:
         print(f"\n=== TODAY'S USAGE ===")
         print(f"Total calls today: {final_stats['total_calls']}")
