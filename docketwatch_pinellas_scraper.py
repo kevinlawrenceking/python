@@ -69,23 +69,35 @@ SEARCH_TARGETS = [
 
 def setup_chrome_driver():
     """Initialize Chrome WebDriver with appropriate options"""
+    import tempfile
+    import shutil
+    
+    # Create a unique temp directory for this session
+    temp_dir = tempfile.mkdtemp(prefix="chrome_pinellas_")
+    
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
-    ## chrome_options.add_argument("--headless")  # Run in headless mode
-    chrome_options.add_argument("--disable-web-security")
-    chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+    chrome_options.add_argument("--headless")  # Run in headless mode
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins")
-    chrome_options.add_argument("--disable-images")
-    chrome_options.add_argument("--user-data-dir=C:/temp/chrome_pinellas_scraper")  # Unique user data directory
+    chrome_options.add_argument("--disable-background-timer-throttling")
+    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
+    chrome_options.add_argument("--disable-renderer-backgrounding")
+    chrome_options.add_argument("--disable-features=TranslateUI")
+    chrome_options.add_argument("--disable-ipc-flooding-protection")
+    chrome_options.add_argument(f"--user-data-dir={temp_dir}")  # Unique temp directory
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.implicitly_wait(IMPLICIT_WAIT)
     driver.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
+    
+    # Store temp directory for cleanup
+    driver._temp_dir = temp_dir
     
     return driver
 
@@ -368,7 +380,18 @@ def main():
         # Cleanup
         if driver:
             try:
-                driver.quit()
+                # Clean up temp directory if it exists
+                if hasattr(driver, '_temp_dir'):
+                    import shutil
+                    temp_dir = driver._temp_dir
+                    driver.quit()
+                    try:
+                        shutil.rmtree(temp_dir, ignore_errors=True)
+                        logging.info(f"Cleaned up temp directory: {temp_dir}")
+                    except:
+                        pass
+                else:
+                    driver.quit()
             except:
                 pass
         
