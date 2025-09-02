@@ -33,6 +33,10 @@ from bs4 import BeautifulSoup
 SEARCH_URL = "https://courtrecords.mypinellasclerk.gov/MyCr/Cases/Search"
 SCRIPT_NAME = "docketwatch_pinellas_scraper.py"
 
+# Date range for search
+START_DATE = "08/01/2025"  # On or After date
+END_DATE = "09/01/2026"    # On or Before date
+
 # Email configuration
 FROM_EMAIL = "it@tmz.com"
 TO_EMAIL = "kevin.king@tmz.com"
@@ -151,6 +155,17 @@ def search_individual(driver, cursor, target):
             dob_field.clear()
             dob_field.send_keys(dob)
         
+        # Fill in date range
+        # Start date (On or After)
+        date_from_field = driver.find_element(By.ID, "DateFrom")
+        date_from_field.clear()
+        date_from_field.send_keys(START_DATE)
+        
+        # End date (On or Before)
+        date_to_field = driver.find_element(By.ID, "DateTo")
+        date_to_field.clear()
+        date_to_field.send_keys(END_DATE)
+        
         # Submit the form
         submit_button = driver.find_element(By.ID, "caseSearch")
         
@@ -252,6 +267,7 @@ Search Details:
 - Last Name: {target['last_name']}
 - Middle Name: {target.get('middle_name', 'N/A')}
 - DOB: {target.get('dob', 'N/A')}
+- Date Range: {START_DATE} to {END_DATE}
 - Search Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 - Source: Pinellas County Court Records
 
@@ -273,6 +289,7 @@ View full results at: {driver.current_url}
     <li><strong>Last Name:</strong> {target['last_name']}</li>
     <li><strong>Middle Name:</strong> {target.get('middle_name', 'N/A')}</li>
     <li><strong>DOB:</strong> {target.get('dob', 'N/A')}</li>
+    <li><strong>Date Range:</strong> {START_DATE} to {END_DATE}</li>
     <li><strong>Search Date:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</li>
     <li><strong>Source:</strong> Pinellas County Court Records</li>
 </ul>
