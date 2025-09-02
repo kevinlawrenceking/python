@@ -34,7 +34,7 @@ SEARCH_URL = "https://courtrecords.mypinellasclerk.gov/MyCr/Cases/Search"
 SCRIPT_NAME = "docketwatch_pinellas_scraper.py"
 
 # Date range for search
-START_DATE = "08/01/2025"  # On or After date
+START_DATE = "08/01/2015"  # On or After date
 END_DATE = "09/01/2026"    # On or Before date
 
 # Email configuration
@@ -75,6 +75,12 @@ def setup_chrome_driver():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--disable-web-security")
+    chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-plugins")
+    chrome_options.add_argument("--disable-images")
+    chrome_options.add_argument("--user-data-dir=C:/temp/chrome_pinellas_scraper")  # Unique user data directory
     
     service = Service(CHROMEDRIVER_PATH)
     driver = webdriver.Chrome(service=service, options=chrome_options)
