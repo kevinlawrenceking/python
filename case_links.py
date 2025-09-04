@@ -55,14 +55,13 @@ def get_unlinked_cases(cursor):
     """Query cases that don't have links yet"""
     try:
         query = """
-            SELECT TOP 10 c.id, c.case_name
-            FROM docketwatch.dbo.cases c
-            INNER JOIN docketwatch.dbo.case_events ce ON c.id = ce.fk_cases
-            WHERE c.id NOT IN (SELECT fk_cases FROM docketwatch.dbo.case_links) 
-            AND c.status = 'Tracked'
-            AND CAST(ce.created_at AS DATE) = CAST(GETDATE() AS DATE)
-            GROUP BY c.id, c.case_name
-            ORDER BY MAX(ce.created_at) DESC
+SELECT TOP 10 c.id, c.case_name
+FROM docketwatch.dbo.cases c
+WHERE c.id IN (
+    SELECT fk_cases 
+    FROM docketwatch.dbo.case_events 
+    WHERE created_at >= DATEADD(DAY, -1, GETDATE())
+)
         """
         cursor.execute(query)
         cases = cursor.fetchall()
