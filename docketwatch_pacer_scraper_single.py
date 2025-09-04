@@ -138,7 +138,7 @@ else:
         f.write(str(os.getpid()))
 # Get PACER Credentials
 try:
-    cursor.execute("SELECT username, pass, login_url FROM dbo.tools WHERE id = 2")
+    cursor.execute("SELECT username, pass, login_url FROM docketwatch.dbo.tools WHERE id = 2")
     row = cursor.fetchone()
     if not row:
         log_message("ERROR", "PACER credentials not found in the database.")
