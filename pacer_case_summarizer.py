@@ -1,7 +1,7 @@
 """
 PACER Case Summarizer
 
-- Logs into PACER using custom login method
+- Logs into PACER usinClose with a short section titled **"Why It Matters"**, explaining the case's potential relevance to the entertainment industry, public interest, or legal precedent. custom login method
 - Navigates to each case URL and clicks into full docket report
 - Ensures 'list_of_parties_and_counsel' is checked, 'terminated_parties' is unchecked
 - Extracts HTML of full docket page (no date filtering)
@@ -139,7 +139,7 @@ def summarize_case_html(html_text, api_key):
                 
                 # Check for success
                 if response.status_code == 200 and result.get("candidates"):
-                    print(f"✅ Success with {model_name} on attempt {attempt + 1}")
+                    print(f"[SUCCESS] Success with {model_name} on attempt {attempt + 1}")
                     return result["candidates"][0]["content"]["parts"][0]["text"].strip()
                 
                 # Handle specific error cases
@@ -160,7 +160,7 @@ def summarize_case_html(html_text, api_key):
                 if attempt < 2:  # Don't wait on last attempt
                     time.sleep(5)
     
-    print("❌ All models failed or overloaded")
+    print("[ERROR] All models failed or overloaded")
     return None
 
 def login_to_pacer(driver, username, password, cursor, fk_task_run):
@@ -210,7 +210,7 @@ def main():
         cases = get_target_cases(cursor, args.case_id)
 
         for case_id, fk_case, case_number, case_name, case_url in cases:
-            print(f"\nProcessing Case: {case_number} — {case_name} — {case_url}")
+            print(f"\nProcessing Case: {case_number} - {case_name} - {case_url}")
             log_id = log_message(cursor, context["fk_task_run"], "INFO", f"Reviewing case: {case_name}", fk_case=fk_case)
             cursor.execute("UPDATE dbo.cases SET fk_task_run_log = ? WHERE id = ?", (log_id, case_id))
             conn.commit()

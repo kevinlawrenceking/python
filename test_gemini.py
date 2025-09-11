@@ -1,5 +1,5 @@
 import requests
-
+AIzaSyDzgx4_USN5_Fg79Y3tM8C3Sff1Ux_HsD8
 API_KEY = "AIzaSyBZAdSnlK62d7LG2c1RCRuuGXQ4pV3j43o"
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
 

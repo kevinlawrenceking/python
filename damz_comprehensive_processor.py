@@ -6,8 +6,8 @@ import os
 import json
 
 # --- CONFIG ---
-BATCH_LIMIT = 5000
-GEMINI_MODEL = "gemini-2.5-flash"
+BATCH_LIMIT = 100
+GEMINI_MODEL = "gemini-1.5-flash"  # Most cost-effective model with vision support
 TEMPERATURE = 0.2  # low for rule-following
 MAX_TOKENS = 300   # increased for comprehensive analysis
 SLEEP_SECONDS = 1.0  # slightly longer for complex processing
@@ -46,13 +46,12 @@ def get_gemini_key(cursor):
     row = cursor.fetchone()
     return row[0] if row and row[0] else None
 
-# --- Get Image Path ---
 def get_image_path(cursor, fk_asset):
     cursor.execute("""
         SELECT u.path + i.path AS full_path
         FROM damz.dbo.asset_image i
         JOIN damz.dbo.storage_unit u ON u.id = i.fk_storage_unit
-        WHERE i.fk_asset = ?
+        WHERE i.type = 'THUMBNAIL' AND i.fk_asset = ?
     """, (fk_asset,))
     row = cursor.fetchone()
     return row[0] if row else None
@@ -374,7 +373,7 @@ def main():
         cursor.execute("""
             SELECT COLUMN_NAME
             FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_NAME = 'damz_test' AND TABLE_SCHEMA = 'dbo'
+            WHERE TABLE_NAME = 'damz_test_low' AND TABLE_SCHEMA = 'dbo'
               AND COLUMN_NAME IN ('headline_type','headline_new','shot_description_new','keywords_new','emotion')
         """)
         cols = {row[0] for row in cursor.fetchall()}
@@ -391,7 +390,7 @@ def main():
                headline,
                shot_description,
                keywords
-        FROM docketwatch.dbo.damz_test
+        FROM docketwatch.dbo.[damz_test_low]
         WHERE headline IS NOT NULL and [version] = 2
           AND (headline_type IS NULL OR headline_new IS NULL OR shot_description_new IS NULL OR keywords_new IS NULL OR emotion IS NULL)
         ORDER BY fk_asset
@@ -427,7 +426,7 @@ def main():
         if type_final and headline_final and description_final and keywords_final and emotion_final:
             # Update all fields
             cursor.execute("""
-                UPDATE docketwatch.dbo.damz_test
+                UPDATE docketwatch.dbo.[damz_test_low]
                 SET headline_type = ?,
                     headline_new = ?,
                     shot_description_new = ?,
