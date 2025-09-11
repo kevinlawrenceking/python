@@ -25,7 +25,7 @@ def process_all_case_events(cursor, fk_task_run=None):
         SELECT TOP 10 e.id
         FROM docketwatch.dbo.case_events e
         JOIN docketwatch.dbo.cases c ON e.fk_cases = c.id
-        WHERE c.fk_tool = 2 AND e.stage_completed < 5 
+        WHERE c.fk_tool = 2 AND e.stage_completed < 5  and e.fk_cases = 84392
         ORDER BY e.created_at DESC
     """)
     event_ids = [row.id for row in cursor.fetchall()]
