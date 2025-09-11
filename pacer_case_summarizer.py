@@ -114,23 +114,54 @@ def get_target_cases(cursor, single_case_id=None):
 def summarize_case_html(html_text, api_key):
     prompt = PROMPT_TEMPLATE + html_text[:MAX_INPUT_LENGTH]
     print(f"Prompt length: {len(prompt)}")
-    try:
-        response = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={api_key}",
-            headers={"Content-Type": "application/json"},
-            data=json.dumps({
-                "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                "generationConfig": {"temperature": 0.6, "max_output_tokens": 1000}
-            })
-        )
-        result = response.json()
-        if not result.get("candidates"):
-            print("Gemini response (no candidates):", json.dumps(result, indent=2))
-            return None
-        return result["candidates"][0]["content"]["parts"][0]["text"].strip()
-    except Exception as e:
-        print("Gemini API error:", e)
-        return None
+    
+    # Try different models, starting with the fastest/least loaded
+    models_to_try = [
+        "gemini-1.5-flash",  # Fastest model, less likely to be overloaded
+        "gemini-1.5-pro",   # Original model (fallback)
+        "gemini-pro"        # Older model (last resort)
+    ]
+    
+    for model_name in models_to_try:
+        print(f"Trying model: {model_name}")
+        
+        for attempt in range(3):  # Up to 3 retries per model
+            try:
+                response = requests.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}",
+                    headers={"Content-Type": "application/json"},
+                    data=json.dumps({
+                        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                        "generationConfig": {"temperature": 0.6, "max_output_tokens": 1000}
+                    })
+                )
+                result = response.json()
+                
+                # Check for success
+                if response.status_code == 200 and result.get("candidates"):
+                    print(f"✅ Success with {model_name} on attempt {attempt + 1}")
+                    return result["candidates"][0]["content"]["parts"][0]["text"].strip()
+                
+                # Handle specific error cases
+                if response.status_code == 503:
+                    wait_time = (attempt + 1) * 10  # 10, 20, 30 seconds
+                    print(f"503 overloaded error with {model_name}, waiting {wait_time}s before retry {attempt + 1}/3")
+                    time.sleep(wait_time)
+                    continue
+                elif response.status_code == 403:
+                    print(f"403 permission error with {model_name}, trying next model")
+                    break  # Try next model
+                else:
+                    print(f"Unexpected response ({response.status_code}) with {model_name}:", json.dumps(result, indent=2))
+                    break  # Try next model
+                    
+            except Exception as e:
+                print(f"Request error with {model_name} attempt {attempt + 1}: {e}")
+                if attempt < 2:  # Don't wait on last attempt
+                    time.sleep(5)
+    
+    print("❌ All models failed or overloaded")
+    return None
 
 def login_to_pacer(driver, username, password, cursor, fk_task_run):
     try:

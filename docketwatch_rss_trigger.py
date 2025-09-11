@@ -155,7 +155,7 @@ log_message(cursor, fk_task_run, "INFO", f"Script {script_filename} started.")
 # =========================
 
 PACER_TOOL_ID = 2  # PACER
-SCRAPER_SCRIPT = r"\\10.146.176.84\general\docketwatch\python\docketwatch_scraper.py"
+SCRAPER_SCRIPT = r"\\10.146.176.84\general\docketwatch\python\docketwatch_pacer_scraper_v2.py"
 PDF_ROOT = r"\\10.146.176.84\general\docketwatch\docs\cases"
 OCR_TRIGGER = r"\\10.146.176.84\general\docketwatch\python\final_pdfs_finder.py"
 SUMMARIZER = r"\\10.146.176.84\general\docketwatch\python\pacer_case_summarizer.py"
@@ -262,7 +262,8 @@ def download_pdf(url, local_path, max_retries=3):
     return False, f"Failed after {max_retries} attempts"
 
 def refresh_case_via_pacer_scraper(fk_case: int):
-    cmd = ["python", SCRAPER_SCRIPT, str(PACER_TOOL_ID), str(fk_case)]
+    # Use the working docketwatch_pacer_scraper_v2 with priority=1 and specific case ID
+    cmd = ["python", SCRAPER_SCRIPT, "1", str(fk_case)]
     return run_subprocess(cmd, "PACER scrape", fk_case=fk_case)
 
 def trigger_ocr_discovery():
@@ -270,7 +271,7 @@ def trigger_ocr_discovery():
     return run_subprocess(cmd, "OCR discovery")
 
 def trigger_case_summary(fk_case: int):
-    cmd = ["python", SUMMARIZER, str(fk_case)]
+    cmd = ["python", SUMMARIZER, "--case-id", str(fk_case)]
     return run_subprocess(cmd, "Gemini summarizer", fk_case=fk_case)
 # =========================
 # Event and Document Enrichment
@@ -533,7 +534,14 @@ def process_new_event(fk_case: int, event_no: int, court_code: str):
     if case_event_id:
         planned_docs = sync_event_documents(cursor, fk_case, case_event_id)
         if planned_docs:
-            download_and_mark_documents(cursor, planned_docs, fk_case)
+            # For PACER documents, use the authenticated PDF downloader
+            log_message(cursor, fk_task_run, "INFO", f"Triggering authenticated PACER PDF download for case_event_id={case_event_id}", fk_case=fk_case)
+            pdf_cmd = ["python", r"\\10.146.176.84\general\docketwatch\python\extract_pacer_pdf_file.py", str(case_event_id)]
+            pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
+            if pdf_result:
+                log_message(cursor, fk_task_run, "INFO", f"PACER PDF download completed successfully", fk_case=fk_case)
+            else:
+                log_message(cursor, fk_task_run, "WARNING", f"PACER PDF download may not have completed successfully", fk_case=fk_case)
         else:
             log_message(cursor, fk_task_run, "INFO", "No documents to download for this event", fk_case=fk_case)
 

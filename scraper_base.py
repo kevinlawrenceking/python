@@ -716,17 +716,11 @@ def get_task_context_by_tool_id(cursor, tool_id):
             r.id, 
             t.id as tool_id, 
             t.search_url, 
-            t.isLogin, 
             t.login_url,
             t.username, 
             t.pass, 
             s.filename, 
-            s.filename + '.log' as logfile_name,
-            t.username_selector,
-            t.password_selector,
-            t.search_button_selector,
-            t.login_checkbox,
-            t.login_button_selector 
+            s.filename + '.log' as logfile_name
         FROM docketwatch.dbo.tools t
         LEFT JOIN docketwatch.dbo.scheduled_task s ON s.fk_tool = t.id
         LEFT JOIN docketwatch.dbo.task_runs r ON r.fk_scheduled_task = s.id
@@ -739,17 +733,18 @@ def get_task_context_by_tool_id(cursor, tool_id):
         "fk_task_run": row[0] if row else None,
         "tool_id": row[1] if row else None,
         "search_url": row[2] if row else None,
-        "is_login": bool(row[3]) if row else False,
-        "login_url": row[4] if row else None,
-        "username": row[5] if row else None,
-        "pass": row[6] if row else None,
-        "filename": row[7] if row else None,
-        "logfile_name": row[8] if row else "docketwatch_scraper.log",
-        "username_selector": row[9] if row else None,
-        "password_selector": row[10] if row else None,
-        "search_button_selector": row[11] if row else None,
-        "login_checkbox": row[12] if row else None,
-        "login_button_selector": row[13] if row else None
+        "is_login": True if tool_id == 2 else False,  # PACER requires login
+        "login_url": row[3] if row else None,
+        "username": row[4] if row else None,
+        "pass": row[5] if row else None,
+        "filename": row[6] if row else None,
+        "logfile_name": row[7] if row else "docketwatch_scraper.log",
+        # Set default selectors for PACER (tool_id = 2)
+        "username_selector": "input[name='loginForm:loginName']" if tool_id == 2 else None,
+        "password_selector": "input[name='loginForm:password']" if tool_id == 2 else None,
+        "search_button_selector": None,
+        "login_checkbox": None,
+        "login_button_selector": "input[name='loginForm:fbtnLogin']" if tool_id == 2 else None
     } if row else None
 
 def mark_case_found(cursor, case_id):

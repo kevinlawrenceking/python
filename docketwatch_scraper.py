@@ -229,7 +229,17 @@ def main():
 
     try:
         if context["is_login"]:
-            perform_tool_login(driver, context)
+            # Try standard login first, fallback to PACER direct login for tool ID 2
+            try:
+                perform_tool_login(driver, context)
+            except Exception as login_error:
+                if TOOL_ID == 2:  # PACER tool
+                    log_message(cursor, context["fk_task_run"], "WARNING", f"Standard login failed: {login_error}. Trying PACER direct login...")
+                    from pacer_login_fix import pacer_login_direct
+                    if not pacer_login_direct(driver, context["username"], context["pass"], cursor, context["fk_task_run"]):
+                        raise Exception("Both login methods failed")
+                else:
+                    raise login_error
         else:
             log_message(cursor, context["fk_task_run"], "INFO", "No login required for this tool.")
 
