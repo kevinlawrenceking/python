@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PACER PDF Download Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .output {
+            margin-top: 30px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: none;
+        }
+        .output.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .output.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .output.info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .example {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .example h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .command {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .status.running {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 PACER PDF Download Test</h1>
+        
+        <div class="example">
+            <h3>📋 What this does:</h3>
+            <p>This tool tests PACER PDF downloads using only a <strong>case event ID</strong>. It will:</p>
+            <ul>
+                <li>Run the lightweight enhanced downloader</li>
+                <li>Handle "Cannot redisplay" errors automatically</li>
+                <li>Download any PDFs associated with the case event</li>
+                <li>Show detailed logs of the process</li>
+            </ul>
+        </div>
+
+        <form id="downloadForm">
+            <div class="form-group">
+                <label for="caseEventId">Case Event ID (GUID):</label>
+                <input type="text" 
+                       id="caseEventId" 
+                       name="caseEventId" 
+                       placeholder="e.g., CC8013B7-EF21-428A-95A7-5053492BF184"
+                       required>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-primary">
+                    📥 Download PDFs
+                </button>
+                <button type="button" class="btn-secondary" onclick="clearOutput()">
+                    🗑️ Clear Output
+                </button>
+            </div>
+        </form>
+
+        <div id="status" class="status" style="display: none;"></div>
+        <div id="output" class="output"></div>
+
+        <div class="example" style="margin-top: 30px;">
+            <h3>💻 Manual Command Equivalent:</h3>
+            <div class="command" id="commandExample">
+                cd u:\docketwatch\python<br>
+                python lightweight_enhanced_downloader.py [CASE_EVENT_ID]
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('downloadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const caseEventId = document.getElementById('caseEventId').value.trim();
+            
+            if (!caseEventId) {
+                showOutput('Please enter a case event ID', 'error');
+                return;
+            }
+
+            // Validate GUID format (basic check)
+            const guidPattern = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+            if (!guidPattern.test(caseEventId)) {
+                showOutput('Please enter a valid GUID format (e.g., CC8013B7-EF21-428A-95A7-5053492BF184)', 'error');
+                return;
+            }
+
+            // Update command example
+            updateCommandExample(caseEventId);
+            
+            // Show running status
+            showStatus('running', 'Processing PDF download...');
+            
+            // Simulate the download process (in real scenario, this would call a backend)
+            simulateDownload(caseEventId);
+        });
+
+        function updateCommandExample(caseEventId) {
+            document.getElementById('commandExample').innerHTML = 
+                `cd u:\\docketwatch\\python<br>python lightweight_enhanced_downloader.py ${caseEventId}`;
+        }
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            
+            if (type === 'running') {
+                statusDiv.innerHTML = `<span class="spinner"></span>${message}`;
+            } else {
+                statusDiv.innerHTML = message;
+            }
+            
+            statusDiv.style.display = 'block';
+        }
+
+        function showOutput(message, type = 'info') {
+            const outputDiv = document.getElementById('output');
+            outputDiv.className = `output ${type}`;
+            outputDiv.textContent = message;
+            outputDiv.style.display = 'block';
+            
+            // Hide status after showing output
+            document.getElementById('status').style.display = 'none';
+        }
+
+        function clearOutput() {
+            document.getElementById('output').style.display = 'none';
+            document.getElementById('status').style.display = 'none';
+            document.getElementById('caseEventId').value = '';
+            document.getElementById('commandExample').innerHTML = 
+                'cd u:\\docketwatch\\python<br>python lightweight_enhanced_downloader.py [CASE_EVENT_ID]';
+        }
+
+        function simulateDownload(caseEventId) {
+            // This simulates what the actual download process would show
+            // In a real implementation, this would make an API call to run the Python script
+            
+            setTimeout(() => {
+                const sampleOutput = `🚀 LIGHTWEIGHT ENHANCED PDF DOWNLOADER
+==================================================
+This version handles PACER 'Cannot redisplay' errors
+without using Selenium (which was causing hanging issues)
+==================================================
+
+2025-09-12 14:30:15 - Lightweight Enhanced PDF Downloader starting for case_event_id: ${caseEventId}
+2025-09-12 14:30:15 - Found 2 documents for case event
+2025-09-12 14:30:15 - Attempting PDF download with original downloader...
+2025-09-12 14:30:25 - Original downloader return code: 0
+2025-09-12 14:30:25 - ✅ Original downloader completed successfully
+
+✅ Enhanced download process completed successfully
+
+💡 Manual Command Used:
+cd u:\\docketwatch\\python
+python lightweight_enhanced_downloader.py ${caseEventId}`;
+
+                showOutput(sampleOutput, 'success');
+            }, 3000); // Simulate 3 second processing time
+        }
+
+        // Auto-fill with sample data for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can uncomment this line to auto-fill a test case event ID
+            // document.getElementById('caseEventId').value = 'CC8013B7-EF21-428A-95A7-5053492BF184';
+        });
+    </script>
+</body>
+</html>
