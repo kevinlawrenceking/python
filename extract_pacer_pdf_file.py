@@ -44,6 +44,8 @@ DEPENDENCIES:
 
 import sys, argparse, pyodbc, os, time, traceback, zipfile, re
 import requests
+import tempfile
+import uuid
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -70,6 +72,7 @@ def main():
     cursor = None
     driver = None
     fk_task_run = None
+    temp_user_data_dir = None
 
     try:
         conn, cursor = get_db_cursor()
@@ -106,11 +109,26 @@ def main():
         log_message(cursor, fk_task_run, "INFO", f"Found {len(rows)} pending documents to download")
 
         log_message(cursor, fk_task_run, "INFO", "Initializing Chrome WebDriver")
+        
+        # Create unique user data directory to avoid conflicts with multiple instances
+        unique_id = str(uuid.uuid4())[:8]
+        temp_user_data_dir = os.path.join(tempfile.gettempdir(), f"chrome_user_data_{unique_id}")
+        
         opts = Options()
-        opts.add_argument("--headless=new")
+        #opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
+        opts.add_argument("--disable-extensions")
+        opts.add_argument("--disable-plugins")
+        opts.add_argument("--disable-images")
+        opts.add_argument("--disable-javascript")
+        opts.add_argument(f"--user-data-dir={temp_user_data_dir}")
+        opts.add_argument("--disable-web-security")
+        opts.add_argument("--allow-running-insecure-content")
+        
+        log_message(cursor, fk_task_run, "INFO", f"Using unique Chrome profile: {temp_user_data_dir}")
+        
         # Remove automatic download preferences - we'll handle downloads manually
         driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
         wait = WebDriverWait(driver, 15)
@@ -352,6 +370,18 @@ def main():
             driver.quit()
             if cursor and fk_task_run:
                 log_message(cursor, fk_task_run, "INFO", "Chrome WebDriver closed")
+        
+        # Cleanup temporary Chrome user data directory
+        if temp_user_data_dir and os.path.exists(temp_user_data_dir):
+            try:
+                import shutil
+                shutil.rmtree(temp_user_data_dir)
+                if cursor and fk_task_run:
+                    log_message(cursor, fk_task_run, "INFO", f"Cleaned up temporary directory: {temp_user_data_dir}")
+            except Exception as cleanup_error:
+                if cursor and fk_task_run:
+                    log_message(cursor, fk_task_run, "WARNING", f"Could not cleanup temp directory: {cleanup_error}")
+        
         if conn:
             conn.close()
             if cursor and fk_task_run:
