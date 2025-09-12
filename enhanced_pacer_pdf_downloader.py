@@ -175,7 +175,7 @@ def try_alternative_access(driver, cursor, fk_task_run, doc_id, case_id):
         # Get document metadata from database to find alternative paths
         cursor.execute("""
             SELECT pdf_url, case_no, document_number, docket_entry_id
-            FROM documents 
+            FROM docketwatch.dbo.documents 
             WHERE id = ?
         """, (doc_id,))
         
@@ -228,7 +228,7 @@ def login_to_pacer(driver, cursor, fk_task_run):
     """Login to PACER with enhanced error checking"""
     try:
         # Get credentials from database
-        cursor.execute("SELECT toolLogin, toolPassword FROM tools WHERE id = 1")
+        cursor.execute("SELECT username, pass FROM docketwatch.dbo.tools WHERE id = 2")
         cred_row = cursor.fetchone()
         if not cred_row:
             log_message(cursor, fk_task_run, "ERROR", "PACER credentials not found")
@@ -332,8 +332,8 @@ def enhanced_pdf_download(case_event_id):
     try:
         # Get pending documents for this case event
         cursor.execute("""
-            SELECT id, pdf_url, fk_case 
-            FROM documents 
+            SELECT id, pdf_url, fk_cases 
+            FROM docketwatch.dbo.documents 
             WHERE fk_case_event = ? AND status = 'pending'
         """, (case_event_id,))
         
@@ -381,7 +381,7 @@ def enhanced_pdf_download(case_event_id):
                         if success:
                             # Update database
                             cursor.execute("""
-                                UPDATE documents 
+                                UPDATE docketwatch.dbo.documents 
                                 SET status = 'downloaded', rel_path = ?, date_downloaded = GETDATE()
                                 WHERE id = ?
                             """, (file_path, doc_id))
@@ -390,7 +390,7 @@ def enhanced_pdf_download(case_event_id):
                         else:
                             # Mark as failed with specific error
                             cursor.execute("""
-                                UPDATE documents 
+                                UPDATE docketwatch.dbo.documents 
                                 SET status = 'failed', error_message = ?
                                 WHERE id = ?
                             """, (err_msg or "Redisplay error - cannot access", doc_id))
@@ -400,7 +400,7 @@ def enhanced_pdf_download(case_event_id):
                     elif error_type:
                         log_message(cursor, fk_task_run, "ERROR", f"PACER error for doc {doc_id}: {error_msg}")
                         cursor.execute("""
-                            UPDATE documents 
+                            UPDATE docketwatch.dbo.documents 
                             SET status = 'failed', error_message = ?
                             WHERE id = ?
                         """, (error_msg, doc_id))
@@ -414,7 +414,7 @@ def enhanced_pdf_download(case_event_id):
                         
                         if success:
                             cursor.execute("""
-                                UPDATE documents 
+                                UPDATE docketwatch.dbo.documents 
                                 SET status = 'downloaded', rel_path = ?, date_downloaded = GETDATE()
                                 WHERE id = ?
                             """, (file_path, doc_id))
@@ -422,7 +422,7 @@ def enhanced_pdf_download(case_event_id):
                             log_message(cursor, fk_task_run, "INFO", f"Document {doc_id} successfully downloaded")
                         else:
                             cursor.execute("""
-                                UPDATE documents 
+                                UPDATE docketwatch.dbo.documents 
                                 SET status = 'failed', error_message = ?
                                 WHERE id = ?
                             """, (err_msg, doc_id))
@@ -432,7 +432,7 @@ def enhanced_pdf_download(case_event_id):
                 except Exception as e:
                     log_message(cursor, fk_task_run, "ERROR", f"Exception processing doc {doc_id}: {str(e)}")
                     cursor.execute("""
-                        UPDATE documents 
+                        UPDATE docketwatch.dbo.documents 
                         SET status = 'failed', error_message = ?
                         WHERE id = ?
                     """, (str(e), doc_id))
