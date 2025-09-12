@@ -1,4 +1,4 @@
-"""
+r"""
 MAP Court System PDF Processing and OCR Script
 
 PURPOSE:
