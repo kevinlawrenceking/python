@@ -7,7 +7,7 @@ Tests all major components of the RSS pipeline to ensure everything works correc
 def test_imports():
     """Test that all imports work correctly"""
     try:
-        from docketwatch_rss_trigger import (
+        from docketwatch_rss_triggervvv import (
             log_message, 
             extract_pacer_identifiers, 
             bulletproof_duplicate_check,
@@ -23,7 +23,7 @@ def test_imports():
 def test_pacer_identifier_extraction():
     """Test PACER identifier extraction"""
     try:
-        from docketwatch_rss_trigger import extract_pacer_identifiers
+        from docketwatch_rss_triggervvv import extract_pacer_identifiers
         
         # Test with PACER document link
         test_link = "https://ecf.cacd.uscourts.gov/doc1/031142598765"
@@ -37,7 +37,7 @@ def test_pacer_identifier_extraction():
 def test_duplicate_detection():
     """Test bulletproof duplicate detection"""
     try:
-        from docketwatch_rss_trigger import bulletproof_duplicate_check
+        from docketwatch_rss_triggervvv import bulletproof_duplicate_check
         
         # Test duplicate detection (should return True for non-duplicates in test)
         result = bulletproof_duplicate_check(
@@ -55,7 +55,7 @@ def test_duplicate_detection():
 def test_logging():
     """Test UTF-8 safe logging"""
     try:
-        from docketwatch_rss_trigger import log_message
+        from docketwatch_rss_triggervvv import log_message
         
         # Test with Unicode characters
         test_message = "Test log message with unicode: résumé café naïve"
@@ -69,7 +69,7 @@ def test_logging():
 def test_process_new_event():
     """Test process_new_event cursor management"""
     try:
-        from docketwatch_rss_trigger import process_new_event
+        from docketwatch_rss_triggervvv import process_new_event
         
         # Test that function can be imported and called (will fail on actual processing due to test data)
         # This just tests that the function signature works

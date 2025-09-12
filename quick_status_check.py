@@ -9,7 +9,7 @@ print("=" * 50)
 
 # Check 1: Import test
 try:
-    from docketwatch_rss_trigger import log_message, process_new_event
+    from docketwatch_rss_triggervvv import log_message, process_new_event
     print("✅ Core imports working")
 except ImportError as e:
     print(f"❌ Import issue: {e}")
@@ -24,7 +24,7 @@ except ImportError as e:
 # Check 3: Function signature check
 try:
     import inspect
-    from docketwatch_rss_trigger import process_new_event
+    from docketwatch_rss_triggervvv import process_new_event
     sig = inspect.signature(process_new_event)
     params = list(sig.parameters.keys())
     if 'cursor_arg' in params and 'fk_task_run_arg' in params:

@@ -15,7 +15,7 @@ from datetime import datetime
 
 # Import the process_new_event function from your RSS trigger
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from docketwatch_rss_trigger import process_new_event
+from docketwatch_rss_triggervvv import process_new_event
 from scraper_base import log_message
 
 

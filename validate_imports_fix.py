@@ -13,7 +13,7 @@ try:
     
     print("✅ Basic imports OK")
     
-    from docketwatch_rss_trigger import process_new_event
+    from docketwatch_rss_triggervvv import process_new_event
     print("✅ process_new_event imported successfully")
     
     # Test if we can call the function signature

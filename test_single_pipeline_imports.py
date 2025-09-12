@@ -11,7 +11,7 @@ def test_imports():
     
     try:
         print("\n1. Testing process_new_event import...")
-        from docketwatch_rss_trigger import process_new_event
+        from docketwatch_rss_triggervvv import process_new_event
         print("   ✅ process_new_event imported successfully")
         
         print("\n2. Testing log_message import...")

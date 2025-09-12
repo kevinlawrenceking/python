@@ -16,7 +16,7 @@ def test_process_new_event_fix():
     try:
         # Import the fixed function
         sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-        from docketwatch_rss_trigger import process_new_event
+        from docketwatch_rss_triggervvv import process_new_event
         
         print("✅ Successfully imported process_new_event")
         
