@@ -623,12 +623,14 @@ def process_new_event(fk_case: int, event_no: int, court_code: str, cursor_arg=N
       5) Trigger case summary
       6) Final status bump
     """
+    global cursor, fk_task_run
+    
     # Use provided cursor/task_run or fall back to globals
     local_cursor = cursor_arg or cursor
     local_task_run = fk_task_run_arg or fk_task_run
     
     # Create a local connection if no cursor provided
-    needs_local_connection = cursor_arg is None
+    needs_local_connection = cursor_arg is None and (cursor is None or not hasattr(cursor, 'execute'))
     if needs_local_connection:
         try:
             import pyodbc
@@ -648,6 +650,10 @@ def process_new_event(fk_case: int, event_no: int, court_code: str, cursor_arg=N
             """, (script_filename,))
             task_run = local_cursor.fetchone()
             local_task_run = task_run[0] if task_run else None
+            
+            # Set globals for subprocess calls
+            cursor, fk_task_run = local_cursor, local_task_run
+            
         except Exception as e:
             print(f"Warning: Could not create local database connection: {e}")
             return
@@ -681,18 +687,7 @@ def process_new_event(fk_case: int, event_no: int, court_code: str, cursor_arg=N
             log_message(local_cursor, local_task_run, "INFO", f"Triggering authenticated PACER PDF download for case_event_id={case_event_id}", fk_case=fk_case)
             pdf_cmd = ["python", r"\\10.146.176.84\general\docketwatch\python\extract_pacer_pdf_file.py", str(case_event_id)]
             
-            # Temporarily override globals for subprocess calls
-            global cursor, fk_task_run
-            try:
-                original_cursor, original_task_run = cursor, fk_task_run
-                cursor, fk_task_run = local_cursor, local_task_run
-                pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
-                # Restore original globals
-                cursor, fk_task_run = original_cursor, original_task_run
-            except NameError:
-                # Globals don't exist yet, just use locals
-                cursor, fk_task_run = local_cursor, local_task_run
-                pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
+            pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
             
             if pdf_result:
                 log_message(local_cursor, local_task_run, "INFO", f"PACER PDF download completed successfully", fk_case=fk_case)
