@@ -683,16 +683,26 @@ def process_new_event(fk_case: int, event_no: int, court_code: str, cursor_arg=N
     if case_event_id:
         planned_docs = sync_event_documents(local_cursor, fk_case, case_event_id)
         if planned_docs:
-            # For PACER documents, use the authenticated PDF downloader
-            log_message(local_cursor, local_task_run, "INFO", f"Triggering authenticated PACER PDF download for case_event_id={case_event_id}", fk_case=fk_case)
-            pdf_cmd = ["python", r"\\10.146.176.84\general\docketwatch\python\extract_pacer_pdf_file.py", str(case_event_id)]
+            # For PACER documents, use the enhanced PDF downloader with redisplay error handling
+            log_message(local_cursor, local_task_run, "INFO", f"Triggering enhanced PACER PDF download for case_event_id={case_event_id}", fk_case=fk_case)
             
-            pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
+            # Try enhanced downloader first (handles redisplay errors)
+            enhanced_cmd = ["python", r"u:\docketwatch\python\enhanced_pacer_pdf_downloader.py", str(case_event_id)]
+            pdf_result = run_subprocess(enhanced_cmd, "Enhanced PACER PDF download", fk_case=fk_case)
             
             if pdf_result:
-                log_message(local_cursor, local_task_run, "INFO", f"PACER PDF download completed successfully", fk_case=fk_case)
+                log_message(local_cursor, local_task_run, "INFO", f"Enhanced PACER PDF download completed successfully", fk_case=fk_case)
             else:
-                log_message(local_cursor, local_task_run, "WARNING", f"PACER PDF download may not have completed successfully", fk_case=fk_case)
+                log_message(local_cursor, local_task_run, "WARNING", f"Enhanced PDF download failed, trying standard downloader as fallback", fk_case=fk_case)
+                
+                # Fallback to original downloader
+                fallback_cmd = ["python", r"\\10.146.176.84\general\docketwatch\python\extract_pacer_pdf_file.py", str(case_event_id)]
+                fallback_result = run_subprocess(fallback_cmd, "Fallback PACER PDF download", fk_case=fk_case)
+                
+                if fallback_result:
+                    log_message(local_cursor, local_task_run, "INFO", f"Fallback PACER PDF download completed", fk_case=fk_case)
+                else:
+                    log_message(local_cursor, local_task_run, "ERROR", f"Both enhanced and fallback PDF downloads failed", fk_case=fk_case)
         else:
             log_message(local_cursor, local_task_run, "INFO", "No documents to download for this event", fk_case=fk_case)
 
