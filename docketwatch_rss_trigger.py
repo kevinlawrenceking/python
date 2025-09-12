@@ -65,7 +65,8 @@ LOG_FILE = rf"\\10.146.176.84\general\docketwatch\python\logs\{script_filename}.
 logging.basicConfig(
     filename=LOG_FILE,
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    encoding='utf-8'
 )
 
 print(f"Script filename: {script_filename}")
@@ -85,6 +86,116 @@ TO_EMAILS = [
 ]
 SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
+
+# =========================
+# PACER Identifier Extraction
+# =========================
+
+def safe_log_message(message):
+    """
+    Safely handle Unicode characters in log messages.
+    Replaces problematic Unicode characters with ASCII equivalents.
+    """
+    # Common Unicode replacements for logging
+    unicode_replacements = {
+        '✅': '[OK]',
+        '❌': '[ERROR]',
+        '🔍': '[INFO]',
+        '📋': '[DATA]',
+        '🔔': '[ALERT]',
+        '⚠️': '[WARNING]',
+        '🎯': '[TARGET]',
+        '🚀': '[SUCCESS]'
+    }
+    
+    safe_message = str(message)
+    for unicode_char, ascii_replacement in unicode_replacements.items():
+        safe_message = safe_message.replace(unicode_char, ascii_replacement)
+    
+    return safe_message
+
+
+def extract_pacer_identifiers(event_description, event_url):
+    """
+    Extract PACER document identifiers for bulletproof duplicate detection.
+    Returns (pacer_doc_number, pacer_doc_id) tuple.
+    """
+    import re
+    
+    pacer_doc_number = None  # The document number like "73"
+    pacer_doc_id = None      # The unique PACER ID like "127138195871"
+    
+    # Extract document number from description
+    # Look for patterns like "Document 73", "Doc 73", or just number in anchor context
+    doc_patterns = [
+        r'(?:Document|Doc)\s+(\d+)',  # "Document 73"
+        r'<a[^>]*>(\d+)</a>',         # "<a>73</a>"
+        r'(?:Entry|Event)\s+(\d+)',   # "Entry 73"
+    ]
+    
+    for pattern in doc_patterns:
+        match = re.search(pattern, event_description, re.IGNORECASE)
+        if match:
+            pacer_doc_number = int(match.group(1))
+            break
+    
+    # Extract PACER document ID from URL
+    if event_url and '/doc1/' in event_url:
+        try:
+            pacer_doc_id = event_url.split('/doc1/')[1].split('?')[0].split('/')[0]
+        except:
+            pass
+    
+    return pacer_doc_number, pacer_doc_id
+
+
+def bulletproof_duplicate_check(cursor, fk_case, pacer_doc_number, pacer_doc_id):
+    """
+    Bulletproof duplicate detection using documents table PACER identifiers.
+    Returns (exists, case_event_id) tuple.
+    """
+    
+    # Method 1: Check by doc_id (most reliable - has unique constraint)
+    if pacer_doc_id:
+        cursor.execute("""
+            SELECT ce.id FROM docketwatch.dbo.case_events ce
+            JOIN docketwatch.dbo.documents d ON d.fk_case_event = ce.id
+            WHERE d.doc_id = ? AND ce.fk_cases = ?
+        """, (pacer_doc_id, fk_case))
+        
+        result = cursor.fetchone()
+        if result:
+            print(f"[OK] Found existing event by doc_id: {pacer_doc_id}")
+            return True, result[0]
+    
+    # Method 2: Check by pdf_no (PACER document number)
+    if pacer_doc_number:
+        cursor.execute("""
+            SELECT ce.id FROM docketwatch.dbo.case_events ce
+            JOIN docketwatch.dbo.documents d ON d.fk_case_event = ce.id
+            WHERE d.pdf_no = ? AND ce.fk_cases = ?
+        """, (pacer_doc_number, fk_case))
+        
+        result = cursor.fetchone()
+        if result:
+            print(f"[OK] Found existing event by pdf_no: {pacer_doc_number}")
+            return True, result[0]
+    
+    # Method 3: Check by URL pattern (additional safety)
+    if pacer_doc_id:
+        cursor.execute("""
+            SELECT ce.id FROM docketwatch.dbo.case_events ce
+            JOIN docketwatch.dbo.documents d ON d.fk_case_event = ce.id
+            WHERE d.pdf_url LIKE ? AND ce.fk_cases = ?
+        """, (f'%/doc1/{pacer_doc_id}%', fk_case))
+        
+        result = cursor.fetchone()
+        if result:
+            print(f"[OK] Found existing event by URL pattern: {pacer_doc_id}")
+            return True, result[0]
+    
+    return False, None
+
 
 def send_docket_email(case_name, case_url, event_no, cleaned_docket_text):
     subject = f"DocketWatch Alert: {case_name} - New Docket Discovered"
@@ -671,6 +782,13 @@ try:
                 event_description_match = re.search(r'\[(.*?)\]', desc_raw)
                 event_description = event_description_match.group(1) if event_description_match else ""
 
+                # Filter out PACER "Unknown Document Type" error messages
+                if event_description.lower().startswith('unknown document type'):
+                    log_message(cursor, fk_task_run, "INFO", 
+                                f"Skipping PACER unknown document type: {event_description}", 
+                                fk_case=None)
+                    continue  # Skip this RSS item - it's not actionable content
+
                 event_no_match = re.search(r'>(\d+)</a>', desc_raw)
                 event_no = safe_int(event_no_match.group(1)) if event_no_match else None
                 if event_no is None:
@@ -690,46 +808,56 @@ try:
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (court_code, case_number, case_name_from_title, event_description, event_no, pub_date, guid, link, pacer_id))
 
-                # Insert case_event if not present for this event_no
+                # Insert case_event if not present (bulletproof PACER identifier check)
                 if event_no != -1:
-                    cursor.execute("""
-                        SELECT COUNT(*) FROM docketwatch.dbo.case_events
-                        WHERE fk_cases = ? AND event_no = ?
-                    """, (fk_case, event_no))
-                    exists = cursor.fetchone()[0] > 0
+                    try:
+                        # Extract PACER identifiers for bulletproof duplicate detection
+                        pacer_doc_number, pacer_doc_id = extract_pacer_identifiers(event_description, event_url)
+                        
+                        print(f"[INFO] PACER IDs: doc_number={pacer_doc_number}, doc_id={pacer_doc_id}")
+                        
+                        # Bulletproof duplicate check using documents table
+                        event_exists, existing_event_id = bulletproof_duplicate_check(
+                            cursor, fk_case, pacer_doc_number, pacer_doc_id
+                        )
+                        
+                        if event_exists:
+                            print(f"[OK] Event already exists (ID: {existing_event_id}) - skipping PACER duplicate")
+                            print(f"   PACER identifiers: doc_number={pacer_doc_number}, doc_id={pacer_doc_id}")
+                        else:
+                            # Event doesn't exist, create it
+                            log_id = log_message(cursor, fk_task_run, "ALERT",
+                                                 f"New RSS docket for {db_case_name} - Event No: {event_no}",
+                                                 fk_case=fk_case)
+                            cursor.execute("""
+                                INSERT INTO docketwatch.dbo.case_events
+                                  (event_date, event_no, event_description, fk_cases, stage_completed, fk_task_run_log, event_url)
+                                VALUES (?, ?, ?, ?, 0, ?, ?)
+                            """, (pub_date, event_no, event_description, fk_case, log_id, event_url))
+                            print(f"[OK] Created new event {event_no} for {pub_date.date()}")
+                            print(f"   PACER identifiers will be: doc_number={pacer_doc_number}, doc_id={pacer_doc_id}")
 
-                    if not exists:
-                        log_id = log_message(cursor, fk_task_run, "ALERT",
-                                             f"New RSS docket for {db_case_name} - Event No: {event_no}",
-                                             fk_case=fk_case)
-                        cursor.execute("""
-                            INSERT INTO docketwatch.dbo.case_events
-                              (event_date, event_no, event_description, fk_cases, stage_completed, fk_task_run_log, event_url)
-                            VALUES (?, ?, ?, ?, 0, ?, ?)
-                        """, (pub_date, event_no, event_description, fk_case, log_id, event_url))
+                            # Email alert and end-to-end pipeline for new events only
+                            try:
+                                send_docket_email(db_case_name, event_url, event_no, event_description)
+                            except Exception:
+                                # Non-fatal; already logged in send_docket_email
+                                pass
+
+                            try:
+                                process_new_event(fk_case=fk_case, event_no=event_no, court_code=court_code)
+                                new_events_this_feed += 1
+                                total_new_events += 1
+                            except Exception as e:
+                                emsg = f"Pipeline error for fk_case={fk_case}, event_no={event_no}: {e}"
+                                log_message(cursor, fk_task_run, "ERROR", emsg, fk_case=fk_case)
+                                error_notifier.log_error("Pipeline error", emsg, fk_task_run=fk_task_run, fk_case=fk_case)
 
                         conn.commit()
-
-                        # Email alert and end-to-end pipeline
-                        try:
-                            send_docket_email(db_case_name, event_url, event_no, event_description)
-                        except Exception:
-                            # Non-fatal; already logged in send_docket_email
-                            pass
-
-                        try:
-                            process_new_event(fk_case=fk_case, event_no=event_no, court_code=court_code)
-                            new_events_this_feed += 1
-                            total_new_events += 1
-                        except Exception as e:
-                            emsg = f"Pipeline error for fk_case={fk_case}, event_no={event_no}: {e}"
-                            log_message(cursor, fk_task_run, "ERROR", emsg, fk_case=fk_case)
-                            error_notifier.log_error("Pipeline error", emsg, fk_task_run=fk_task_run, fk_case=fk_case)
-                    else:
-                        conn.commit()
-                        log_message(cursor, fk_task_run, "INFO",
-                                    f"Duplicate event_no {event_no} for case {db_case_name}. Skipping.",
-                                    fk_case=fk_case)
+                    except Exception as e:
+                        print(f"[ERROR] Error handling event {event_no}: {e}")
+                        conn.rollback()
+                        raise
                 else:
                     conn.commit()
                     log_message(cursor, fk_task_run, "WARNING",
@@ -743,7 +871,7 @@ try:
                 log_message(cursor, fk_task_run, "ALERT", f"Feed {court_code} generated {new_events_this_feed} new event(s)")
             
         except Exception as e:
-            msg = f"Unexpected error processing RSS feed {rss_url}: {e}"
+            msg = f"Unexpected error processing RSS feed {rss_url}: {safe_log_message(str(e))}"
             log_message(cursor, fk_task_run, "ERROR", msg)
             error_notifier.log_error("RSS Processing Error", msg, fk_task_run=fk_task_run, additional_context=f"Court: {court_code}, URL: {rss_url}")
             failed_feeds += 1
@@ -754,12 +882,12 @@ try:
     log_message(cursor, fk_task_run, "INFO", f"RSS monitoring completed: {success_feeds}/{len(sites)} feeds successful, {total_new_events} new events detected, {total_processed_items} items processed")
     
     if total_new_events > 0:
-        log_message(cursor, fk_task_run, "ALERT", f"🔔 RSS monitoring discovered {total_new_events} new court event(s) across {success_feeds} feeds")
+        log_message(cursor, fk_task_run, "ALERT", f"[ALERT] RSS monitoring discovered {total_new_events} new court event(s) across {success_feeds} feeds")
     
     log_message(cursor, fk_task_run, "INFO", "RSS trigger script completed successfully.")
 
 except Exception as e:
-    error_msg = f"Critical script failure in main loop: {str(e)}"
+    error_msg = f"Critical script failure in main loop: {safe_log_message(str(e))}"
     print(f"CRITICAL: {error_msg}")
     try:
         log_message(cursor, fk_task_run, "ERROR", error_msg)
