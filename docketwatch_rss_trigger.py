@@ -613,7 +613,7 @@ def download_and_mark_documents(cursor, planned_docs, fk_case: int):
 # Orchestrator for a single event
 # =========================
 
-def process_new_event(fk_case: int, event_no: int, court_code: str):
+def process_new_event(fk_case: int, event_no: int, court_code: str, cursor_arg=None, fk_task_run_arg=None):
     """
     Pipeline for a single new event:
       1) PACER scrape for this case
@@ -623,38 +623,83 @@ def process_new_event(fk_case: int, event_no: int, court_code: str):
       5) Trigger case summary
       6) Final status bump
     """
-    log_message(cursor, fk_task_run, "INFO", f"Process start for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
+    # Use provided cursor/task_run or fall back to globals
+    local_cursor = cursor_arg or cursor
+    local_task_run = fk_task_run_arg or fk_task_run
+    
+    # Create a local connection if no cursor provided
+    needs_local_connection = cursor_arg is None
+    if needs_local_connection:
+        try:
+            import pyodbc
+            local_conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
+            local_conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+            local_conn.setencoding(encoding='utf-8')
+            local_cursor = local_conn.cursor()
+            
+            # Get or create task run
+            script_filename = os.path.splitext(os.path.basename(__file__))[0]
+            local_cursor.execute("""
+                SELECT r.id as fk_task_run 
+                FROM docketwatch.dbo.task_runs r
+                INNER JOIN docketwatch.dbo.scheduled_task s ON r.fk_scheduled_task = s.id 
+                WHERE s.filename = ? 
+                ORDER BY r.id DESC
+            """, (script_filename,))
+            task_run = local_cursor.fetchone()
+            local_task_run = task_run[0] if task_run else None
+        except Exception as e:
+            print(f"Warning: Could not create local database connection: {e}")
+            return
+    
+    log_message(local_cursor, local_task_run, "INFO", f"Process start for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
 
     scraped = refresh_case_via_pacer_scraper(fk_case)
     if not scraped:
-        log_message(cursor, fk_task_run, "WARNING", f"PACER scrape did not complete for fk_case={fk_case}", fk_case=fk_case)
+        log_message(local_cursor, local_task_run, "WARNING", f"PACER scrape did not complete for fk_case={fk_case}", fk_case=fk_case)
     else:
         time.sleep(SCRAPER_COOLDOWN_SEC)
 
-    case_event_id, long_desc = enrich_event_from_fresh_pacer(cursor, fk_case, event_no)
+    case_event_id, long_desc = enrich_event_from_fresh_pacer(local_cursor, fk_case, event_no)
     if case_event_id:
-        cursor.execute("""
+        local_cursor.execute("""
             UPDATE docketwatch.dbo.case_events
             SET stage_completed = 1
             WHERE id = ?
         """, (case_event_id,))
-        cursor.commit()
+        if needs_local_connection:
+            local_conn.commit()
+        else:
+            local_cursor.commit()
         if long_desc:
-            log_message(cursor, fk_task_run, "INFO", f"Updated long description for event {event_no}", fk_case=fk_case)
+            log_message(local_cursor, local_task_run, "INFO", f"Updated long description for event {event_no}", fk_case=fk_case)
 
     if case_event_id:
-        planned_docs = sync_event_documents(cursor, fk_case, case_event_id)
+        planned_docs = sync_event_documents(local_cursor, fk_case, case_event_id)
         if planned_docs:
             # For PACER documents, use the authenticated PDF downloader
-            log_message(cursor, fk_task_run, "INFO", f"Triggering authenticated PACER PDF download for case_event_id={case_event_id}", fk_case=fk_case)
+            log_message(local_cursor, local_task_run, "INFO", f"Triggering authenticated PACER PDF download for case_event_id={case_event_id}", fk_case=fk_case)
             pdf_cmd = ["python", r"\\10.146.176.84\general\docketwatch\python\extract_pacer_pdf_file.py", str(case_event_id)]
-            pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
+            
+            # Temporarily override globals for subprocess calls
+            global cursor, fk_task_run
+            try:
+                original_cursor, original_task_run = cursor, fk_task_run
+                cursor, fk_task_run = local_cursor, local_task_run
+                pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
+                # Restore original globals
+                cursor, fk_task_run = original_cursor, original_task_run
+            except NameError:
+                # Globals don't exist yet, just use locals
+                cursor, fk_task_run = local_cursor, local_task_run
+                pdf_result = run_subprocess(pdf_cmd, "PACER PDF download", fk_case=fk_case)
+            
             if pdf_result:
-                log_message(cursor, fk_task_run, "INFO", f"PACER PDF download completed successfully", fk_case=fk_case)
+                log_message(local_cursor, local_task_run, "INFO", f"PACER PDF download completed successfully", fk_case=fk_case)
             else:
-                log_message(cursor, fk_task_run, "WARNING", f"PACER PDF download may not have completed successfully", fk_case=fk_case)
+                log_message(local_cursor, local_task_run, "WARNING", f"PACER PDF download may not have completed successfully", fk_case=fk_case)
         else:
-            log_message(cursor, fk_task_run, "INFO", "No documents to download for this event", fk_case=fk_case)
+            log_message(local_cursor, local_task_run, "INFO", "No documents to download for this event", fk_case=fk_case)
 
     ok_ocr = trigger_ocr_discovery()
     time.sleep(OCR_SUMMARY_COOLDOWN_SEC)
@@ -663,14 +708,25 @@ def process_new_event(fk_case: int, event_no: int, court_code: str):
 
     if case_event_id:
         final_stage = 5 if ok_sum else 4  # 5 = Summarized, 4 = OCR Complete
-        cursor.execute("""
+        local_cursor.execute("""
             UPDATE docketwatch.dbo.case_events
             SET stage_completed = ?
             WHERE id = ?
         """, (final_stage, case_event_id))
-        cursor.commit()
+        if needs_local_connection:
+            local_conn.commit()
+        else:
+            local_cursor.commit()
 
-    log_message(cursor, fk_task_run, "INFO", f"Process end for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
+    log_message(local_cursor, local_task_run, "INFO", f"Process end for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
+    
+    # Clean up local connection if we created one
+    if needs_local_connection:
+        try:
+            local_cursor.close()
+            local_conn.close()
+        except:
+            pass
 # =========================
 # Tracked Cases + RSS Loop
 # =========================
