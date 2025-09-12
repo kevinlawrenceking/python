@@ -15,7 +15,8 @@ from datetime import datetime
 
 # Import the process_new_event function from your RSS trigger
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from docketwatch_rss_trigger import process_new_event, safe_log
+from docketwatch_rss_trigger import process_new_event
+from scraper_base import log_message
 
 
 def main():
@@ -146,7 +147,7 @@ def main():
             conn.close()
             
         except Exception as e:
-            safe_log(None, None, "WARNING", f"Could not check final status: {e}")
+            print(f"⚠️  WARNING: Could not check final status: {e}")
         
         return 0
         
