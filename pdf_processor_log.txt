@@ -1,0 +1,1107 @@
+=============================== 
+START: Tue 09/16/2025 17:19:52.21 
+Processing Case Event ID: 3ABFCF7F-85DF-4745-BDB1-D0EEA2376E71 
+STEP 1 START: Tue 09/16/2025 17:19:52.22 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: crashed.
+  (chrome not reachable)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:20:04.84 
+STEP 2 START: Tue 09/16/2025 17:20:04.84 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:20:15.51 
+END: Tue 09/16/2025 17:20:15.51 
+ 
+=============================== 
+START: Tue 09/16/2025 17:22:03.18 
+Processing Case Event ID: 3ABFCF7F-85DF-4745-BDB1-D0EEA2376E71 
+STEP 1 START: Tue 09/16/2025 17:22:03.18 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 160, in main
+    driver.get(LOGIN_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a390a07d]
+	(No symbol) [0x0x7ff7a3909d6b]
+	(No symbol) [0x0x7ff7a39078dc]
+	(No symbol) [0x0x7ff7a390835b]
+	(No symbol) [0x0x7ff7a391725e]
+	(No symbol) [0x0x7ff7a392d5c1]
+	(No symbol) [0x0x7ff7a393485a]
+	(No symbol) [0x0x7ff7a3908b0e]
+	(No symbol) [0x0x7ff7a392cdb2]
+	(No symbol) [0x0x7ff7a39c4e62]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:22:19.84 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:22:19.90 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:22:30.57 
+END: Tue 09/16/2025 17:22:30.57 
+ 
+=============================== 
+START: Tue 09/16/2025 17:25:10.56 
+Processing Case Event ID: 3ABFCF7F-85DF-4745-BDB1-D0EEA2376E71 
+STEP 1 START: Tue 09/16/2025 17:25:10.57 
+STEP 1 SUCCESS: Tue 09/16/2025 17:25:33.76 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:25:38.16 
+STEP 2 SUCCESS: Tue 09/16/2025 17:26:19.06 
+END: Tue 09/16/2025 17:26:19.06 
+ 
+=============================== 
+START: Tue 09/16/2025 17:28:54.13 
+Processing Case Event ID: DB2BEB01-6C86-4520-9678-639E06FF2155 
+STEP 1 START: Tue 09/16/2025 17:28:54.14 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:29:06.29 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:29:06.35 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:29:16.79 
+END: Tue 09/16/2025 17:29:16.79 
+ 
+=============================== 
+START: Tue 09/16/2025 17:30:06.02 
+Processing Case Event ID: DB2BEB01-6C86-4520-9678-639E06FF2155 
+STEP 1 START: Tue 09/16/2025 17:30:06.02 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:30:18.26 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:30:18.30 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:30:30.92 
+END: Tue 09/16/2025 17:30:30.93 
+ 
+=============================== 
+START: Tue 09/16/2025 17:31:00.84 
+Processing Case Event ID: FE2BB58B-66E8-4523-B7BF-C340B682657E 
+STEP 1 START: Tue 09/16/2025 17:31:00.85 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:31:11.57 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:31:11.62 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 129, in main
+    driver.get(event_url)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a3908995]
+	(No symbol) [0x0x7ff7a3908840]
+	(No symbol) [0x0x7ff7a3920431]
+	(No symbol) [0x0x7ff7a39c48f2]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:31:28.42 
+END: Tue 09/16/2025 17:31:28.43 
+ 
+=============================== 
+START: Tue 09/16/2025 17:33:33.99 
+Processing Case Event ID: FE2BB58B-66E8-4523-B7BF-C340B682657E 
+STEP 1 START: Tue 09/16/2025 17:33:34.00 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 160, in main
+    driver.get(LOGIN_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a390a07d]
+	(No symbol) [0x0x7ff7a3909d6b]
+	(No symbol) [0x0x7ff7a39078dc]
+	(No symbol) [0x0x7ff7a390835b]
+	(No symbol) [0x0x7ff7a391725e]
+	(No symbol) [0x0x7ff7a392d5c1]
+	(No symbol) [0x0x7ff7a393485a]
+	(No symbol) [0x0x7ff7a3908b0e]
+	(No symbol) [0x0x7ff7a392cdb2]
+	(No symbol) [0x0x7ff7a39c4e62]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:33:50.69 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:33:55.19 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 118, in main
+    driver.get(LOGIN_URL)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: Unable to receive message from renderer
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a390a07d]
+	(No symbol) [0x0x7ff7a3909d6b]
+	(No symbol) [0x0x7ff7a39078dc]
+	(No symbol) [0x0x7ff7a390835b]
+	(No symbol) [0x0x7ff7a391725e]
+	(No symbol) [0x0x7ff7a392d5c1]
+	(No symbol) [0x0x7ff7a393485a]
+	(No symbol) [0x0x7ff7a3908b0e]
+	(No symbol) [0x0x7ff7a392cdb2]
+	(No symbol) [0x0x7ff7a39c4e62]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:34:11.75 
+END: Tue 09/16/2025 17:34:11.76 
+ 
+=============================== 
+START: Tue 09/16/2025 17:34:23.56 
+Processing Case Event ID: F268CA8F-9520-40A8-A7E1-8C5C69D0F7D6 
+STEP 1 START: Tue 09/16/2025 17:34:23.58 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:34:34.28 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:34:39.17 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:34:51.53 
+END: Tue 09/16/2025 17:34:51.54 
+ 
+=============================== 
+START: Tue 09/16/2025 17:35:19.86 
+Processing Case Event ID: 37084D89-95C5-4CF3-8920-A68BC409E587 
+STEP 1 START: Tue 09/16/2025 17:35:19.88 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:35:31.17 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:35:36.16 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:35:47.32 
+END: Tue 09/16/2025 17:35:47.33 
+ 
+=============================== 
+START: Tue 09/16/2025 17:40:25.63 
+Processing Case Event ID: EF4B7ABF-1EE1-4B6B-8A07-3C8A2F0BAA4A 
+STEP 1 START: Tue 09/16/2025 17:40:25.64 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 174, in main
+    driver.get(event_url)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a3908995]
+	(No symbol) [0x0x7ff7a3908840]
+	(No symbol) [0x0x7ff7a3920431]
+	(No symbol) [0x0x7ff7a39c48f2]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:40:40.64 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:40:45.12 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 129, in main
+    driver.get(event_url)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id: session deleted as the browser has closed the connection
+from disconnected: not connected to DevTools
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a3908995]
+	(No symbol) [0x0x7ff7a3908840]
+	(No symbol) [0x0x7ff7a3920431]
+	(No symbol) [0x0x7ff7a39c48f2]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:41:01.18 
+END: Tue 09/16/2025 17:41:01.18 
+ 
+=============================== 
+START: Tue 09/16/2025 17:54:47.64 
+Processing Case Event ID: FE2BB58B-66E8-4523-B7BF-C340B682657E 
+STEP 1 START: Tue 09/16/2025 17:54:47.65 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Tue 09/16/2025 17:54:57.92 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Tue 09/16/2025 17:55:02.21 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7a3b9fc95+79861]
+	GetHandleVerifier [0x0x7ff7a3b9fcf0+79952]
+	(No symbol) [0x0x7ff7a391cada]
+	(No symbol) [0x0x7ff7a395c494]
+	(No symbol) [0x0x7ff7a3956340]
+	(No symbol) [0x0x7ff7a39aa84f]
+	(No symbol) [0x0x7ff7a39a9fd0]
+	(No symbol) [0x0x7ff7a399c8b3]
+	(No symbol) [0x0x7ff7a3965272]
+	(No symbol) [0x0x7ff7a3966043]
+	GetHandleVerifier [0x0x7ff7a3e5b9cd+2946349]
+	GetHandleVerifier [0x0x7ff7a3e55c4a+2922410]
+	GetHandleVerifier [0x0x7ff7a3e759d7+3052855]
+	GetHandleVerifier [0x0x7ff7a3bbaa7e+189918]
+	GetHandleVerifier [0x0x7ff7a3bc2a1f+222591]
+	GetHandleVerifier [0x0x7ff7a3ba8ab4+116244]
+	GetHandleVerifier [0x0x7ff7a3ba8c69+116681]
+	GetHandleVerifier [0x0x7ff7a3b8f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Tue 09/16/2025 17:55:12.89 
+END: Tue 09/16/2025 17:55:12.90 
+ 
+=============================== 
+START: Wed 09/17/2025 10:51:11.51 
+Processing Case Event ID: 69D6DAC5-62E2-4C2E-91BB-712BB2E943E5 
+STEP 1 START: Wed 09/17/2025 10:51:11.52 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff72655fc95+79861]
+	GetHandleVerifier [0x0x7ff72655fcf0+79952]
+	(No symbol) [0x0x7ff7262dcada]
+	(No symbol) [0x0x7ff72631c494]
+	(No symbol) [0x0x7ff726316340]
+	(No symbol) [0x0x7ff72636a84f]
+	(No symbol) [0x0x7ff726369fd0]
+	(No symbol) [0x0x7ff72635c8b3]
+	(No symbol) [0x0x7ff726325272]
+	(No symbol) [0x0x7ff726326043]
+	GetHandleVerifier [0x0x7ff72681b9cd+2946349]
+	GetHandleVerifier [0x0x7ff726815c4a+2922410]
+	GetHandleVerifier [0x0x7ff7268359d7+3052855]
+	GetHandleVerifier [0x0x7ff72657aa7e+189918]
+	GetHandleVerifier [0x0x7ff726582a1f+222591]
+	GetHandleVerifier [0x0x7ff726568ab4+116244]
+	GetHandleVerifier [0x0x7ff726568c69+116681]
+	GetHandleVerifier [0x0x7ff72654f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Wed 09/17/2025 10:51:22.59 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Wed 09/17/2025 10:51:27.17 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff72655fc95+79861]
+	GetHandleVerifier [0x0x7ff72655fcf0+79952]
+	(No symbol) [0x0x7ff7262dcada]
+	(No symbol) [0x0x7ff72631c494]
+	(No symbol) [0x0x7ff726316340]
+	(No symbol) [0x0x7ff72636a84f]
+	(No symbol) [0x0x7ff726369fd0]
+	(No symbol) [0x0x7ff72635c8b3]
+	(No symbol) [0x0x7ff726325272]
+	(No symbol) [0x0x7ff726326043]
+	GetHandleVerifier [0x0x7ff72681b9cd+2946349]
+	GetHandleVerifier [0x0x7ff726815c4a+2922410]
+	GetHandleVerifier [0x0x7ff7268359d7+3052855]
+	GetHandleVerifier [0x0x7ff72657aa7e+189918]
+	GetHandleVerifier [0x0x7ff726582a1f+222591]
+	GetHandleVerifier [0x0x7ff726568ab4+116244]
+	GetHandleVerifier [0x0x7ff726568c69+116681]
+	GetHandleVerifier [0x0x7ff72654f048+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Wed 09/17/2025 10:51:38.40 
+END: Wed 09/17/2025 10:51:38.40 
+ 
+=============================== 
+START: Wed 09/17/2025 12:34:31.39 
+Processing Case Event ID: 58019A39-1BCA-4F09-A923-3A7747378F09 
+STEP 1 START: Wed 09/17/2025 12:34:31.40 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 155, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7d8a73135+79493]
+	GetHandleVerifier [0x0x7ff7d8a73190+79584]
+	(No symbol) [0x0x7ff7d87f01ba]
+	(No symbol) [0x0x7ff7d88300b2]
+	(No symbol) [0x0x7ff7d8829f50]
+	(No symbol) [0x0x7ff7d887e47f]
+	(No symbol) [0x0x7ff7d887dc00]
+	(No symbol) [0x0x7ff7d88704e3]
+	(No symbol) [0x0x7ff7d8838e92]
+	(No symbol) [0x0x7ff7d8839c63]
+	GetHandleVerifier [0x0x7ff7d8d30dfd+2954061]
+	GetHandleVerifier [0x0x7ff7d8d2b06a+2930106]
+	GetHandleVerifier [0x0x7ff7d8d4b397+3061991]
+	GetHandleVerifier [0x0x7ff7d8a8d64e+187294]
+	GetHandleVerifier [0x0x7ff7d8a955bf+219919]
+	GetHandleVerifier [0x0x7ff7d8a7c2d4+116772]
+	GetHandleVerifier [0x0x7ff7d8a7c489+117209]
+	GetHandleVerifier [0x0x7ff7d8a62658+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Wed 09/17/2025 12:34:41.90 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Wed 09/17/2025 12:34:46.18 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 114, in main
+    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chrome\webdriver.py", line 45, in __init__
+    super().__init__(
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\chromium\webdriver.py", line 66, in __init__
+    super().__init__(command_executor=executor, options=options)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 250, in __init__
+    self.start_session(capabilities)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 342, in start_session
+    response = self.execute(Command.NEW_SESSION, caps)["value"]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Program Files\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.SessionNotCreatedException: Message: session not created: Chrome failed to start: was killed.
+  (session not created: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location C:\Program Files\Google\Chrome\Application\chrome.exe is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7d8a73135+79493]
+	GetHandleVerifier [0x0x7ff7d8a73190+79584]
+	(No symbol) [0x0x7ff7d87f01ba]
+	(No symbol) [0x0x7ff7d88300b2]
+	(No symbol) [0x0x7ff7d8829f50]
+	(No symbol) [0x0x7ff7d887e47f]
+	(No symbol) [0x0x7ff7d887dc00]
+	(No symbol) [0x0x7ff7d88704e3]
+	(No symbol) [0x0x7ff7d8838e92]
+	(No symbol) [0x0x7ff7d8839c63]
+	GetHandleVerifier [0x0x7ff7d8d30dfd+2954061]
+	GetHandleVerifier [0x0x7ff7d8d2b06a+2930106]
+	GetHandleVerifier [0x0x7ff7d8d4b397+3061991]
+	GetHandleVerifier [0x0x7ff7d8a8d64e+187294]
+	GetHandleVerifier [0x0x7ff7d8a955bf+219919]
+	GetHandleVerifier [0x0x7ff7d8a7c2d4+116772]
+	GetHandleVerifier [0x0x7ff7d8a7c489+117209]
+	GetHandleVerifier [0x0x7ff7d8a62658+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Wed 09/17/2025 12:34:56.52 
+END: Wed 09/17/2025 12:34:56.52 
+ 

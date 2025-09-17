@@ -134,18 +134,23 @@ def main():
         wait = WebDriverWait(driver, 15)
         log_message(cursor, fk_task_run, "INFO", "Chrome WebDriver initialized")
 
-        log_message(cursor, fk_task_run, "INFO", "Starting PACER login process")
-        driver.get(LOGIN_URL)
-        wait.until(EC.presence_of_element_located((By.NAME, "loginForm:loginName"))).send_keys(USERNAME)
-        driver.find_element(By.NAME, "loginForm:password").send_keys(PASSWORD)
-        try:
-            driver.find_element(By.NAME, "loginForm:clientCode").send_keys("DocketWatch")
-            log_message(cursor, fk_task_run, "INFO", "Client code 'DocketWatch' entered")
-        except:
-            log_message(cursor, fk_task_run, "INFO", "Client code field not found - skipping")
-        driver.find_element(By.NAME, "loginForm:fbtnLogin").click()
-        time.sleep(3)
-        log_message(cursor, fk_task_run, "INFO", "PACER login completed successfully")
+        def login_to_pacer():
+            """Login to PACER - can be called multiple times for session recovery"""
+            log_message(cursor, fk_task_run, "INFO", "Starting PACER login process")
+            driver.get(LOGIN_URL)
+            wait.until(EC.presence_of_element_located((By.NAME, "loginForm:loginName"))).send_keys(USERNAME)
+            driver.find_element(By.NAME, "loginForm:password").send_keys(PASSWORD)
+            try:
+                driver.find_element(By.NAME, "loginForm:clientCode").send_keys("DocketWatch")
+                log_message(cursor, fk_task_run, "INFO", "Client code 'DocketWatch' entered")
+            except:
+                log_message(cursor, fk_task_run, "INFO", "Client code field not found - skipping")
+            driver.find_element(By.NAME, "loginForm:fbtnLogin").click()
+            time.sleep(3)
+            log_message(cursor, fk_task_run, "INFO", "PACER login completed successfully")
+
+        # Perform initial login
+        login_to_pacer()
 
         successful_downloads = 0
         failed_downloads = 0
@@ -168,6 +173,20 @@ def main():
 
             try:
                 log_message(cursor, fk_task_run, "INFO", f"Downloading PDF from: {pdf_url}")
+                
+                # Check if driver session is still valid
+                try:
+                    driver.current_url
+                except Exception as session_error:
+                    log_message(cursor, fk_task_run, "WARNING", f"Driver session invalid: {session_error}. Recreating driver...")
+                    try:
+                        driver.quit()
+                    except:
+                        pass
+                    # Recreate driver with same settings
+                    driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+                    # Re-login to PACER
+                    login_to_pacer()
                 
                 # Use WebDriver to navigate to PDF URL and handle CSRF
                 driver.get(pdf_url)
@@ -356,8 +375,67 @@ def main():
                     failed_downloads += 1
             
             except Exception as e:
-                log_message(cursor, fk_task_run, "ERROR", f"Error processing document {doc_id}: {str(e)}")
-                failed_downloads += 1
+                error_msg = str(e)
+                log_message(cursor, fk_task_run, "ERROR", f"Error processing document {doc_id}: {error_msg}")
+                
+                # Check if it's a session disconnection error
+                if "session deleted" in error_msg or "not connected to DevTools" in error_msg or "browser has closed" in error_msg:
+                    log_message(cursor, fk_task_run, "WARNING", "Browser session disconnected. Attempting to recreate driver...")
+                    try:
+                        driver.quit()
+                    except:
+                        pass
+                    
+                    # Recreate driver and login
+                    try:
+                        # Recreate temp directory for new session
+                        if 'temp_user_data_dir' in locals():
+                            try:
+                                import shutil
+                                shutil.rmtree(temp_user_data_dir, ignore_errors=True)
+                            except:
+                                pass
+                        
+                        # Create new temp directory
+                        temp_user_data_dir = tempfile.mkdtemp(prefix="chrome_pdf_")
+                        
+                        # Recreate Chrome options
+                        opts = Options()
+                        opts.add_experimental_option("detach", True)
+                        opts.add_argument("--disable-gpu")
+                        opts.add_argument("--no-sandbox")
+                        opts.add_argument("--disable-dev-shm-usage")
+                        opts.add_argument("--disable-web-security")
+                        opts.add_argument("--allow-running-insecure-content")
+                        opts.add_argument(f"--user-data-dir={temp_user_data_dir}")
+                        
+                        prefs = {
+                            "download.default_directory": FINAL_PDF_DIR,
+                            "download.prompt_for_download": False,
+                            "download.directory_upgrade": True,
+                            "safebrowsing.enabled": False,
+                            "safebrowsing.disable_download_protection": True,
+                            "plugins.always_open_pdf_externally": True
+                        }
+                        opts.add_experimental_option("prefs", prefs)
+                        
+                        # Recreate driver
+                        driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
+                        wait = WebDriverWait(driver, 20)
+                        
+                        # Re-login
+                        login_to_pacer()
+                        
+                        log_message(cursor, fk_task_run, "INFO", "Driver recreated and logged in successfully")
+                        
+                        # Continue with next document (this one failed)
+                        failed_downloads += 1
+                        
+                    except Exception as recovery_error:
+                        log_message(cursor, fk_task_run, "ERROR", f"Failed to recover session: {recovery_error}")
+                        break  # Exit the loop if we can't recover
+                else:
+                    failed_downloads += 1
 
         log_message(cursor, fk_task_run, "INFO", 
             f"Download process completed. Success: {successful_downloads}, Failed: {failed_downloads}")
