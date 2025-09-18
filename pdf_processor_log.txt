@@ -1105,3 +1105,77 @@ Stacktrace:
 STEP 2 SUCCESS: Wed 09/17/2025 12:34:56.52 
 END: Wed 09/17/2025 12:34:56.52 
  
+=============================== 
+START: Wed 09/17/2025 17:31:27.01 
+Processing Case Event ID: 5FB80ECD-EE23-4537-BEBE-BD199678A525 
+STEP 1 START: Wed 09/17/2025 17:31:27.02 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\extract_pacer_pdf_metadata.py", line 174, in main
+    driver.get(event_url)
+  File "C:\Users\XKKING\AppData\Roaming\Python\Python312\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\XKKING\AppData\Roaming\Python\Python312\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\XKKING\AppData\Roaming\Python\Python312\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidArgumentException: Message: invalid argument: 'url' must be a string
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7d8a73135+79493]
+	GetHandleVerifier [0x0x7ff7d8a73190+79584]
+	(No symbol) [0x0x7ff7d87f01ba]
+	(No symbol) [0x0x7ff7d8899a44]
+	(No symbol) [0x0x7ff7d887070a]
+	(No symbol) [0x0x7ff7d8898b8b]
+	(No symbol) [0x0x7ff7d88704e3]
+	(No symbol) [0x0x7ff7d8838e92]
+	(No symbol) [0x0x7ff7d8839c63]
+	GetHandleVerifier [0x0x7ff7d8d30dfd+2954061]
+	GetHandleVerifier [0x0x7ff7d8d2b06a+2930106]
+	GetHandleVerifier [0x0x7ff7d8d4b397+3061991]
+	GetHandleVerifier [0x0x7ff7d8a8d64e+187294]
+	GetHandleVerifier [0x0x7ff7d8a955bf+219919]
+	GetHandleVerifier [0x0x7ff7d8a7c2d4+116772]
+	GetHandleVerifier [0x0x7ff7d8a7c489+117209]
+	GetHandleVerifier [0x0x7ff7d8a62658+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 1 SUCCESS: Wed 09/17/2025 17:31:42.77 
+Waiting 5 seconds before Step 2... 
+STEP 2 START: Wed 09/17/2025 17:31:47.15 
+Traceback (most recent call last):
+  File "u:\DOCKETWATCH\python\process_pacer_event_pdf_final.py", line 129, in main
+    driver.get(event_url)
+  File "C:\Users\XKKING\AppData\Roaming\Python\Python312\site-packages\selenium\webdriver\remote\webdriver.py", line 454, in get
+    self.execute(Command.GET, {"url": url})
+  File "C:\Users\XKKING\AppData\Roaming\Python\Python312\site-packages\selenium\webdriver\remote\webdriver.py", line 429, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\XKKING\AppData\Roaming\Python\Python312\site-packages\selenium\webdriver\remote\errorhandler.py", line 232, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.InvalidArgumentException: Message: invalid argument: 'url' must be a string
+  (Session info: chrome=140.0.7339.128)
+Stacktrace:
+	GetHandleVerifier [0x0x7ff7d8a73135+79493]
+	GetHandleVerifier [0x0x7ff7d8a73190+79584]
+	(No symbol) [0x0x7ff7d87f01ba]
+	(No symbol) [0x0x7ff7d8899a44]
+	(No symbol) [0x0x7ff7d887070a]
+	(No symbol) [0x0x7ff7d8898b8b]
+	(No symbol) [0x0x7ff7d88704e3]
+	(No symbol) [0x0x7ff7d8838e92]
+	(No symbol) [0x0x7ff7d8839c63]
+	GetHandleVerifier [0x0x7ff7d8d30dfd+2954061]
+	GetHandleVerifier [0x0x7ff7d8d2b06a+2930106]
+	GetHandleVerifier [0x0x7ff7d8d4b397+3061991]
+	GetHandleVerifier [0x0x7ff7d8a8d64e+187294]
+	GetHandleVerifier [0x0x7ff7d8a955bf+219919]
+	GetHandleVerifier [0x0x7ff7d8a7c2d4+116772]
+	GetHandleVerifier [0x0x7ff7d8a7c489+117209]
+	GetHandleVerifier [0x0x7ff7d8a62658+11176]
+	BaseThreadInitThunk [0x0x7ffe98db4de0+16]
+	RtlUserThreadStart [0x0x7ffe9aa7edab+43]
+
+STEP 2 SUCCESS: Wed 09/17/2025 17:32:02.22 
+END: Wed 09/17/2025 17:32:02.22 
+ 

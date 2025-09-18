@@ -54,105 +54,105 @@ def log_message(log_type, message, fk_case=None):
             # Also log this to error notification system
             error_notifier.log_database_error(f"Failed to log message to task_runs_log: {e}", fk_task_run=fk_task_run)
 
+# Wrap the entire script in error handling
+try:
+    log_message("INFO", "=== CAPTCHA Bypass Script Started ===")
+
 # Fetch CAPTCHA API Key
 def get_captcha_api():
     cursor.execute("SELECT captcha_api FROM [docketwatch].[dbo].[utilities] WHERE id = 1")
     api_key = cursor.fetchone()
     return api_key[0] if api_key else None
 
-# Wrap the entire script in error handling
+API_KEY = get_captcha_api()
+if not API_KEY:
+    error_msg = "No 2Captcha API Key found in database!"
+    log_message("ERROR", error_msg)
+    error_notifier.log_critical_error(error_msg, fk_task_run=fk_task_run)
+    raise ValueError(error_msg)
+
+# Setup 2Captcha Solver
+solver = TwoCaptcha(API_KEY)
+
+# Setup ChromeDriver
+CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
+chrome_options = Options()
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--start-maximized")
+chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+chrome_options.add_experimental_option("useAutomationExtension", False)
+chrome_options.add_argument("--headless=new")  
+
+service = Service(CHROMEDRIVER_PATH)
+
+driver = None
 try:
-    log_message("INFO", "=== CAPTCHA Bypass Script Started ===")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
-    API_KEY = get_captcha_api()
-    if not API_KEY:
-        error_msg = "No 2Captcha API Key found in database!"
-        log_message("ERROR", error_msg)
-        error_notifier.log_critical_error(error_msg, fk_task_run=fk_task_run)
-        raise ValueError(error_msg)
+    # Open Case Lookup Page
+    SITE_URL = "https://caselookup.nmcourts.gov/caselookup/app"
+    driver.get(SITE_URL)
 
-    # Setup 2Captcha Solver
-    solver = TwoCaptcha(API_KEY)
-
-    # Setup ChromeDriver
-    CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
-    chrome_options = Options()
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option("useAutomationExtension", False)
-    chrome_options.add_argument("--headless=new")  
-
-    service = Service(CHROMEDRIVER_PATH)
-
-    driver = None
+    # Click "I Accept" Button & Extract Cookies
     try:
-        driver = webdriver.Chrome(service=service, options=chrome_options)
+        time.sleep(2)  # Slight delay to appear human-like
+        accept_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "Submit"))
+        )
+        accept_button.click()
+        log_message("INFO", "Clicked 'I Accept' button.")
+        time.sleep(3)
 
-        # Open Case Lookup Page
-        SITE_URL = "https://caselookup.nmcourts.gov/caselookup/app"
-        driver.get(SITE_URL)
+        # Extract Cookies
+        cookies = driver.get_cookies()
+        session_cookies = {cookie['name']: cookie['value'] for cookie in cookies}
+        log_message("INFO", f"Extracted Session Cookies: {session_cookies}")
 
-        # Click "I Accept" Button & Extract Cookies
+    except Exception as e:
+        log_message("ERROR", f"Could not click 'I Accept' button: {e}")
+        exit()
+
+    # Extract the Correct Sitekey Dynamically
+    try:
+        sitekey_element = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-sitekey]"))
+        )
+        SITE_KEY = sitekey_element.get_attribute("data-sitekey")
+        log_message("INFO", f"Extracted Sitekey: {SITE_KEY}")
+
+    except Exception as e:
+        log_message("ERROR", f"Error extracting Sitekey: {e}")
+        exit()
+
+    # Solve CAPTCHA Using 2Captcha
+    log_message("INFO", "Sending CAPTCHA to 2Captcha for solving...")
+    try:
+        result = solver.recaptcha(sitekey=SITE_KEY, url=SITE_URL)
+        captcha_solution = result['code']
+        log_message("INFO", f"CAPTCHA Solved: {captcha_solution}")
+    except Exception as e:
+        log_message("ERROR", f"2Captcha Error: {e}")
+        exit()
+
+    # Inject CAPTCHA Solution into Page
+    try:
+        driver.execute_script(f'document.getElementById("g-recaptcha-response").innerText = "{captcha_solution}";')
+        log_message("INFO", "Injected CAPTCHA solution into page.")
+
+        # Dispatch events to make sure reCAPTCHA registers the token
+        for event in ["input", "change", "blur", "keyup", "keydown"]:
+            driver.execute_script(f'document.getElementById("g-recaptcha-response").dispatchEvent(new Event("{event}", {{ bubbles: true }}));')
+
+        time.sleep(2)  # Give time for reCAPTCHA to process
+
+        # Click the "Verify" or "Submit" Button if present
         try:
-            time.sleep(2)  # Slight delay to appear human-like
-            accept_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "Submit"))
+            verify_button = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.ID, "recaptcha-verify-button"))
             )
-            accept_button.click()
-            log_message("INFO", "Clicked 'I Accept' button.")
-            time.sleep(3)
-
-            # Extract Cookies
-            cookies = driver.get_cookies()
-            session_cookies = {cookie['name']: cookie['value'] for cookie in cookies}
-            log_message("INFO", f"Extracted Session Cookies: {session_cookies}")
-
-        except Exception as e:
-            log_message("ERROR", f"Could not click 'I Accept' button: {e}")
-            exit()
-
-        # Extract the Correct Sitekey Dynamically
-        try:
-            sitekey_element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "[data-sitekey]"))
-            )
-            SITE_KEY = sitekey_element.get_attribute("data-sitekey")
-            log_message("INFO", f"Extracted Sitekey: {SITE_KEY}")
-
-        except Exception as e:
-            log_message("ERROR", f"Error extracting Sitekey: {e}")
-            exit()
-
-        # Solve CAPTCHA Using 2Captcha
-        log_message("INFO", "Sending CAPTCHA to 2Captcha for solving...")
-        try:
-            result = solver.recaptcha(sitekey=SITE_KEY, url=SITE_URL)
-            captcha_solution = result['code']
-            log_message("INFO", f"CAPTCHA Solved: {captcha_solution}")
-        except Exception as e:
-            log_message("ERROR", f"2Captcha Error: {e}")
-            exit()
-
-        # Inject CAPTCHA Solution into Page
-        try:
-            driver.execute_script(f'document.getElementById("g-recaptcha-response").innerText = "{captcha_solution}";')
-            log_message("INFO", "Injected CAPTCHA solution into page.")
-
-            # Dispatch events to make sure reCAPTCHA registers the token
-            for event in ["input", "change", "blur", "keyup", "keydown"]:
-                driver.execute_script(f'document.getElementById("g-recaptcha-response").dispatchEvent(new Event("{event}", {{ bubbles: true }}));')
-
-            time.sleep(2)  # Give time for reCAPTCHA to process
-
-            # Click the "Verify" or "Submit" Button if present
-            try:
-                verify_button = WebDriverWait(driver, 5).until(
-                    EC.element_to_be_clickable((By.ID, "recaptcha-verify-button"))
-                )
-                verify_button.click()
+            verify_button.click()
             log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
             time.sleep(2)
         except:

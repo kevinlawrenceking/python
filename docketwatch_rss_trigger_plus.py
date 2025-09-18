@@ -49,6 +49,15 @@ from email.mime.multipart import MIMEMultipart
 from email.utils import parsedate_to_datetime
 from urllib.parse import urlparse, parse_qs
 
+# Add Selenium imports for PACER scraping
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, WebDriverException
+
 from scraper_base import log_message
 from error_notification_system import create_error_notifier
 
@@ -158,6 +167,15 @@ PDF_ROOT = r"\\10.146.176.84\general\docketwatch\cases"
 OCR_TRIGGER = r"\\10.146.176.84\general\docketwatch\python\final_pdfs_finder.py"
 SUMMARIZER = r"\\10.146.176.84\general\docketwatch\python\pacer_case_summarizer.py"
 
+# PDF Download Scripts
+ENHANCED_PDF_DOWNLOADER = r"\\10.146.176.84\general\docketwatch\python\enhanced_pacer_pdf_downloader.py"
+COMBINED_PDF_PROCESSOR = r"\\10.146.176.84\general\docketwatch\python\combined_pacer_pdf_vprocessor.py"
+
+# PACER Login Configuration
+CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
+PACER_USERNAME = "docketwatch"  # You may want to store this in database
+PACER_PASSWORD = "Tm123456!"   # You may want to store this in database
+
 DOWNLOAD_TIMEOUT = 60
 SCRAPER_COOLDOWN_SEC = 5
 OCR_SUMMARY_COOLDOWN_SEC = 2
@@ -234,15 +252,224 @@ def trigger_ocr_discovery():
 def trigger_case_summary(fk_case: int):
     cmd = ["python", SUMMARIZER, str(fk_case)]
     return run_subprocess(cmd, "Gemini summarizer", fk_case=fk_case)
+
+def trigger_enhanced_pdf_download(case_event_id: int):
+    """Trigger the enhanced PDF downloader for a specific case event"""
+    cmd = ["python", ENHANCED_PDF_DOWNLOADER, str(case_event_id)]
+    return run_subprocess(cmd, "Enhanced PDF Download")
+
+def trigger_combined_pdf_processor(case_event_id: int):
+    """Trigger the combined PDF processor for a specific case event"""
+    cmd = ["python", COMBINED_PDF_PROCESSOR, str(case_event_id)]
+    return run_subprocess(cmd, "Combined PDF Processor")
+
+# =========================
+# PACER Login and Event Detail Scraping
+# =========================
+
+def create_chrome_driver():
+    """Create a Chrome WebDriver instance with appropriate options"""
+    chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-plugins")
+    # Uncomment for headless mode (but may cause issues)
+    # chrome_options.add_argument("--headless")
+    
+    service = Service(CHROMEDRIVER_PATH)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    return driver
+
+def login_to_pacer(driver, court_url):
+    """Login to PACER for a specific court"""
+    try:
+        login_url = court_url.rstrip("/") + "/cgi-bin/login.pl"
+        log_message(cursor, fk_task_run, "INFO", f"Logging into PACER: {login_url}")
+        
+        driver.get(login_url)
+        
+        # Wait for login form and fill it out
+        wait = WebDriverWait(driver, 15)
+        username_field = wait.until(EC.presence_of_element_located((By.NAME, "loginForm:loginName")))
+        username_field.send_keys(PACER_USERNAME)
+        
+        password_field = driver.find_element(By.NAME, "loginForm:password")
+        password_field.send_keys(PACER_PASSWORD)
+        
+        # Try to find and fill client code field if it exists
+        try:
+            client_code_field = driver.find_element(By.NAME, "loginForm:clientCode")
+            client_code_field.send_keys("DocketWatch")
+            log_message(cursor, fk_task_run, "INFO", "Client code 'DocketWatch' entered")
+        except:
+            log_message(cursor, fk_task_run, "INFO", "Client code field not found - skipping")
+        
+        # Submit login form
+        login_button = driver.find_element(By.NAME, "loginForm:fbtnLogin")
+        login_button.click()
+        
+        time.sleep(3)
+        
+        # Check if login was successful
+        if "Invalid" in driver.page_source or "error" in driver.page_source.lower():
+            log_message(cursor, fk_task_run, "ERROR", "PACER login failed - invalid credentials")
+            return False
+        
+        log_message(cursor, fk_task_run, "INFO", "PACER login completed successfully")
+        return True
+        
+    except Exception as e:
+        log_message(cursor, fk_task_run, "ERROR", f"PACER login error: {e}")
+        return False
+
+def scrape_event_details_from_pacer(cursor, fk_case: int, event_no: int, event_url: str):
+    """
+    Navigate to PACER event page and scrape full event description
+    Returns the full event description text
+    """
+    driver = None
+    try:
+        log_message(cursor, fk_task_run, "INFO", f"Scraping event details for case {fk_case}, event {event_no}")
+        
+        # Get court URL from the case
+        cursor.execute("""
+            SELECT c.pacer_id, ct.pacer_url, c.case_name
+            FROM docketwatch.dbo.cases c
+            JOIN docketwatch.dbo.courts ct ON c.fk_court = ct.court_code
+            WHERE c.id = ?
+        """, (fk_case,))
+        
+        case_info = cursor.fetchone()
+        if not case_info:
+            log_message(cursor, fk_task_run, "ERROR", f"Could not find case info for fk_case {fk_case}")
+            return None
+        
+        pacer_id, court_url, case_name = case_info
+        
+        if not court_url:
+            log_message(cursor, fk_task_run, "WARNING", f"No court URL found for case {case_name}")
+            return None
+        
+        # Create Chrome driver
+        driver = create_chrome_driver()
+        
+        # Login to PACER
+        if not login_to_pacer(driver, court_url):
+            log_message(cursor, fk_task_run, "ERROR", f"Failed to login to PACER for case {case_name}")
+            return None
+        
+        # Navigate to the event URL if provided, otherwise construct docket sheet URL
+        if event_url and event_url.startswith("http"):
+            target_url = event_url
+        else:
+            # Construct docket sheet URL
+            target_url = f"{court_url.rstrip('/')}/cgi-bin/DktRpt.pl?{pacer_id}"
+        
+        log_message(cursor, fk_task_run, "INFO", f"Navigating to: {target_url}")
+        driver.get(target_url)
+        
+        time.sleep(3)
+        
+        # Look for the specific event number on the docket sheet
+        event_description = None
+        
+        # Try to find event description by looking for the event number
+        try:
+            # Look for table rows containing the event number
+            event_links = driver.find_elements(By.XPATH, f"//a[contains(text(), '{event_no}')]")
+            
+            if event_links:
+                # Click on the event link to get details
+                event_link = event_links[0]
+                event_link.click()
+                time.sleep(2)
+                
+                # Look for event description in various possible locations
+                description_selectors = [
+                    "//td[contains(@class, 'docketText')]",
+                    "//td[contains(text(), 'Description')]/../td[2]",
+                    "//table//td[contains(text(), 'Event:')]/../td[2]",
+                    "//div[contains(@class, 'eventDescription')]"
+                ]
+                
+                for selector in description_selectors:
+                    try:
+                        desc_element = driver.find_element(By.XPATH, selector)
+                        event_description = desc_element.text.strip()
+                        if event_description and len(event_description) > 10:
+                            break
+                    except:
+                        continue
+            else:
+                # If we can't find the specific event, try to get description from page source
+                page_source = driver.page_source
+                # Look for patterns that might contain the event description
+                soup = BeautifulSoup(page_source, 'html.parser')
+                
+                # Find table rows and look for our event number
+                for row in soup.find_all('tr'):
+                    cells = row.find_all('td')
+                    if len(cells) >= 3:
+                        # Check if any cell contains our event number
+                        for i, cell in enumerate(cells):
+                            if str(event_no) in cell.get_text():
+                                # Try to get description from next cells
+                                if i + 1 < len(cells):
+                                    event_description = cells[i + 1].get_text().strip()
+                                    if len(event_description) > 10:
+                                        break
+                        if event_description:
+                            break
+        
+        except Exception as e:
+            log_message(cursor, fk_task_run, "WARNING", f"Could not find specific event details: {e}")
+            # Fallback: try to get any meaningful description from the page
+            try:
+                page_text = driver.page_source
+                if f"Event {event_no}" in page_text or str(event_no) in page_text:
+                    # Extract some context around the event number
+                    import re
+                    pattern = rf'.{{0,100}}{event_no}.{{0,200}}'
+                    matches = re.findall(pattern, page_text, re.IGNORECASE | re.DOTALL)
+                    if matches:
+                        event_description = matches[0].strip()
+                        # Clean up HTML tags
+                        event_description = re.sub(r'<[^>]+>', '', event_description)
+                        event_description = re.sub(r'\s+', ' ', event_description).strip()
+            except:
+                pass
+        
+        if event_description and len(event_description) > 10:
+            log_message(cursor, fk_task_run, "INFO", f"Successfully scraped event description: {event_description[:100]}...")
+            return event_description
+        else:
+            log_message(cursor, fk_task_run, "WARNING", f"Could not extract meaningful event description for event {event_no}")
+            return None
+        
+    except Exception as e:
+        log_message(cursor, fk_task_run, "ERROR", f"Error scraping event details: {e}")
+        error_notifier.log_error("PACER Event Scraping Error", str(e), fk_task_run=fk_task_run, fk_case=fk_case)
+        return None
+    
+    finally:
+        if driver:
+            try:
+                driver.quit()
+            except:
+                pass
 # =========================
 # Event and Document Enrichment
 # =========================
 
-def enrich_event_from_fresh_pacer(cursor, fk_case: int, event_no: int):
+def enrich_event_from_fresh_pacer(cursor, fk_case: int, event_no: int, event_url: str = None):
     """
-    After the PACER scrape, pull the latest long description for the event_no
-    and return (case_event_id, long_desc). Assumes the scraper wrote into case_events.
+    After the PACER scrape, pull the latest description for the event_no,
+    then enhance it by scraping the full details from PACER directly.
+    Returns (case_event_id, enhanced_description).
     """
+    # First get the basic event info from our database
     cursor.execute("""
         SELECT TOP 1 id, event_description, event_date
         FROM docketwatch.dbo.case_events
@@ -251,10 +478,43 @@ def enrich_event_from_fresh_pacer(cursor, fk_case: int, event_no: int):
     """, (fk_case, event_no))
     row = cursor.fetchone()
     if not row:
+        log_message(cursor, fk_task_run, "WARNING", f"No case_event found for fk_case={fk_case}, event_no={event_no}")
         return None, None
+    
     case_event_id = row.id
-    long_desc = row.event_description
-    return case_event_id, long_desc
+    current_desc = row.event_description or ""
+    
+    # Now scrape the full event description from PACER
+    log_message(cursor, fk_task_run, "INFO", f"Enhancing event description for case_event_id {case_event_id}")
+    
+    enhanced_description = scrape_event_details_from_pacer(cursor, fk_case, event_no, event_url)
+    
+    if enhanced_description and enhanced_description != current_desc:
+        # Update the database with the enhanced description
+        try:
+            cursor.execute("""
+                UPDATE docketwatch.dbo.case_events
+                SET event_description = ?, 
+                    status = 'Enhanced from PACER',
+                    last_updated = GETDATE()
+                WHERE id = ?
+            """, (enhanced_description, case_event_id))
+            cursor.commit()
+            
+            log_message(cursor, fk_task_run, "INFO", 
+                       f"Updated event_description for case_event_id {case_event_id} with enhanced PACER details")
+            return case_event_id, enhanced_description
+            
+        except Exception as e:
+            log_message(cursor, fk_task_run, "ERROR", f"Failed to update event_description: {e}")
+            error_notifier.log_database_error(f"Failed to update case_event {case_event_id}: {e}", fk_task_run=fk_task_run)
+            return case_event_id, current_desc
+    else:
+        if enhanced_description:
+            log_message(cursor, fk_task_run, "INFO", f"Event description unchanged for case_event_id {case_event_id}")
+        else:
+            log_message(cursor, fk_task_run, "WARNING", f"Could not enhance event description for case_event_id {case_event_id}")
+        return case_event_id, current_desc
 
 def sync_event_documents(cursor, fk_case: int, case_event_id: int):
     """
@@ -333,57 +593,98 @@ def download_and_mark_documents(cursor, planned_docs, fk_case: int):
 # Orchestrator for a single event
 # =========================
 
-def process_new_event(fk_case: int, event_no: int, court_code: str):
+def process_new_event(fk_case: int, event_no: int, court_code: str, event_url: str = None):
     """
-    Pipeline for a single new event:
+    Enhanced pipeline for a single new event:
       1) PACER scrape for this case
-      2) Enrich event description and mark status
-      3) Sync documents and download PDFs
-      4) Trigger OCR discovery
-      5) Trigger case summary
-      6) Final status bump
+      2) Enrich event description with full PACER details
+      3) Run enhanced PDF download scripts
+      4) Sync documents and download PDFs
+      5) Trigger OCR discovery
+      6) Trigger case summary
+      7) Final status update
     """
-    log_message(cursor, fk_task_run, "INFO", f"Process start for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
+    log_message(cursor, fk_task_run, "INFO", f"Enhanced process start for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
 
+    # Step 1: Refresh case via PACER scraper
     scraped = refresh_case_via_pacer_scraper(fk_case)
     if not scraped:
         log_message(cursor, fk_task_run, "WARNING", f"PACER scrape did not complete for fk_case={fk_case}", fk_case=fk_case)
     else:
         time.sleep(SCRAPER_COOLDOWN_SEC)
 
-    case_event_id, long_desc = enrich_event_from_fresh_pacer(cursor, fk_case, event_no)
+    # Step 2: Enrich event description with full PACER details
+    case_event_id, enhanced_desc = enrich_event_from_fresh_pacer(cursor, fk_case, event_no, event_url)
     if case_event_id:
         cursor.execute("""
             UPDATE docketwatch.dbo.case_events
-            SET status = 'Pending OCR'
+            SET status = 'Enhanced - Ready for PDF Processing'
             WHERE id = ?
         """, (case_event_id,))
         cursor.commit()
-        if long_desc:
-            log_message(cursor, fk_task_run, "INFO", f"Updated long description for event {event_no}", fk_case=fk_case)
+        
+        if enhanced_desc:
+            log_message(cursor, fk_task_run, "INFO", f"Enhanced event description for event {event_no}: {enhanced_desc[:100]}...", fk_case=fk_case)
+    else:
+        log_message(cursor, fk_task_run, "ERROR", f"Could not find or create case_event for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
+        return
 
+    # Step 3: Run PDF download scripts
+    if case_event_id:
+        log_message(cursor, fk_task_run, "INFO", f"Starting PDF download process for case_event_id {case_event_id}", fk_case=fk_case)
+        
+        # Run Enhanced PDF Downloader
+        pdf_download_success = trigger_enhanced_pdf_download(case_event_id)
+        if pdf_download_success:
+            log_message(cursor, fk_task_run, "INFO", f"Enhanced PDF download completed for case_event_id {case_event_id}", fk_case=fk_case)
+        else:
+            log_message(cursor, fk_task_run, "WARNING", f"Enhanced PDF download failed for case_event_id {case_event_id}", fk_case=fk_case)
+        
+        time.sleep(2)  # Brief pause between scripts
+        
+        # Run Combined PDF Processor
+        pdf_process_success = trigger_combined_pdf_processor(case_event_id)
+        if pdf_process_success:
+            log_message(cursor, fk_task_run, "INFO", f"Combined PDF processor completed for case_event_id {case_event_id}", fk_case=fk_case)
+        else:
+            log_message(cursor, fk_task_run, "WARNING", f"Combined PDF processor failed for case_event_id {case_event_id}", fk_case=fk_case)
+
+    # Step 4: Sync documents and download any remaining PDFs
     if case_event_id:
         planned_docs = sync_event_documents(cursor, fk_case, case_event_id)
         if planned_docs:
             download_and_mark_documents(cursor, planned_docs, fk_case)
+            log_message(cursor, fk_task_run, "INFO", f"Downloaded {len(planned_docs)} additional documents", fk_case=fk_case)
         else:
-            log_message(cursor, fk_task_run, "INFO", "No documents to download for this event", fk_case=fk_case)
+            log_message(cursor, fk_task_run, "INFO", "No additional documents to download for this event", fk_case=fk_case)
 
+    # Step 5: Trigger OCR discovery
     ok_ocr = trigger_ocr_discovery()
+    if ok_ocr:
+        log_message(cursor, fk_task_run, "INFO", "OCR discovery completed successfully", fk_case=fk_case)
+    else:
+        log_message(cursor, fk_task_run, "WARNING", "OCR discovery had issues", fk_case=fk_case)
+    
     time.sleep(OCR_SUMMARY_COOLDOWN_SEC)
 
+    # Step 6: Trigger case summary
     ok_sum = trigger_case_summary(fk_case)
+    if ok_sum:
+        log_message(cursor, fk_task_run, "INFO", "Case summary completed successfully", fk_case=fk_case)
+    else:
+        log_message(cursor, fk_task_run, "WARNING", "Case summary had issues", fk_case=fk_case)
 
+    # Step 7: Final status update
     if case_event_id:
-        final_status = "Summarized" if ok_sum else "Pending Summary"
+        final_status = "Completed - PDF & Summary Ready" if (ok_sum and (pdf_download_success or pdf_process_success)) else "Partial Processing Complete"
         cursor.execute("""
             UPDATE docketwatch.dbo.case_events
-            SET status = ?
+            SET status = ?, last_updated = GETDATE()
             WHERE id = ?
         """, (final_status, case_event_id))
         cursor.commit()
 
-    log_message(cursor, fk_task_run, "INFO", f"Process end for fk_case={fk_case}, event_no={event_no}", fk_case=fk_case)
+    log_message(cursor, fk_task_run, "INFO", f"Enhanced process end for fk_case={fk_case}, event_no={event_no} - Status: {final_status}", fk_case=fk_case)
 # =========================
 # Tracked Cases + RSS Loop
 # =========================
@@ -526,7 +827,7 @@ try:
                             pass
 
                         try:
-                            process_new_event(fk_case=fk_case, event_no=event_no, court_code=court_code)
+                            process_new_event(fk_case=fk_case, event_no=event_no, court_code=court_code, event_url=event_url)
                         except Exception as e:
                             emsg = f"Pipeline error for fk_case={fk_case}, event_no={event_no}: {e}"
                             log_message(cursor, fk_task_run, "ERROR", emsg, fk_case=fk_case)

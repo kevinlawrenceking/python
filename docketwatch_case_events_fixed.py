@@ -54,6 +54,8 @@ def log_message(log_type, message, fk_case=None):
             # Also log this to error notification system
             error_notifier.log_database_error(f"Failed to log message to task_runs_log: {e}", fk_task_run=fk_task_run)
 
+# Wrap the entire script in error handling
+
 # Fetch CAPTCHA API Key
 def get_captcha_api():
     cursor.execute("SELECT captcha_api FROM [docketwatch].[dbo].[utilities] WHERE id = 1")
@@ -63,6 +65,8 @@ def get_captcha_api():
 # Wrap the entire script in error handling
 try:
     log_message("INFO", "=== CAPTCHA Bypass Script Started ===")
+
+
 
     API_KEY = get_captcha_api()
     if not API_KEY:
@@ -153,113 +157,113 @@ try:
                     EC.element_to_be_clickable((By.ID, "recaptcha-verify-button"))
                 )
                 verify_button.click()
-            log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
-            time.sleep(2)
-        except:
-            log_message("INFO", "No 'Verify' button found, proceeding.")
+                log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
+                time.sleep(2)
+            except:
+                log_message("INFO", "No 'Verify' button found, proceeding.")
 
-    except Exception as e:
-        log_message("ERROR", f"Error injecting CAPTCHA solution: {e}")
-        exit()
+        except Exception as e:
+            log_message("ERROR", f"Error injecting CAPTCHA solution: {e}")
+            exit()
 
-    # Click "Continue" Button After CAPTCHA
-    try:
-        submit_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "Submit"))
-        )
-        driver.execute_script("arguments[0].scrollIntoView();", submit_button)
-        submit_button.click()
-        log_message("INFO", "Clicked 'Continue to Case Lookup' button.")
-        time.sleep(3)
-    except Exception as e:
-        log_message("ERROR", f"Error clicking 'Continue to Case Lookup' button: {e}")
-        exit()
-
-    # Confirm We Reached the Case Search Page
-    try:
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "dl2"))
-        )
-        log_message("INFO", "Successfully reached the case search page!")
-    except:
-        log_message("ERROR", "Still stuck on CAPTCHA or failed to reach case search page.")
-        exit()
-
-    # SEARCHING FOR CASE EVENTS  #
-
-    # Fetch Cases from Database
-    cursor.execute("SELECT id, case_number, courttype, courtlocation, courtcategory, courtcasenumber FROM docketwatch.dbo.cases WHERE courttype is not null and courtcasenumber IS NOT NULL")
-    cases = cursor.fetchall()
-
-    for case in cases:
-        case_id, case_number, courttype, courtlocation, courtcategory, courtcasenumber = case
-
-        log_message("INFO", f"Searching for case: {case_number}", fk_case=case_id)
-
-        # Click on "Case Number Search" Tab
+        # Click "Continue" Button After CAPTCHA
         try:
-            case_search_tab = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "dl2"))
+            submit_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, "Submit"))
             )
-            case_search_tab.click()
+            driver.execute_script("arguments[0].scrollIntoView();", submit_button)
+            submit_button.click()
+            log_message("INFO", "Clicked 'Continue to Case Lookup' button.")
             time.sleep(3)
         except Exception as e:
-            log_message("ERROR", f"Error clicking 'Case Number Search' tab: {e}")
-            continue
+            log_message("ERROR", f"Error clicking 'Continue to Case Lookup' button: {e}")
+            exit()
 
-        # Enter Case Information
+        # Confirm We Reached the Case Search Page
         try:
-            driver.find_element(By.ID, "courtType").send_keys(courttype)
-            driver.find_element(By.ID, "courtLocation").send_keys(courtlocation)
-            driver.find_element(By.ID, "caseCategory").send_keys(courtcategory)
-            driver.find_element(By.ID, "caseNumber").send_keys(courtcasenumber)
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "dl2"))
+            )
+            log_message("INFO", "Successfully reached the case search page!")
+        except:
+            log_message("ERROR", "Still stuck on CAPTCHA or failed to reach case search page.")
+            exit()
 
-            # Submit Search
-            driver.find_element(By.ID, "Submit").click()
-            time.sleep(3)
-        except Exception as e:
-            log_message("ERROR", f"Error entering case details: {e}")
-            continue
+        # SEARCHING FOR CASE EVENTS  #
 
-        # Extract Case Events
-        try:
-            rows = driver.find_elements(By.CSS_SELECTOR, "table.details tr")
-            inserted = 0
-            for row in rows[1:]:
-                cols = row.find_elements(By.TAG_NAME, "td")
-                if len(cols) == 6:
-                    event_date = cols[0].text.strip()
-                    event_description = cols[1].text.strip()
-                    event_result = cols[2].text.strip()
-                    party_type = cols[3].text.strip()
-                    party_number = cols[4].text.strip()
-                    amount = cols[5].text.strip()
+        # Fetch Cases from Database
+        cursor.execute("SELECT id, case_number, courttype, courtlocation, courtcategory, courtcasenumber FROM docketwatch.dbo.cases WHERE courttype is not null and courtcasenumber IS NOT NULL")
+        cases = cursor.fetchall()
 
-                    # Insert into case_events table only if the event doesn't already exist
-                    cursor.execute("""
-                        INSERT INTO docketwatch.dbo.case_events (event_date, event_description, event_result, party_type, party_number, amount, fk_cases, created_at)
-                        SELECT ?, ?, ?, ?, ?, ?, ?, GETDATE()
-                        WHERE NOT EXISTS (
-                            SELECT 1 FROM docketwatch.dbo.case_events 
-                            WHERE fk_cases = ? 
-                            AND event_date = ? 
-                            AND event_description = ?
-                        )
-                    """, event_date, event_description, event_result, party_type, party_number, amount, case_id, case_id, event_date, event_description)
+        for case in cases:
+            case_id, case_number, courttype, courtlocation, courtcategory, courtcasenumber = case
 
-                    conn.commit()
-                    inserted += 1
+            log_message("INFO", f"Searching for case: {case_number}", fk_case=case_id)
 
-            if inserted > 0:
-                log_message("ALERT", f"Inserted {inserted} new event(s) for {case_number}", fk_case=case_id)
-            else:
-                log_message("INFO", f"No new events inserted for {case_number}", fk_case=case_id)
+            # Click on "Case Number Search" Tab
+            try:
+                case_search_tab = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.ID, "dl2"))
+                )
+                case_search_tab.click()
+                time.sleep(3)
+            except Exception as e:
+                log_message("ERROR", f"Error clicking 'Case Number Search' tab: {e}")
+                continue
+
+            # Enter Case Information
+            try:
+                driver.find_element(By.ID, "courtType").send_keys(courttype)
+                driver.find_element(By.ID, "courtLocation").send_keys(courtlocation)
+                driver.find_element(By.ID, "caseCategory").send_keys(courtcategory)
+                driver.find_element(By.ID, "caseNumber").send_keys(courtcasenumber)
+
+                # Submit Search
+                driver.find_element(By.ID, "Submit").click()
+                time.sleep(3)
+            except Exception as e:
+                log_message("ERROR", f"Error entering case details: {e}")
+                continue
+
+            # Extract Case Events
+            try:
+                rows = driver.find_elements(By.CSS_SELECTOR, "table.details tr")
+                inserted = 0
+                for row in rows[1:]:
+                    cols = row.find_elements(By.TAG_NAME, "td")
+                    if len(cols) == 6:
+                        event_date = cols[0].text.strip()
+                        event_description = cols[1].text.strip()
+                        event_result = cols[2].text.strip()
+                        party_type = cols[3].text.strip()
+                        party_number = cols[4].text.strip()
+                        amount = cols[5].text.strip()
+
+                        # Insert into case_events table only if the event doesn't already exist
+                        cursor.execute("""
+                            INSERT INTO docketwatch.dbo.case_events (event_date, event_description, event_result, party_type, party_number, amount, fk_cases, created_at)
+                            SELECT ?, ?, ?, ?, ?, ?, ?, GETDATE()
+                            WHERE NOT EXISTS (
+                                SELECT 1 FROM docketwatch.dbo.case_events 
+                                WHERE fk_cases = ? 
+                                AND event_date = ? 
+                                AND event_description = ?
+                            )
+                        """, event_date, event_description, event_result, party_type, party_number, amount, case_id, case_id, event_date, event_description)
+
+                        conn.commit()
+                        inserted += 1
+
+                if inserted > 0:
+                    log_message("ALERT", f"Inserted {inserted} new event(s) for {case_number}", fk_case=case_id)
+                else:
+                    log_message("INFO", f"No new events inserted for {case_number}", fk_case=case_id)
             
-        except Exception as e:
-            log_message("ERROR", f"Failed to extract case events for {case_number}: {e}", fk_case=case_id)
-            continue
+            except Exception as e:
+                log_message("ERROR", f"Failed to extract case events for {case_number}: {e}", fk_case=case_id)
+                continue
 
-    log_message("INFO", "Script Completed Successfully!")
+        log_message("INFO", "Script Completed Successfully!")
 
 finally:
     # === Ensure ChromeDriver is always properly closed ===
