@@ -115,7 +115,7 @@ def main():
         temp_user_data_dir = os.path.join(tempfile.gettempdir(), f"chrome_user_data_{unique_id}")
         
         opts = Options()
-        opts.add_argument("--headless=new")
+        #opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
