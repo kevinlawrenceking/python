@@ -8,7 +8,7 @@ cursor = conn.cursor()
 
 # --- Query to find case_events that need processing (no documents OR pending documents) ---
 cursor.execute("""
-    SELECT TOP 200 
+    SELECT TOP 50 
         ce.id,
         ce.event_no,
         ce.event_description,
@@ -59,29 +59,51 @@ for row in case_events:
     # STEP 1: Always run metadata extraction first
     print(f"[STEP 1] Running extract_pacer_pdf_metadata.py for case_event: {case_id}")
     try:
-        subprocess.run([
+        result = subprocess.run([
             "C:\\Program Files\\Python312\\python.exe",
             "u:\\docketwatch\\python\\extract_pacer_pdf_metadata.py",
             str(case_id)
-        ], check=True)
-        print(f"[STEP 1] Metadata extraction completed successfully for {case_id}")
-        time.sleep(3)  # Wait before next step
-    except subprocess.CalledProcessError as e:
-        print(f"[ERROR] Metadata extraction failed on case_event {case_id}: {e}")
-        continue  # Skip to next case_event if metadata fails
+        ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
+        
+        if result.returncode == 0:
+            print(f"[STEP 1] Metadata extraction completed successfully for {case_id}")
+        else:
+            print(f"[ERROR] Metadata extraction failed on case_event {case_id}:")
+            print(f"  Return code: {result.returncode}")
+            print(f"  STDOUT: {result.stdout[-500:]}")  # Last 500 chars
+            print(f"  STDERR: {result.stderr[-500:]}")  # Last 500 chars
+            continue  # Skip to next case_event if metadata fails
+            
+        time.sleep(5)  # Wait longer before next step to ensure Chrome cleanup
+    except subprocess.TimeoutExpired:
+        print(f"[ERROR] Metadata extraction timed out on case_event {case_id}")
+        continue
+    except Exception as e:
+        print(f"[ERROR] Metadata extraction exception on case_event {case_id}: {e}")
+        continue
     
     # STEP 2: Run PDF download script
     print(f"[STEP 2] Running process_pacer_event_pdf_final.py for case_event: {case_id}")
     try:
-        subprocess.run([
+        result = subprocess.run([
             "C:\\Program Files\\Python312\\python.exe",
             "u:\\docketwatch\\python\\process_pacer_event_pdf_final.py",
             str(case_id)
-        ], check=True)
-        print(f"[STEP 2] PDF download completed successfully for {case_id}")
-        time.sleep(3)  # Wait before next case_event
-    except subprocess.CalledProcessError as e:
-        print(f"[ERROR] PDF download failed on case_event {case_id}: {e}")
+        ], capture_output=True, text=True, timeout=300)  # 5 minute timeout
+        
+        if result.returncode == 0:
+            print(f"[STEP 2] PDF download completed successfully for {case_id}")
+        else:
+            print(f"[ERROR] PDF download failed on case_event {case_id}:")
+            print(f"  Return code: {result.returncode}")
+            print(f"  STDOUT: {result.stdout[-500:]}")  # Last 500 chars
+            print(f"  STDERR: {result.stderr[-500:]}")  # Last 500 chars
+            
+        time.sleep(5)  # Wait longer before next case_event to ensure Chrome cleanup
+    except subprocess.TimeoutExpired:
+        print(f"[ERROR] PDF download timed out on case_event {case_id}")
+    except Exception as e:
+        print(f"[ERROR] PDF download exception on case_event {case_id}: {e}")
     
     print(f"[COMPLETE] Finished processing case_event {case_id}")
     print("-" * 60)
