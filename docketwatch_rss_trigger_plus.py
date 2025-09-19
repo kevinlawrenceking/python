@@ -165,7 +165,7 @@ PACER_TOOL_ID = 2  # PACER
 SCRAPER_SCRIPT = r"\\10.146.176.84\general\docketwatch\python\docketwatch_scraper.py"
 PDF_ROOT = r"\\10.146.176.84\general\docketwatch\cases"
 OCR_TRIGGER = r"\\10.146.176.84\general\docketwatch\python\final_pdfs_finder.py"
-SUMMARIZER = r"\\10.146.176.84\general\docketwatch\python\pacer_case_summarizer.py"
+SUMMARIZER = r"\\10.146.176.84\general\docketwatch\python\pacer_case_event_pdf_summarizer.py"
 
 # PDF Download Scripts
 ENHANCED_PDF_DOWNLOADER = r"\\10.146.176.84\general\docketwatch\python\enhanced_pacer_pdf_downloader.py"
@@ -250,7 +250,7 @@ def trigger_ocr_discovery():
     return run_subprocess(cmd, "OCR discovery")
 
 def trigger_case_summary(fk_case: int):
-    cmd = ["python", SUMMARIZER, str(fk_case)]
+    cmd = ["python", SUMMARIZER, "--case-id", str(fk_case)]
     return run_subprocess(cmd, "Gemini summarizer", fk_case=fk_case)
 
 def trigger_enhanced_pdf_download(case_event_id: int):

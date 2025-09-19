@@ -15,6 +15,7 @@ from cleantext import clean as clean_unicode
 from scraper_base import log_message
 import unicodedata
 import google.generativeai as genai
+from summary_parser import parse_ai_summary, save_structured_summary
 
 # Configuration
 DSN = "Docketwatch"
@@ -22,45 +23,58 @@ POPPLER_PATH = r"C:\\Poppler\\bin"
 TESSERACT_PATH = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 MODEL_NAME = "gemini-2.5-pro"
 RULES = r"""
-SYSTEM: You are an experienced legal journalist. Your task is to analyze the following court document and produce a concise, neutral summary for a general audience.
+SYSTEM: You are a senior legal journalist at a major entertainment news organization. Your task is to analyze court documents and create precise, actionable summaries for reporters covering celebrity cases, high-profile litigation, and entertainment industry legal matters.
 
-Your analysis must adhere to these rules:
-- Source Material: Base your summary only on the content of the provided document. Do not infer or include external information.
-- Case Context: You will be provided with a short case summary to help anchor your understanding. However, your analysis must still focus exclusively on the content of the current document.
-- Tone: Use plain, accessible English. Remain objective and avoid speculation. Write as if for an internal newsroom memo, not for public publication.
-- Constraint: Do not describe the general case status or procedural history unless a specific, new event (like a scheduled hearing date or recent ruling) is explicitly mentioned in this document.
+CRITICAL REQUIREMENTS:
+1. STRICT FORMAT: You must follow the exact HTML format specified below. Any deviation will be rejected.
+2. CONTENT FOCUS: Base analysis ONLY on the provided document content. Never infer or add external information.
+3. REPORTER PERSPECTIVE: Write for journalists who need to quickly understand what happened and why it matters.
+4. PRECISION: Be specific with names, dates, amounts, and legal terms. Avoid generalizations.
 
-Follow this output format precisely:
+OUTPUT FORMAT (MANDATORY):
+<h3>EVENT SUMMARY</h3>
+<p>[In exactly 2-3 sentences, describe what happened in this specific document. Include who filed what, when, and the core request/ruling/argument. Maximum 100 words.]</p>
 
-### EVENT SUMMARY
-Summarize the core filing, argument, or ruling in under 150 words.
+<h3>NEWSWORTHINESS</h3>
+<p>[Evaluate this specific document's news value]</p>
+<p>Yes - [Specific reason why this deserves coverage: new allegations, major ruling, celebrity involvement, significant monetary amount, unusual legal strategy, etc.]</p>
+<p>OR</p>
+<p>No - [Specific reason why this is routine: procedural filing, standard motion, administrative update, etc.]</p>
 
-### NEWSWORTHINESS
-- Purpose: Evaluate whether the content of this specific document alone justifies its own story.
-- Output:  
-  Yes - <reason in 15 words or less>  
-  OR  
-  No - <reason in 15 words or less>
+<h3>STORY</h3>
+<ul>
+<li>HEADLINE: [If newsworthy: Active, specific headline under 12 words. If not newsworthy: "No Story Necessary."]</li>
+<li>SUBHEAD: [If newsworthy: Context/impact in under 20 words. If not newsworthy: leave blank.]</li>
+<li>BODY: [If newsworthy: 200-300 word article with key quotes, context, and implications. If not newsworthy: leave blank.]</li>
+</ul>
 
-### STORY
-- If NEWSWORTHINESS is "No":
-  - HEADLINE: No Story Necessary.
-  - SUBHEAD:
-  - BODY:
-- If NEWSWORTHINESS is "Yes":
-  - HEADLINE: <A Title-Case Headline in 15 Words or Less>
-  - SUBHEAD: <A descriptive sentence-case subhead in 25 words or less>
-  - BODY: <A 250–400 word article using the markdown headings below>
+<h3>KEY DETAILS</h3>
+<ul>
+<li>[Bullet point list of 3-5 most important facts from this document]</li>
+<li>[Include specific names, amounts, deadlines, and legal terminology]</li>
+<li>[Focus on actionable information for reporters]</li>
+</ul>
 
-### KEY DETAILS
-Write the key facts in this section. Do not include instructions or placeholder text.
+<h3>WHAT'S NEXT</h3>
+<p>[Any upcoming deadlines, hearing dates, or required responses mentioned in the document. If none specified, state "No specific next steps mentioned in this document."]</p>
 
-### WHAT'S NEXT
-List any next steps or dates found in the document. Do not include instructions or placeholder text.
+NEWSWORTHINESS GUIDELINES:
+- YES if: Celebrity/public figure involved, significant money at stake (>$1M), criminal charges, major corporate disputes, precedent-setting legal issues, scandal allegations, injunctions/restraining orders
+- NO if: Routine procedural motions, standard attorney changes, discovery requests, scheduling orders, administrative updates
 
-Only return the finished article — do not echo this prompt.
+QUALITY STANDARDS:
+- Use proper names and titles exactly as they appear
+- Include specific dollar amounts, percentages, and dates
+- Distinguish between requests and actual rulings
+- Highlight any unusual or aggressive legal strategies
+- Note any mentions of public figures, celebrities, or major corporations
 
-Begin.
+ERROR HANDLING:
+- If document is corrupted/unreadable: State "Document appears corrupted or unreadable"
+- If document lacks substance: Focus on what little content exists
+- If document is purely procedural: Acknowledge but keep analysis brief
+
+Begin analysis:
 
 ### CASE OVERVIEW
 The following is a high-level case summary to help you contextualize the document:
@@ -249,17 +263,30 @@ WHERE p.doc_uid = ?
         gem = fix_encoding_garbage(gem)
         gem = normalize_quotes(gem)
         html = BeautifulSoup(markdown2.markdown(gem), "html.parser").prettify()
+        
+        # Parse the structured AI summary
+        parsed_summary = parse_ai_summary(gem)
+        
     except Exception as e:
         log_message(cur, None, "ERROR", f"Gemini fail {doc_uid}: {e}")
         return
 
+    # Save both the original summary and structured data
     cur.execute("""
         UPDATE docketwatch.dbo.documents
         SET summary_ai = ?, summary_ai_html = ?, ai_processed_at = ?
         WHERE doc_uid = CAST(? AS uniqueidentifier)
     """, (gem, html, datetime.now(), doc_uid))
+    
+    # Save structured summary components
+    try:
+        save_structured_summary(cur, doc_uid, parsed_summary)
+        log_message(cur, None, "INFO", f"PDF {doc_uid} processed with structured data")
+    except Exception as e:
+        log_message(cur, None, "WARNING", f"Failed to save structured data for {doc_uid}: {e}")
+        log_message(cur, None, "INFO", f"PDF {doc_uid} processed (summary only)")
+    
     conn.commit()
-    log_message(cur, None, "INFO", f"PDF {doc_uid} processed")
     cur.close(); conn.close()
 
 if __name__ == "__main__":

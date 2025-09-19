@@ -1,6 +1,6 @@
 import pyodbc
 import time
-from pacer_case_event_pdf_summarizer import process_single_pdf
+from summarize_document_event import process_single_pdf
 
 def get_cursor():
     conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")

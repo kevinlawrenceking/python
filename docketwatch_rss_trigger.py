@@ -156,7 +156,7 @@ PACER_TOOL_ID = 2  # PACER
 SCRAPER_SCRIPT = r"\\10.146.176.84\general\docketwatch\python\docketwatch_scraper.py"
 PDF_ROOT = r"\\10.146.176.84\general\docketwatch\cases"
 OCR_TRIGGER = r"\\10.146.176.84\general\docketwatch\python\final_pdfs_finder.py"
-SUMMARIZER = r"\\10.146.176.84\general\docketwatch\python\pacer_case_summarizer.py"
+SUMMARIZER = r"\\10.146.176.84\general\docketwatch\python\pacer_case_event_pdf_summarizer.py"
 
 DOWNLOAD_TIMEOUT = 60
 SCRAPER_COOLDOWN_SEC = 5
@@ -232,7 +232,7 @@ def trigger_ocr_discovery():
     return run_subprocess(cmd, "OCR discovery")
 
 def trigger_case_summary(fk_case: int):
-    cmd = ["python", SUMMARIZER, str(fk_case)]
+    cmd = ["python", SUMMARIZER, "--case-id", str(fk_case)]
     return run_subprocess(cmd, "Gemini summarizer", fk_case=fk_case)
 # =========================
 # Event and Document Enrichment
@@ -262,10 +262,10 @@ def sync_event_documents(cursor, fk_case: int, case_event_id: int):
     Returns list of planned download dicts: {id, url, target_abs, rel_path}.
     """
     cursor.execute("""
-        SELECT d.id, d.source_url, d.file_name, d.rel_path
+        SELECT d.doc_uid, d.pdf_url, d.rel_path, d.doc_id
         FROM docketwatch.dbo.documents d
-        WHERE d.fk_case = ? AND (d.fk_case_event = ? OR d.fk_case_event IS NULL)
-        ORDER BY d.id DESC
+        WHERE d.fk_case = ? AND d.fk_case_event = ?
+        ORDER BY d.doc_uid DESC
     """, (fk_case, case_event_id))
     docs = cursor.fetchall()
 
@@ -273,9 +273,8 @@ def sync_event_documents(cursor, fk_case: int, case_event_id: int):
     ensure_dir(os.path.join(PDF_ROOT, str(fk_case)))
 
     for d in docs:
-        doc_id = d.id
-        source_url = getattr(d, "source_url", None)
-        file_name = getattr(d, "file_name", None)
+        doc_id = d.doc_uid  # Use doc_uid as the unique identifier
+        source_url = getattr(d, "pdf_url", None)  # Use pdf_url instead of source_url
         rel_path = getattr(d, "rel_path", None)
 
         if not source_url:
@@ -283,19 +282,11 @@ def sync_event_documents(cursor, fk_case: int, case_event_id: int):
             ev = cursor.fetchone()
             source_url = ev.event_url if ev and ev.event_url else None
 
-        if not file_name:
-            ts = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        # Generate filename from doc_id if rel_path is pending
+        if rel_path == 'pending' or not rel_path:
             doc_hint = extract_doc_id_from_url(source_url) or f"doc{doc_id}"
-            file_name = f"{ts}_{doc_hint}.pdf"
-            rel_path = f"{fk_case}\\{file_name}"
-            cursor.execute("""
-                UPDATE docketwatch.dbo.documents
-                SET file_name = ?, rel_path = ?
-                WHERE id = ?
-            """, (file_name, rel_path, doc_id))
-            cursor.commit()
-        else:
-            rel_path = f"{fk_case}\\{file_name}"
+            file_name = f"E{d.doc_id}.pdf" if d.doc_id else f"{doc_hint}.pdf"
+            rel_path = f"cases\\{fk_case}\\{file_name}"
 
         planned.append({
             "id": doc_id,
@@ -319,9 +310,9 @@ def download_and_mark_documents(cursor, planned_docs, fk_case: int):
                 size = None
             cursor.execute("""
                 UPDATE docketwatch.dbo.documents
-                SET file_size = ?, status = 'Downloaded', rel_path = ?
-                WHERE id = ?
-            """, (size, p["rel_path"], p["id"]))
+                SET rel_path = ?, date_downloaded = GETDATE()
+                WHERE doc_uid = ?
+            """, (p["rel_path"], p["id"]))
             cursor.commit()
             log_message(cursor, fk_task_run, "INFO", f"Downloaded document {p['id']} to {p['rel_path']}", fk_case=fk_case)
         else:

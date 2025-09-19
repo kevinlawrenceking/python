@@ -1,301 +1,264 @@
+"""
+PACER Case Summarizer
+
+- Logs into PACER using custom login method
+- Navigates to each case URL and clicks into full docket report
+- Ensures 'list_of_parties_and_counsel' is checked, 'terminated_parties' is unchecked
+- Extracts HTML of full docket page (no date filtering)
+- Sends to Gemini for summarization
+- Saves result to cases.summarize and cases.summarize_html
+"""
+
 import os
-import re
 import sys
-import json
-import cv2
-import numpy as np
+import time
+import argparse
+import logging
 import pyodbc
-import PyPDF2
-import pytesseract
+import json
+import requests
 import markdown2
-from bs4 import BeautifulSoup
 from datetime import datetime
-from pdf2image import convert_from_path
-from cleantext import clean as clean_unicode
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
+
 from scraper_base import (
+    get_db_cursor,
+    get_task_context_by_tool_id,
     log_message,
-    get_gemini_key,
-    gemini_api_call_with_logging,
-    get_gemini_usage_stats
+    DEFAULT_CHROMEDRIVER_PATH,
 )
-import unicodedata
-import google.generativeai as genai
 
-# Configuration
-DSN = "Docketwatch"
-POPPLER_PATH = r"C:\\Poppler\\bin"
-TESSERACT_PATH = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-MODEL_NAME = "gemini-2.5-pro"
-SCRIPT_NAME = "pacer_case_event_pdf_summarizer.py"  # For Gemini logging purposes
-RULES = r"""
-SYSTEM: You are an experienced legal journalist. Your task is to analyze the following court document and produce a concise, neutral summary for a general audience.
+# Note: Removed pyodbc.setdecoding calls as they don't exist in current pyodbc version
 
-Your analysis must adhere to these rules:
-- Source Material: Base your summary only on the content of the provided document. Do not infer or include external information.
-- Case Context: You will be provided with a short case summary to help anchor your understanding. However, your analysis must still focus exclusively on the content of the current document.
-- Tone: Use plain, accessible English. Remain objective and avoid speculation. Write as if for an internal newsroom memo, not for public publication.
-- Constraint: Do not describe the general case status or procedural history unless a specific, new event (like a scheduled hearing date or recent ruling) is explicitly mentioned in this document.
 
-Follow this output format precisely:
+def human_pause(a, b):
+    time.sleep((a + b) / 2)
 
-### EVENT SUMMARY
-Summarize the core filing, argument, or ruling in under 150 words.
 
-### NEWSWORTHINESS
-- Purpose: Evaluate whether the content of this specific document alone justifies its own story.
-- Output:  
-  Yes - <reason in 15 words or less>  
-  OR  
-  No - <reason in 15 words or less>
+def get_gemini_key(cursor):
+    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
+    row = cursor.fetchone()
+    return row[0] if row and row[0] else None
 
-### STORY
-- If NEWSWORTHINESS is "No":
-  - HEADLINE: No Story Necessary.
-  - SUBHEAD:
-  - BODY:
-- If NEWSWORTHINESS is "Yes":
-  - HEADLINE: <A Title-Case Headline in 15 Words or Less>
-  - SUBHEAD: <A descriptive sentence-case subhead in 25 words or less>
-  - BODY: <A 250–400 word article using the markdown headings below>
 
-### KEY DETAILS
-Write the key facts in this section. Do not include instructions or placeholder text.
+PROMPT_TEMPLATE = """
+You are a legal analyst for a major entertainment news organization. Create a clear, professional summary that helps journalists understand and report on this case.
 
-### WHAT'S NEXT
-List any next steps or dates found in the document. Do not include instructions or placeholder text.
+Analyze the following case and docket data to extract:
 
-Only return the finished article — do not echo this prompt.
+* The case name, case number, jurisdiction, and presiding judge.
+* The parties involved, including plaintiffs, defendants, and others.
+* A clear chronological narrative summarizing key filings, hearings, motions, rulings, and milestones. Include docket numbers when relevant.
+* Any unusual or notable filings.
+* The current status of the case.
+* Related case numbers or consolidations if noted.
 
-Begin.
+Close with a short section titled "Why It Matters", explaining the case’s potential relevance to the entertainment industry, public interest, or legal precedent.
 
-### CASE OVERVIEW
-The following is a high-level case summary to help you contextualize the document:
+Neutral language. Do not guess. State clearly if information is missing.
 
-{CASE_OVERVIEW}
+Keep under 800 words.
 
-### EVENT
-Date: {event_date}  
-Description: {event_desc}
-
-### DOCUMENT TEXT
-{PDF_BODY}
-
---- END OF DOCUMENT ---
+Below is the case docket data:
 """
 
+MAX_INPUT_LENGTH = 16000
 
 
-# Utility Functions
-def get_cursor():
-    conn = pyodbc.connect(f"DSN={DSN};TrustServerCertificate=yes;")
-    conn.setdecoding(pyodbc.SQL_WCHAR, encoding="utf-8")
-    conn.setencoding(encoding="utf-8")
-    return conn, conn.cursor()
+def clean_html(raw_html):
+    soup = BeautifulSoup(raw_html, "html.parser")
+    for tag in soup(["script", "style"]):
+        tag.decompose()
+    return " ".join(soup.get_text().split())
 
-def get_util(cur, col):
-    cur.execute(f"SELECT {col} FROM docketwatch.dbo.utilities")
-    row = cur.fetchone()
-    return row[0] if row else None
 
-def fix_encoding_garbage(text):
+def convert_to_clean_html(summary_text):
+    html = markdown2.markdown(summary_text)
+    soup = BeautifulSoup(html, "html.parser")
+    return str(soup)
+
+
+def get_target_cases(cursor, single_case_id=None):
+    if single_case_id:
+        cursor.execute(
+            """
+            SELECT
+                c.id,
+                c.id AS fk_case,
+                CAST(c.case_number AS NVARCHAR(MAX)) AS case_number,
+                CAST(c.case_name   AS NVARCHAR(MAX)) AS case_name,
+                CAST(c.case_url    AS NVARCHAR(MAX)) AS case_url
+            FROM docketwatch.dbo.cases c
+            WHERE c.id = ?
+            """,
+            (single_case_id,),
+        )
+    else:
+        cursor.execute(
+            """
+            SELECT DISTINCT
+                c.id,
+                c.id AS fk_case,
+                CAST(c.case_number AS NVARCHAR(MAX)) AS case_number,
+                CAST(c.case_name   AS NVARCHAR(MAX)) AS case_name,
+                CAST(c.case_url    AS NVARCHAR(MAX)) AS case_url,
+                CAST(d.summary_ai  AS NVARCHAR(MAX)) AS doc_summary,
+                CAST(e.summarize   AS NVARCHAR(MAX)) AS event_summary,
+                CAST(c.summarize   AS NVARCHAR(MAX)) AS case_summary,
+                d.date_downloaded
+            FROM docketwatch.dbo.cases c
+            INNER JOIN docketwatch.dbo.case_events e ON e.fk_cases = c.id
+            INNER JOIN docketwatch.dbo.documents d   ON d.fk_case_event = e.id
+            WHERE c.case_number <> 'Unfiled'
+              AND d.summary_ai IS NULL
+              AND c.summarize IS NOT NULL
+              AND c.fk_tool = 2
+              AND d.rel_path IS NOT NULL
+            ORDER BY d.date_downloaded DESC
+            """
+        )
+    return cursor.fetchall()
+
+
+def summarize_case_html(html_text, api_key):
+    prompt = PROMPT_TEMPLATE + html_text[:MAX_INPUT_LENGTH]
+    models = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]
+
+    for model in models:
+        for attempt in range(3):
+            try:
+                r = requests.post(
+                    f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}",
+                    headers={"Content-Type": "application/json"},
+                    data=json.dumps(
+                        {
+                            "contents": [
+                                {"role": "user", "parts": [{"text": prompt}]}
+                            ],
+                            "generationConfig": {
+                                "temperature": 0.6,
+                                "max_output_tokens": 1000,
+                            },
+                        }
+                    ),
+                )
+                result = r.json()
+                if r.status_code == 200 and result.get("candidates"):
+                    return (
+                        result["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    )
+                if r.status_code == 503:
+                    time.sleep((attempt + 1) * 10)
+                    continue
+                break
+            except Exception:
+                if attempt < 2:
+                    time.sleep(5)
+    return None
+
+
+def login_to_pacer(driver, username, password, cursor, fk_task_run):
+    driver.get("https://pacer.login.uscourts.gov/csologin/login.jsf")
+    human_pause(2, 4)
+    driver.find_element(By.NAME, "loginForm:loginName").send_keys(username)
+    driver.find_element(By.NAME, "loginForm:password").send_keys(password)
     try:
-        return text.encode('latin1').decode('utf-8')
+        code_field = driver.find_element(By.NAME, "loginForm:clientCode")
+        code_field.clear()
+        code_field.send_keys("DocketWatch")
     except:
-        return text
-
-def normalize_quotes(text):
-    return unicodedata.normalize('NFKD', text).replace('“', '"').replace('”', '"').replace('’', "'").replace('‘', "'")
-
-def preprocess(img_bgr):
-    gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
-    gray = cv2.bilateralFilter(gray, 5, 75, 75)
-    _, bw = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-    kernel = np.ones((2, 2), np.uint8)
-    bw = cv2.dilate(bw, kernel, iterations=1)
-    bw = cv2.erode(bw, kernel, iterations=1)
-    coords = np.column_stack(np.where(bw > 0))
-    if coords.size == 0:
-        return bw
-    angle = cv2.minAreaRect(coords)[-1]
-    angle = -(90 + angle) if angle < -45 else -angle
-    if abs(angle) < 1.5:
-        return bw
-    M = cv2.getRotationMatrix2D((bw.shape[1] / 2, bw.shape[0] / 2), angle, 1.0)
-    return cv2.warpAffine(bw, M, (bw.shape[1], bw.shape[0]), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
-
-def tesseract_page(img):
-    txt = pytesseract.image_to_string(img, config="--oem 1 --psm 6")
-    return txt
-
-def pdf_to_text(path):
-    text = ""
-    try:
-        with open(path, "rb") as f:
-            reader = PyPDF2.PdfReader(f)
-            for pg in reader.pages:
-                text += (pg.extract_text() or "") + "\n"
-    except Exception:
         pass
-    if len(text.strip()) >= 200:
-        return text
-    pages = convert_from_path(path, dpi=300, poppler_path=POPPLER_PATH)
-    for pil in pages:
-        img = preprocess(cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR))
-        text += tesseract_page(img) + "\n"
-    return text
+    driver.find_element(By.NAME, "loginForm:fbtnLogin").click()
+    human_pause(3, 5)
+    log_message(cursor, fk_task_run, "INFO", "PACER login successful.")
 
-def clean_ocr_text(txt):
-    txt = re.sub(r'^Page \d+\s*\n', '', txt, flags=re.MULTILINE)
-    txt = re.sub(r'-\n(?=\w)', '', txt)
-    txt = re.sub(r'(?<!\n)\n(?!\n)', ' ', txt)
-    txt = re.sub(r' +', ' ', txt)
-    txt = clean_unicode(txt, fix_unicode=True)
-    return normalize_quotes(txt.strip())
 
-def refine_ocr_with_ai(text: str, cursor, case_event_id=None) -> str:
-    """Refine OCR text using Gemini AI with centralized logging"""
-    prompt = f"""
-SYSTEM: You are an expert legal document cleaner.
-Your job is to correct OCR errors in legal text while preserving original meaning.
-Fix split words, misspellings, and remove junk characters.
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--case-id", type=int)
+    args = parser.parse_args()
 
---- TEXT TO CLEAN ---
-{text[:9000]}
---- END ---
+    conn, cursor = get_db_cursor()
+    context = get_task_context_by_tool_id(cursor, 2)
+    gemini_key = get_gemini_key(cursor)
+    username = context.get("username")
+    password = context.get("pass")
 
-Return only the corrected text. Do not summarize or explain.
-"""
-    
-    # Use centralized Gemini API call with logging
-    response_text, success = gemini_api_call_with_logging(
-        cursor=cursor,
-        script_name=SCRIPT_NAME,
-        model_name=MODEL_NAME,
-        prompt=prompt,
-        fk_asset=case_event_id or 0,  # Use case_event_id or 0 as identifier
-        temperature=0.1,  # Low temperature for text correction
-        max_tokens=2048
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(
+        service=Service(DEFAULT_CHROMEDRIVER_PATH), options=options
     )
-    
-    if not success or not response_text:
-        print(f"[ERROR] OCR refinement failed for case_event {case_event_id}")
-        return text  # Return original text if refinement fails
-    
-    return response_text.strip()
-
-def ask_gemini(case_summary, event_desc, event_date, pdf_text, cursor, case_event_id=None):
-    """Generate document summary using Gemini AI with centralized logging"""
-    
-    # Ensure input size is controlled
-    case_summary = (case_summary or "")[:2000]  # Increased limit to preserve case detail
-    event_desc = (event_desc or "")[:500]
-
-    # Build the body content with event info and PDF text
-    body_text = f"Date: {event_date}\nDescription: {event_desc}\n\n{pdf_text}"
-    if len(body_text) > 10000:
-        body_text = body_text[:8000] + "\n...\n" + body_text[-2000:]
-
-    # Replace both placeholders in the rules template
-    full_prompt = RULES.replace("{CASE_OVERVIEW}", case_summary).replace("{PDF_BODY}", body_text)
-
-    # Use centralized Gemini API call with logging
-    response_text, success = gemini_api_call_with_logging(
-        cursor=cursor,
-        script_name=SCRIPT_NAME,
-        model_name=MODEL_NAME,
-        prompt=full_prompt[:16000],
-        fk_asset=case_event_id or 0,  # Use case_event_id as identifier
-        temperature=0.3,  # Low temperature for factual summarization
-        max_tokens=1024
-    )
-    
-    if not success or not response_text:
-        print(f"[ERROR] Document summarization failed for case_event {case_event_id}")
-        return None
-    
-    return response_text.strip()
-
-
-def process_single_pdf(doc_uid: str):
-    conn, cur = get_cursor()
-    key = get_gemini_key(cur)  # Use centralized function
-    docs_root = get_util(cur, "docs_root")
-    if not (key and docs_root):
-        print("Missing Gemini key or docs_root.")
-        return
-
-    cur.execute("""
-SELECT 
-    c.summarize,
-    ISNULL(e.event_description, p.pdf_title) AS event_description,
-    CONVERT(char(10), ISNULL(e.event_date, p.date_downloaded), 23) AS event_date,
-    p.ocr_text,
-    p.fk_case,
-    p.fk_case_event
-FROM docketwatch.dbo.documents p
-LEFT JOIN docketwatch.dbo.case_events e ON e.id = p.fk_case_event
-JOIN docketwatch.dbo.cases c ON c.id = p.fk_case
-WHERE p.doc_uid = ?
-    """, doc_uid)
-    row = cur.fetchone()
-    if not row:
-        print("PDF id not found.")
-        return
-
-    summ, ev_desc, ev_date, ocr_text, case_id, case_event_id = row
-    cur.execute("""
-        SELECT TOP 1 rel_path
-        FROM docketwatch.dbo.documents
-        WHERE fk_case = ?
-        ORDER BY date_downloaded DESC
-    """, case_id)
-    rel_row = cur.fetchone()
-    abs_path = os.path.join(docs_root, rel_row[0]) if rel_row else None
-
-    if (not ocr_text or len(ocr_text.strip()) < 100) and abs_path and os.path.isfile(abs_path):
-        raw = pdf_to_text(abs_path)
-        clean = clean_ocr_text(raw)
-        try:
-            clean = refine_ocr_with_ai(clean, cur, case_event_id)
-        except Exception as e:
-            log_message(cur, None, "WARNING", f"Refinement failed for {doc_uid}: {e}")
-        cur.execute("""
-            UPDATE docketwatch.dbo.documents
-            SET ocr_text_raw = ?, ocr_text = ?, ai_processed_at = ?
-            WHERE doc_uid = CAST(? AS uniqueidentifier)
-        """, (raw, clean, datetime.now(), doc_uid))
-        conn.commit()
-        ocr_text = clean
-
-    pdf_text = clean_ocr_text(ocr_text or "")
-    if len(pdf_text.strip()) < 100:
-        print("Skipping Gemini summary — OCR result is too poor.")
-        return
 
     try:
-        gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text, cur, case_event_id)
-        if gem:  # Check if summary was generated successfully
-            gem = fix_encoding_garbage(gem)
-            gem = normalize_quotes(gem)
-            html = BeautifulSoup(markdown2.markdown(gem), "html.parser").prettify()
-        else:
-            log_message(cur, None, "ERROR", f"Gemini summary generation failed for {doc_uid}")
-            return
-    except Exception as e:
-        log_message(cur, None, "ERROR", f"Gemini fail {doc_uid}: {e}")
-        return
+        login_to_pacer(driver, username, password, cursor, context["fk_task_run"])
+        cases = get_target_cases(cursor, args.case_id)
 
-    cur.execute("""
-        UPDATE docketwatch.dbo.documents
-        SET summary_ai = ?, summary_ai_html = ?, ai_processed_at = ?
-        WHERE doc_uid = CAST(? AS uniqueidentifier)
-    """, (gem, html, datetime.now(), doc_uid))
-    conn.commit()
-    log_message(cur, None, "INFO", f"PDF {doc_uid} processed")
-    cur.close(); conn.close()
+        for case_row in cases:
+            case_id, fk_case, case_number, case_name, case_url = case_row[:5]
+
+            case_name_safe = str(case_name) if case_name else "Unknown"
+            case_url_safe = str(case_url) if case_url else ""
+
+            print(f"Processing: {case_number} - {case_name_safe}")
+
+            driver.get(case_url_safe)
+            human_pause(3, 5)
+
+            driver.find_element(By.PARTIAL_LINK_TEXT, "Docket Report").click()
+            human_pause(2, 3)
+
+            try:
+                cb = driver.find_element(By.ID, "list_of_parties_and_counsel")
+                if not cb.is_selected():
+                    cb.click()
+            except:
+                pass
+
+            try:
+                cb = driver.find_element(By.ID, "terminated_parties")
+                if cb.is_selected():
+                    cb.click()
+            except:
+                pass
+
+            try:
+                Select(driver.find_element(By.NAME, "sort1")).select_by_visible_text(
+                    "Most recent date first"
+                )
+            except:
+                pass
+
+            driver.find_element(By.NAME, "button1").click()
+            human_pause(3, 5)
+
+            html = driver.page_source
+            clean_text = clean_html(html)
+            summary = summarize_case_html(clean_text, gemini_key)
+
+            if summary:
+                html_version = convert_to_clean_html(summary)
+                cursor.execute(
+                    "UPDATE docketwatch.dbo.cases SET summarize=?, summarize_html=? WHERE id=?",
+                    (summary[:4000], html_version[:8000], case_id),
+                )
+                conn.commit()
+            else:
+                print("No summary returned.")
+
+    finally:
+        driver.quit()
+        cursor.close()
+        conn.close()
+
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python pacer_case_event_pdf_summarizer.py <doc_uid>")
-    else:
-        process_single_pdf(sys.argv[1])
+    main()

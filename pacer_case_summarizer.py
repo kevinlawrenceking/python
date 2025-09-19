@@ -102,14 +102,43 @@ def get_target_cases(cursor, single_case_id=None):
     if single_case_id:
         cursor.execute("SELECT id, id AS fk_case, case_number, case_name, case_url FROM docketwatch.dbo.cases WHERE id = ?", (single_case_id,))
     else:
-        cursor.execute("""
-            SELECT DISTINCT c.id, c.id AS fk_case, c.case_number, c.case_name, c.case_url
-            FROM docketwatch.dbo.cases c
-            INNER JOIN docketwatch.dbo.case_events e ON e.fk_cases = c.id
-            INNER JOIN docketwatch.dbo.case_events_pdf p ON p.fk_case_event = e.id
-            WHERE p.isDownloaded = 1 AND p.local_pdf_filename IS NOT NULL AND LEN(p.local_pdf_filename) > 0 AND c.summarize IS NULL
-        """)
-    return cursor.fetchall()
+        cursor.execute("""SELECT DISTINCT c.id, c.id AS fk_case, c.case_number, CAST(c.case_name AS NVARCHAR(MAX)) as case_name, c.case_url,
+                CAST(d.summary_ai AS NVARCHAR(MAX)) as doc_summary, 
+                CAST(e.summarize AS NVARCHAR(MAX)) as event_summary, 
+                CAST(c.summarize AS NVARCHAR(MAX)) as case_summary,
+                d.date_downloaded
+                FROM docketwatch.dbo.cases c
+                INNER JOIN docketwatch.dbo.case_events e ON e.fk_cases = c.id
+                INNER JOIN docketwatch.dbo.documents d ON d.fk_case_event = e.id
+                Where  c.case_number <> 'Unfiled' and d.summary_ai is  null and  c.summarize is not null
+           and c.fk_tool = 2 AND d.rel_path IS NOT NULL  AND c.summarize IS not NULL
+
+    	   order by d.date_downloaded desc""")
+    
+    # Handle potential encoding issues when fetching results
+    try:
+        return cursor.fetchall()
+    except UnicodeDecodeError as e:
+        print(f"Unicode decode error: {e}")
+        print("Attempting to handle encoding issue...")
+        
+        # Re-execute with explicit encoding handling
+        if single_case_id:
+            cursor.execute("SELECT id, id AS fk_case, case_number, CAST(case_name AS NVARCHAR(MAX)) as case_name, case_url FROM docketwatch.dbo.cases WHERE id = ?", (single_case_id,))
+        else:
+            cursor.execute("""SELECT DISTINCT c.id, c.id AS fk_case, c.case_number, CAST(c.case_name AS NVARCHAR(MAX)) as case_name, c.case_url,
+                CAST(d.summary_ai AS NVARCHAR(MAX)) as doc_summary, 
+                CAST(e.summarize AS NVARCHAR(MAX)) as event_summary, 
+                CAST(c.summarize AS NVARCHAR(MAX)) as case_summary,
+                d.date_downloaded
+                FROM docketwatch.dbo.cases c
+                INNER JOIN docketwatch.dbo.case_events e ON e.fk_cases = c.id
+                INNER JOIN docketwatch.dbo.documents d ON d.fk_case_event = e.id
+                Where  c.case_number <> 'Unfiled' and d.summary_ai is  null and  c.summarize is not null
+           and c.fk_tool = 2 AND d.rel_path IS NOT NULL  AND c.summarize IS not NULL
+
+    	   order by d.date_downloaded desc""")
+        return cursor.fetchall()
 
 def summarize_case_html(html_text, api_key):
     prompt = PROMPT_TEMPLATE + html_text[:MAX_INPUT_LENGTH]
@@ -203,22 +232,47 @@ def main():
     options.add_argument("--disable-default-apps")
     options.add_argument("--disable-sync")
     options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-features=VizDisplayCompositor")
+    options.add_argument("--disable-background-timer-throttling")
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--disable-renderer-backgrounding")
+    options.add_argument("--no-first-run")
+    options.add_argument("--disable-plugins")
+    options.add_argument("--disable-images")
+    options.add_argument("--max_old_space_size=4096")
     driver = webdriver.Chrome(service=Service(DEFAULT_CHROMEDRIVER_PATH), options=options)
 
     try:
         login_to_pacer(driver, username, password, cursor, context["fk_task_run"])
         cases = get_target_cases(cursor, args.case_id)
 
-        for case_id, fk_case, case_number, case_name, case_url in cases:
-            print(f"\nProcessing Case: {case_number} - {case_name} - {case_url}")
-            log_id = log_message(cursor, context["fk_task_run"], "INFO", f"Reviewing case: {case_name}", fk_case=fk_case)
+        for case_row in cases:
+            # Handle different query results - single case vs multi-case
+            if len(case_row) == 5:  # Single case query
+                case_id, fk_case, case_number, case_name, case_url = case_row
+            else:  # Multi-case query with additional fields
+                case_id, fk_case, case_number, case_name, case_url = case_row[:5]
+                
+            # Handle potential encoding issues in individual fields
+            try:
+                case_name_safe = str(case_name) if case_name else "Unknown Case"
+                case_number_safe = str(case_number) if case_number else "Unknown"
+                case_url_safe = str(case_url) if case_url else ""
+            except UnicodeDecodeError:
+                case_name_safe = "Case with encoding issue"
+                case_number_safe = str(case_id)
+                case_url_safe = case_url if case_url else ""
+                
+            print(f"\nProcessing Case: {case_number_safe} - {case_name_safe} - {case_url_safe}")
+            log_id = log_message(cursor, context["fk_task_run"], "INFO", f"Reviewing case: {case_name_safe}", fk_case=fk_case)
             cursor.execute("UPDATE dbo.cases SET fk_task_run_log = ? WHERE id = ?", (log_id, case_id))
             conn.commit()
 
             try:
-                driver.get(case_url)
+                driver.get(case_url_safe)
                 human_pause(3, 5)
-                log_message(cursor, context["fk_task_run"], "INFO", f"Loaded case URL: {case_url}", fk_case=fk_case)
+                log_message(cursor, context["fk_task_run"], "INFO", f"Loaded case URL: {case_url_safe}", fk_case=fk_case)
                 print("Loaded case URL")
                 driver.find_element(By.PARTIAL_LINK_TEXT, "Docket Report").click()
                 human_pause(2, 3)
@@ -266,8 +320,8 @@ def main():
                 else:
                     print("Gemini returned no summary.")
             except Exception as e:
-                log_message(cursor, context["fk_task_run"], "ERROR", f"Failed to summarize case {case_number}: {e}", fk_case=fk_case)
-                print(f"Error processing case {case_number}: {e}")
+                log_message(cursor, context["fk_task_run"], "ERROR", f"Failed to summarize case {case_number_safe}: {e}", fk_case=fk_case)
+                print(f"Error processing case {case_number_safe}: {e}")
                 continue
     finally:
         driver.quit()

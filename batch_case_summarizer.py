@@ -119,7 +119,7 @@ def run_summarizer(case_id):
             result = subprocess.run(
                 [
                     "python",
-                    r"\\10.146.176.84\general\docketwatch\python\pacer_case_summarizer.py",
+                    r"\\10.146.176.84\general\docketwatch\python\pacer_case_event_pdf_summarizer.py",
                     "--case-id",
                     str(case_id)
                 ],

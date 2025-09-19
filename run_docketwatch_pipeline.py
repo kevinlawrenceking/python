@@ -12,7 +12,7 @@ LOG_FILE        = r"\\10.146.176.84\general\docketwatch\python\logs\run_docketwa
 EXTRACT_SCRIPT  = r"U:\\docketwatch\\python\\extract_pacer_pdf_metadata.py"
 PDF_SCRIPT      = r"U:\\docketwatch\\python\\process_pacer_event_pdf.py"
 FINALIZE_SCRIPT = r"U:\\docketwatch\\python\\summarize_case_event_ai.py"
-CASE_SUMMARIZER = r"U:\\docketwatch\\python\\pacer_case_summarizer.py"
+CASE_SUMMARIZER = r"U:\\docketwatch\\python\\pacer_case_event_pdf_summarizer.py"
 
 logging.basicConfig(
     filename=LOG_FILE,
