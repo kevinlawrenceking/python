@@ -289,8 +289,30 @@ WHERE p.doc_uid = ?
     conn.commit()
     cur.close(); conn.close()
 
+def get_default_doc_uid():
+    """Get the latest document that needs summarization."""
+    conn, cur = get_cursor()
+    try:
+        cur.execute("""
+            SELECT doc_uid AS default_doc_uid 
+            FROM docketwatch.dbo.documents 
+            WHERE pdf_type <> 'Filing' AND summary_ai IS NULL AND fk_tool = 2 AND pdf_url IS NOT NULL
+            ORDER BY date_downloaded DESC
+        """)
+        row = cur.fetchone()
+        return row.default_doc_uid if row else None
+    finally:
+        conn.close()
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python pacer_case_event_pdf_summarizer.py <doc_uid>")
+        # No argument supplied, find the default document to process
+        default_doc_uid = get_default_doc_uid()
+        if default_doc_uid:
+            print(f"No doc_uid argument supplied. Processing latest unsummarized document: {default_doc_uid}")
+            process_single_pdf(default_doc_uid)
+        else:
+            print("No unsummarized documents found.")
+            print("Usage: python summarize_document_event.py <doc_uid>")
     else:
         process_single_pdf(sys.argv[1])
