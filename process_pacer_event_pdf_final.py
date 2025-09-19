@@ -111,7 +111,7 @@ def main():
             "profile.default_content_setting_values.automatic_downloads": 1
         }
         opts.add_experimental_option("prefs", prefs)
-        driver = webdriver.Chrome(options=opts)
+        driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
         wait = WebDriverWait(driver, 15)
 
         # Login

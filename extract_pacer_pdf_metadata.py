@@ -152,7 +152,7 @@ def main():
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
-        driver = webdriver.Chrome(options=opts)
+        driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
         wait = WebDriverWait(driver, 15)
 
         # Login

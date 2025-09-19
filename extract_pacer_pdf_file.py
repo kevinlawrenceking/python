@@ -110,14 +110,27 @@ def main():
 
         log_message(cursor, fk_task_run, "INFO", "Initializing Chrome WebDriver")
         
+        # Create unique user data directory to avoid conflicts with multiple instances
+        unique_id = str(uuid.uuid4())[:8]
+        temp_user_data_dir = os.path.join(tempfile.gettempdir(), f"chrome_user_data_{unique_id}")
+        
         opts = Options()
-        opts.add_argument("--headless=new")
+        #opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
+        opts.add_argument("--disable-extensions")
+        opts.add_argument("--disable-plugins")
+        opts.add_argument("--disable-images")
+        opts.add_argument("--disable-javascript")
+        opts.add_argument(f"--user-data-dir={temp_user_data_dir}")
+        opts.add_argument("--disable-web-security")
+        opts.add_argument("--allow-running-insecure-content")
+        
+        log_message(cursor, fk_task_run, "INFO", f"Using unique Chrome profile: {temp_user_data_dir}")
         
         # Remove automatic download preferences - we'll handle downloads manually
-        driver = webdriver.Chrome(options=opts)
+        driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
         wait = WebDriverWait(driver, 15)
         log_message(cursor, fk_task_run, "INFO", "Chrome WebDriver initialized")
 
