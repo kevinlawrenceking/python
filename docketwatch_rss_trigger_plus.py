@@ -268,19 +268,52 @@ def trigger_combined_pdf_processor(case_event_id: int):
 # =========================
 
 def create_chrome_driver():
-    """Create a Chrome WebDriver instance with appropriate options"""
+    """Create a Chrome WebDriver instance with enhanced stability options"""
     chrome_options = Options()
+    # Core stability options
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins")
-    # Uncomment for headless mode (but may cause issues)
-    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")  # Enable headless for stability
+    
+    # Enhanced stability options
+    chrome_options.add_argument("--disable-background-timer-throttling")
+    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
+    chrome_options.add_argument("--disable-renderer-backgrounding")
+    chrome_options.add_argument("--disable-features=TranslateUI")
+    chrome_options.add_argument("--disable-ipc-flooding-protection")
+    chrome_options.add_argument("--no-first-run")
+    chrome_options.add_argument("--no-default-browser-check")
+    chrome_options.add_argument("--disable-logging")
+    chrome_options.add_argument("--disable-default-apps")
+    chrome_options.add_argument("--disable-background-networking")
+    chrome_options.add_argument("--disable-sync")
+    chrome_options.add_argument("--metrics-recording-only")
+    chrome_options.add_argument("--no-experiments")
+    
+    # Memory management
+    chrome_options.add_argument("--memory-pressure-off")
+    chrome_options.add_argument("--max_old_space_size=4096")
+    
+    # User agent to avoid detection
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
     
     service = Service(CHROMEDRIVER_PATH)
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    return driver
+    
+    # Enhanced service configuration
+    service.log_path = "NUL"  # Disable logging on Windows
+    
+    try:
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        # Set shorter timeouts to fail faster instead of hanging
+        driver.set_page_load_timeout(30)
+        driver.implicitly_wait(10)
+        return driver
+    except Exception as e:
+        log_message(cursor, fk_task_run, "ERROR", f"Failed to create Chrome driver: {e}")
+        return None
 
 def login_to_pacer(driver, court_url):
     """Login to PACER for a specific court"""
