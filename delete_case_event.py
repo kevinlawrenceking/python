@@ -26,12 +26,20 @@ from pathlib import Path
 
 def main():
     parser = argparse.ArgumentParser(description='Delete case event and associated data')
-    parser.add_argument('case_event_id', type=int, help='Case Event ID to delete')
+    parser.add_argument('case_event_id', type=str, help='Case Event ID (GUID) to delete')
     parser.add_argument('--include-rss', action='store_true', help='Also delete RSS feed entries')
     parser.add_argument('--dry-run', action='store_true', help='Show what would be deleted without actually deleting')
     args = parser.parse_args()
 
-    case_event_id = args.case_event_id
+    case_event_id = args.case_event_id.strip()
+    
+    # Validate GUID format
+    import re
+    guid_pattern = r'^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    if not re.match(guid_pattern, case_event_id):
+        print(f"❌ Invalid GUID format: {case_event_id}")
+        print(f"   Expected format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX")
+        return
     
     try:
         # Connect to database

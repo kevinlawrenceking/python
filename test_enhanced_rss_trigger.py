@@ -1,14 +1,115 @@
 #!/usr/bin/env python3
 """
-Test script for the enhanced RSS trigger plus functionality
+Test Enhanced RSS Trigger
+
+This script tests the enhanced RSS trigger functionality using a known case event.
+It simulates the enhanced processing workflow without actually monitoring RSS feeds.
+
+Usage:
+    python test_enhanced_rss_trigger.py [case_event_id]
+
+If no case_event_id is provided, it will find a recent case event for testing.
 """
+
+import sys
+import os
 import pyodbc
+from datetime import datetime
 
-print("=== Testing Enhanced RSS Trigger Plus ===")
+# Add the current directory to Python path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-try:
-    # Test database connection
-    conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
+from scraper_base import log_message
+from error_notification_system import create_error_notifier
+
+def get_test_case_event(cursor):
+    """Get a recent case event for testing"""
+    cursor.execute("""
+        SELECT TOP 1 
+            ce.id as case_event_id,
+            c.case_name,
+            ce.event_no,
+            ce.event_description,
+            ce.event_url
+        FROM docketwatch.dbo.case_events ce
+        INNER JOIN docketwatch.dbo.cases c ON c.id = ce.fk_cases
+        WHERE ce.event_url IS NOT NULL
+        AND c.fk_tool = 2  -- PACER cases only
+        ORDER BY ce.event_date DESC
+    """)
+    
+    result = cursor.fetchone()
+    if result:
+        return {
+            'case_event_id': result[0],
+            'case_name': result[1],
+            'event_no': result[2],
+            'event_description': result[3],
+            'event_url': result[4]
+        }
+    return None
+
+def test_pdf_download(case_event_id, cursor, fk_task_run):
+    """Test PDF download functionality"""
+    print(f"\n📄 Testing PDF download for case event {case_event_id}...")
+    
+    try:
+        # Import the download function from our enhanced script
+        from docketwatch_rss_trigger_enhanced import download_pdfs_for_case_event
+        
+        success, paths, error = download_pdfs_for_case_event(case_event_id, cursor, fk_task_run)
+        
+        if success:
+            print(f"✅ PDF download successful!")
+            if paths:
+                print(f"   Downloaded {len(paths)} files:")
+                for path in paths:
+                    print(f"   📎 {path}")
+            else:
+                print("   No PDFs found to download")
+            return True
+        else:
+            print(f"❌ PDF download failed: {error}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ PDF download test error: {e}")
+        return False
+
+def test_summarization(case_event_id, cursor, fk_task_run):
+    """Test document summarization functionality"""
+    print(f"\n🧠 Testing summarization for case event {case_event_id}...")
+    
+    try:
+        # Import the summarization function from our enhanced script
+        from docketwatch_rss_trigger_enhanced import summarize_documents_for_case_event
+        
+        success, summary, error = summarize_documents_for_case_event(case_event_id, cursor, fk_task_run)
+        
+        if success:
+            print(f"✅ Summarization successful!")
+            if summary:
+                print(f"   Summary preview: {summary[:200]}...")
+            else:
+                print("   No summary generated (no documents requiring summarization)")
+            return True
+        else:
+            print(f"❌ Summarization failed: {error}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Summarization test error: {e}")
+        return False
+
+def main():
+    """Main test function"""
+    print("=" * 60)
+    print("         ENHANCED RSS TRIGGER TEST")
+    print("=" * 60)
+    
+    # Connect to database
+    try:
+        conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
     cursor = conn.cursor()
     print("✓ Database connection successful")
     

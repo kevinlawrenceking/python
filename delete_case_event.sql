@@ -1,8 +1,8 @@
 -- Delete Case Event and Associated Data
--- Replace the ID in each query with your actual case event ID
+-- Replace the GUID with your actual case event ID
 
 -- STEP 1: Show what will be deleted (run this first to verify)
-DECLARE @case_event_id INT = 12345;  -- CHANGE THIS TO YOUR CASE EVENT ID
+DECLARE @case_event_id UNIQUEIDENTIFIER = '6107341A-75EE-4673-A37C-ECBE8E2A5A44';  -- CHANGE THIS TO YOUR CASE EVENT GUID
 
 SELECT 
     'CASE EVENT' AS type, 
