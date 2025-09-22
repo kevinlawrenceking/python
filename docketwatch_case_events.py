@@ -153,10 +153,10 @@ try:
                     EC.element_to_be_clickable((By.ID, "recaptcha-verify-button"))
                 )
                 verify_button.click()
-            log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
-            time.sleep(2)
-        except:
-            log_message("INFO", "No 'Verify' button found, proceeding.")
+                log_message("INFO", "Clicked reCAPTCHA 'Verify' button.")
+                time.sleep(2)
+            except:
+                log_message("INFO", "No 'Verify' button found, proceeding.")
 
     except Exception as e:
         log_message("ERROR", f"Error injecting CAPTCHA solution: {e}")

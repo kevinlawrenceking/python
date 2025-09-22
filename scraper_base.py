@@ -774,8 +774,7 @@ def update_case_records(cursor, case_id, case_number, case_name, TOOL_ID, fk_cou
             status = 'Tracked',
             fk_court = ?,
             case_type = ?,
-            fk_task_run_log = ?,
-            last_updated = GETDATE()
+            fk_task_run_log = ?
         WHERE id = ?
     """, (case_number, case_name, TOOL_ID, fk_court, case_type, fk_task_run, case_id))
     # Update tool-specific case record
@@ -787,7 +786,6 @@ def update_case_records(cursor, case_id, case_number, case_name, TOOL_ID, fk_cou
             case_name = ?,
             case_url = ?,
             is_tracked = 1,
-            last_updated = GETDATE(),
             fk_task_run_log = ?
         WHERE id = ?
     """, (TOOL_ID, case_number, case_name, current_url, fk_task_run, case_id))
