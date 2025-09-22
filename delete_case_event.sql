@@ -1,50 +1,68 @@
 -- Delete Case Event and Associated Data
--- Replace @case_event_id with the actual case event ID
+-- Replace the ID in each query with your actual case event ID
 
-DECLARE @case_event_id INT = 12345;  -- CHANGE THIS
+-- STEP 1: Show what will be deleted (run this first to verify)
+DECLARE @case_event_id INT = 12345;  -- CHANGE THIS TO YOUR CASE EVENT ID
 
--- Show what will be deleted (run this first)
-SELECT 'CASE EVENT' AS type, ce.id, ce.event_no, ce.event_description, c.case_name
+SELECT 
+    'CASE EVENT' AS type, 
+    ce.id AS case_event_id,
+    ce.event_no, 
+    ce.event_description, 
+    c.case_name,
+    ce.status
 FROM docketwatch.dbo.case_events ce
 JOIN docketwatch.dbo.cases c ON ce.fk_cases = c.id
 WHERE ce.id = @case_event_id
 
 UNION ALL
 
-SELECT 'DOCUMENT' AS type, d.doc_uid, d.pdf_title, d.rel_path, CAST(d.file_size AS NVARCHAR)
+SELECT 
+    'DOCUMENT' AS type,
+    CAST(d.doc_uid AS NVARCHAR) AS case_event_id,
+    d.pdf_title AS event_no,
+    d.rel_path AS event_description,
+    CAST(d.file_size AS NVARCHAR) AS case_name,
+    CASE WHEN d.rel_path IS NOT NULL THEN 'Has File Path' ELSE 'No File Path' END AS status
 FROM docketwatch.dbo.documents d
 WHERE d.fk_case_event = @case_event_id;
 
--- After confirming above results, run these DELETE statements:
+-- STEP 2: Delete statements (run after confirming above)
+-- Since case_event_id is unique, these are simple direct deletes:
 
--- 1. Delete documents first (due to foreign key)
+-- Delete documents first (foreign key constraint)
 DELETE FROM docketwatch.dbo.documents 
 WHERE fk_case_event = @case_event_id;
 
--- 2. Delete case event
+-- Delete the case event (unique ID)
 DELETE FROM docketwatch.dbo.case_events 
 WHERE id = @case_event_id;
 
--- 3. Optional: Delete RSS entries for this event
--- (Only if you want to remove the RSS trigger record too)
-/*
-DELETE FROM docketwatch.dbo.rss_feed_entries 
-WHERE pacer_id IN (
-    SELECT pacer_id FROM docketwatch.dbo.cases c
-    JOIN docketwatch.dbo.case_events ce ON c.id = ce.fk_cases
-    WHERE ce.id = @case_event_id
-) AND event_no = (
-    SELECT event_no FROM docketwatch.dbo.case_events WHERE id = @case_event_id
-);
-*/
-
--- Verify deletion
-SELECT 'Remaining case events' AS check_type, COUNT(*) AS count
+-- STEP 3: Verify deletion (should return 0 for both)
+SELECT 
+    'Case Events Remaining' AS item,
+    COUNT(*) AS count
 FROM docketwatch.dbo.case_events 
 WHERE id = @case_event_id
 
 UNION ALL
 
-SELECT 'Remaining documents' AS check_type, COUNT(*) AS count
+SELECT 
+    'Documents Remaining' AS item,
+    COUNT(*) AS count
 FROM docketwatch.dbo.documents 
 WHERE fk_case_event = @case_event_id;
+
+-- OPTIONAL: Delete RSS entries (only if you want to remove the original RSS trigger too)
+/*
+-- Get event details first
+SELECT ce.event_no, c.pacer_id, c.case_name
+FROM docketwatch.dbo.case_events ce
+JOIN docketwatch.dbo.cases c ON ce.fk_cases = c.id
+WHERE ce.id = @case_event_id;
+
+-- Then delete RSS entry (if exists)
+DELETE FROM docketwatch.dbo.rss_feed_entries 
+WHERE pacer_id = [PACER_ID_FROM_ABOVE] 
+  AND event_no = [EVENT_NO_FROM_ABOVE];
+*/
