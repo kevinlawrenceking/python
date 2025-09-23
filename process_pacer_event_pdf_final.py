@@ -1,4 +1,6 @@
 import sys, argparse, pyodbc, os, time, traceback, zipfile, re
+import requests
+from urllib.parse import urljoin, urlparse
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -11,6 +13,223 @@ from scraper_base import log_message, setup_logging, get_db_cursor, get_task_con
 
 CHROMEDRIVER_PATH = "C:/WebDriver/chromedriver.exe"
 FINAL_PDF_DIR = r"\\10.146.176.84\general\docketwatch\docs\cases"
+
+
+def download_pacer_pdf_from_purchased_doc(driver, doc_url, out_path, cursor, fk_task_run):
+    """
+    Download PDF for already-purchased documents using the doc1 URL with download=1 parameter.
+    This avoids the 'Cannot redisplay' error by forcing file download instead of inline viewing.
+    """
+    try:
+        # Extract base URL from doc_url
+        parsed = urlparse(doc_url)
+        base_url = f"{parsed.scheme}://{parsed.netloc}"
+        
+        # Add download=1 parameter to force file download
+        if "download=1" not in doc_url:
+            sep = "&" if ("?" in doc_url) else "?"
+            doc_url = f"{doc_url}{sep}download=1"
+        
+        log_message(cursor, fk_task_run, "INFO", f"Downloading already-purchased PDF from: {doc_url}")
+        
+        # Copy Selenium cookies to a requests.Session
+        session = requests.Session()
+        user_agent = driver.execute_script("return navigator.userAgent;")
+        
+        for cookie in driver.get_cookies():
+            # PACER cookies are scoped to ecf.* domains
+            session.cookies.set(
+                cookie["name"], 
+                cookie["value"], 
+                domain=cookie.get("domain") or parsed.hostname
+            )
+        
+        # Fetch PDF with proper headers
+        response = session.get(
+            doc_url, 
+            headers={
+                "User-Agent": user_agent, 
+                "Referer": driver.current_url
+            }, 
+            stream=True, 
+            allow_redirects=True
+        )
+        
+        # Check if we got PDF content
+        content_type = response.headers.get("Content-Type", "")
+        if "application/pdf" not in content_type:
+            # If we got HTML (interstitial page), look for iframe or redirect
+            text = response.text
+            iframe_match = re.search(r'<iframe[^>]+src="([^"]*?/doc1/[^"]+)"', text, re.I)
+            href_match = re.search(r'href="([^"]*?/doc1/[^"]+)"', text, re.I)
+            
+            if iframe_match or href_match:
+                next_url = urljoin(response.url, (iframe_match or href_match).group(1))
+                if "download=1" not in next_url:
+                    sep = "&" if ("?" in next_url) else "?"
+                    next_url = f"{next_url}{sep}download=1"
+                
+                log_message(cursor, fk_task_run, "INFO", f"Following redirect to: {next_url}")
+                response = session.get(
+                    next_url, 
+                    headers={
+                        "User-Agent": user_agent, 
+                        "Referer": response.url
+                    }, 
+                    stream=True, 
+                    allow_redirects=True
+                )
+                content_type = response.headers.get("Content-Type", "")
+        
+        if "application/pdf" not in content_type:
+            raise RuntimeError(f"Expected PDF, got {content_type}. Response: {response.text[:500]}")
+        
+        # Save PDF file
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        with open(out_path, "wb") as f:
+            for chunk in response.iter_content(1024 * 64):
+                if chunk:
+                    f.write(chunk)
+        
+        log_message(cursor, fk_task_run, "INFO", f"Successfully downloaded PDF to: {out_path}")
+        return out_path
+        
+    except Exception as e:
+        log_message(cursor, fk_task_run, "ERROR", f"Error downloading purchased PDF: {str(e)}")
+        raise
+
+
+def download_pdf_by_clicking_download_button(driver, doc_url, dest_path, cursor, fk_task_run):
+    """
+    Navigate to the PDF viewer page and click the download button.
+    This is more reliable than trying to extract URLs from iframes.
+    """
+    try:
+        log_message(cursor, fk_task_run, "INFO", f"Navigating to PDF page and looking for download button: {doc_url}")
+        
+        # Navigate to the document URL
+        driver.get(doc_url)
+        time.sleep(3)
+        
+        # Handle any CSRF protection or billing confirmation pages
+        page_source = driver.page_source.lower()
+        
+        # Check for CSRF form
+        if "referrer must match" in page_source or "csrf" in page_source:
+            log_message(cursor, fk_task_run, "INFO", "CSRF protection page detected - submitting form")
+            try:
+                submit_button = driver.find_element(By.XPATH, "//input[@type='submit']")
+                submit_button.click()
+                time.sleep(3)
+                log_message(cursor, fk_task_run, "INFO", "CSRF form submitted successfully")
+            except Exception as e:
+                log_message(cursor, fk_task_run, "WARNING", f"Could not handle CSRF form: {e}")
+        
+        # Check for billing confirmation page with "View Document" button
+        if "view document" in driver.page_source.lower():
+            log_message(cursor, fk_task_run, "INFO", "PACER billing confirmation page detected - clicking View Document")
+            try:
+                view_button = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.XPATH, "//input[@value='View Document']"))
+                )
+                log_message(cursor, fk_task_run, "INFO", f"Found View Document button with selector: //input[@value='View Document']")
+                view_button.click()
+                time.sleep(3)
+                log_message(cursor, fk_task_run, "INFO", "View Document button clicked successfully")
+            except Exception as e:
+                log_message(cursor, fk_task_run, "WARNING", f"Could not find/click View Document button: {e}")
+        
+        # Now we should be on the PDF viewer page - look for download button
+        time.sleep(2)  # Let the page load
+        
+        # Try multiple possible download button selectors
+        download_selectors = [
+            "//a[contains(@href, 'download') or contains(text(), 'Download')]",
+            "//button[contains(text(), 'Download') or contains(@title, 'Download')]",
+            "//input[@type='submit'][contains(@value, 'Download')]",
+            "//a[contains(@class, 'download')]",
+            "//span[contains(text(), 'Download')]/parent::*",
+            "//*[contains(@onclick, 'download')]"
+        ]
+        
+        download_clicked = False
+        for selector in download_selectors:
+            try:
+                download_element = driver.find_element(By.XPATH, selector)
+                log_message(cursor, fk_task_run, "INFO", f"Found download element with selector: {selector}")
+                log_message(cursor, fk_task_run, "INFO", f"Element text: '{download_element.text}', tag: {download_element.tag_name}")
+                
+                # Click the download button/link
+                driver.execute_script("arguments[0].click();", download_element)
+                log_message(cursor, fk_task_run, "INFO", "Download button clicked via JavaScript")
+                download_clicked = True
+                break
+                
+            except Exception as e:
+                log_message(cursor, fk_task_run, "DEBUG", f"Selector {selector} failed: {e}")
+                continue
+        
+        if not download_clicked:
+            # If no download button found, try to save the current page if it's a PDF
+            current_url = driver.current_url
+            if current_url.endswith('.pdf') or 'application/pdf' in driver.page_source:
+                log_message(cursor, fk_task_run, "INFO", "No download button found, but current page appears to be PDF - saving directly")
+                # Use requests to download the PDF using session cookies
+                session = requests.Session()
+                for cookie in driver.get_cookies():
+                    session.cookies.set(cookie["name"], cookie["value"])
+                
+                response = session.get(current_url, stream=True)
+                if response.headers.get('Content-Type', '').startswith('application/pdf'):
+                    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                    with open(dest_path, 'wb') as f:
+                        for chunk in response.iter_content(1024):
+                            f.write(chunk)
+                    log_message(cursor, fk_task_run, "INFO", f"PDF downloaded directly from current URL to: {dest_path}")
+                    return dest_path
+                else:
+                    raise RuntimeError("Current page is not a PDF and no download button found")
+            else:
+                # Save debug information
+                debug_path = dest_path.replace('.pdf', '_debug.html')
+                with open(debug_path, 'w', encoding='utf-8') as f:
+                    f.write(driver.page_source)
+                log_message(cursor, fk_task_run, "INFO", f"Saved debug HTML to: {debug_path}")
+                raise RuntimeError("No download button found and current page is not a PDF")
+        
+        # Wait for the download to complete
+        time.sleep(5)
+        
+        # Check if the file was downloaded to the default download directory
+        downloads_dir = os.path.expanduser("~/Downloads")
+        possible_files = [
+            os.path.join(downloads_dir, os.path.basename(dest_path)),
+            os.path.join(downloads_dir, f"document.pdf"),
+            os.path.join(downloads_dir, f"download.pdf")
+        ]
+        
+        # Look for any recently downloaded PDF files
+        if os.path.exists(downloads_dir):
+            pdf_files = [f for f in os.listdir(downloads_dir) if f.endswith('.pdf')]
+            pdf_files.sort(key=lambda x: os.path.getmtime(os.path.join(downloads_dir, x)), reverse=True)
+            
+            if pdf_files:
+                latest_pdf = os.path.join(downloads_dir, pdf_files[0])
+                # Check if this file was created in the last 30 seconds
+                if time.time() - os.path.getmtime(latest_pdf) < 30:
+                    # Move the file to the destination
+                    os.makedirs(os.path.dirname(dest_path), exist_ok=True)
+                    if os.path.exists(dest_path):
+                        os.remove(dest_path)
+                    os.rename(latest_pdf, dest_path)
+                    log_message(cursor, fk_task_run, "INFO", f"Successfully downloaded PDF via download button to: {dest_path}")
+                    return dest_path
+        
+        raise RuntimeError("Download button was clicked but no PDF file was found")
+        
+    except Exception as e:
+        log_message(cursor, fk_task_run, "ERROR", f"Error downloading PDF via download button: {str(e)}")
+        raise
 
 
 def extract_doc_rows(soup):
@@ -181,6 +400,107 @@ def main():
             conn.commit()
             log_message(cursor, fk_task_run, "INFO", f"Inserted metadata for {inserted} documents.")
 
+        # Check for purchased documents that need special handling
+        cursor.execute("""
+            SELECT doc_uid, doc_id, pdf_url, pdf_title, fk_case
+            FROM docketwatch.dbo.documents 
+            WHERE fk_case_event = ? AND rel_path = 'purchased_pending'
+        """, (args.case_event_id,))
+        purchased_docs = cursor.fetchall()
+        
+        if purchased_docs:
+            log_message(cursor, fk_task_run, "INFO", f"Found {len(purchased_docs)} already-purchased documents to download")
+            
+            # Initialize Chrome WebDriver with download settings for purchased docs
+            chrome_options = Options()
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+            chrome_options.add_argument("--disable-gpu")
+            chrome_options.add_argument("--window-size=1920,1080")
+            
+            # Download preferences
+            prefs = {
+                "download.default_directory": FINAL_PDF_DIR,
+                "download.prompt_for_download": False,
+                "download.directory_upgrade": True,
+                "profile.default_content_setting_values.automatic_downloads": 1
+            }
+            chrome_options.add_experimental_option("prefs", prefs)
+            
+            service = Service(CHROMEDRIVER_PATH)
+            driver = webdriver.Chrome(service=service, options=chrome_options)
+            
+            try:
+                # Login to PACER
+                driver.get("https://pacer.login.uscourts.gov/csologin/login.jsf")
+                time.sleep(3)
+                
+                # Get PACER credentials
+                cursor.execute("SELECT username, password FROM docketwatch.dbo.pacer_login WHERE login_url = ?", 
+                             ("https://pacer.login.uscourts.gov/csologin/login.jsf",))
+                creds = cursor.fetchone()
+                if not creds:
+                    raise RuntimeError("No PACER credentials found")
+                
+                # Login
+                username_field = driver.find_element(By.ID, "loginForm:loginName")
+                password_field = driver.find_element(By.ID, "loginForm:password")
+                username_field.send_keys(creds.username)
+                password_field.send_keys(creds.password)
+                
+                # Enter client code
+                try:
+                    client_code_field = driver.find_element(By.ID, "loginForm:clientCode")
+                    client_code_field.send_keys("DocketWatch")
+                    log_message(cursor, fk_task_run, "INFO", "Client code 'DocketWatch' entered")
+                except:
+                    log_message(cursor, fk_task_run, "WARNING", "Client code field not found")
+                
+                login_button = driver.find_element(By.ID, "loginForm:loginButton")
+                login_button.click()
+                time.sleep(5)
+                log_message(cursor, fk_task_run, "INFO", "PACER login completed for purchased document downloads")
+                
+                # Process each purchased document
+                for doc in purchased_docs:
+                    doc_uid = doc.doc_uid
+                    doc_id = doc.doc_id
+                    pdf_url = doc.pdf_url
+                    pdf_title = doc.pdf_title
+                    fk_case = doc.fk_case
+                    
+                    filename = f"E{doc_id}.pdf"
+                    case_dir = os.path.join(FINAL_PDF_DIR, str(fk_case))
+                    os.makedirs(case_dir, exist_ok=True)
+                    dest_path = os.path.join(case_dir, filename)
+                    
+                    try:
+                        log_message(cursor, fk_task_run, "INFO", f"Downloading purchased document {doc_id} from: {pdf_url}")
+                        
+                        # Use the new function to download purchased document
+                        downloaded_path = download_pacer_pdf_from_purchased_doc(driver, pdf_url, dest_path, cursor, fk_task_run)
+                        
+                        if downloaded_path and os.path.exists(downloaded_path):
+                            # Update database with successful download
+                            rel_path = f"cases\\{fk_case}\\{filename}"
+                            cursor.execute("""
+                                UPDATE docketwatch.dbo.documents 
+                                SET rel_path = ?, date_downloaded = GETDATE()
+                                WHERE doc_uid = ?
+                            """, (rel_path, doc_uid))
+                            conn.commit()
+                            log_message(cursor, fk_task_run, "INFO", f"Successfully downloaded and updated {filename}")
+                        else:
+                            log_message(cursor, fk_task_run, "ERROR", f"Failed to download {filename}")
+                            
+                    except Exception as e:
+                        log_message(cursor, fk_task_run, "ERROR", f"Error downloading purchased document {doc_id}: {str(e)}")
+                        continue
+                        
+            finally:
+                driver.quit()
+                log_message(cursor, fk_task_run, "INFO", "Completed purchased document downloads")
+
         # Now query for those documents with rel_path = 'pending' and download the actual PDFs
         cursor.execute("""
          
@@ -253,12 +573,39 @@ def main():
                     except Exception as e:
                         log_message(cursor, fk_task_run, "ERROR", f"CSRF form submission failed: {str(e)}")
 
+                # Check if we're on a PDF viewer page (after transaction receipt/View Document)
+                page_source_lower = driver.page_source.lower()
+                if ("iframe" in page_source_lower and "pdf" in page_source_lower) or "view document" in page_source_lower:
+                    log_message(cursor, fk_task_run, "INFO", f"Detected PDF viewer page for {filename} - trying download button approach")
+                    try:
+                        # Try the new download button approach first
+                        downloaded_path = download_pdf_by_clicking_download_button(driver, driver.current_url, dest_path, cursor, fk_task_run)
+                        if downloaded_path and os.path.exists(downloaded_path):
+                            file_size = os.path.getsize(downloaded_path)
+                            if file_size >= 2048:  # Valid PDF size
+                                rel_path = f"cases\\{fk_case}\\{filename}"
+                                cursor.execute("""
+                                    UPDATE docketwatch.dbo.documents
+                                    SET rel_path = ?, date_downloaded = GETDATE()
+                                    WHERE doc_uid = ?
+                                """, (rel_path, doc_uid))
+                                conn.commit()
+                                log_message(cursor, fk_task_run, "INFO", f"Successfully downloaded via download button: {filename} ({file_size} bytes)")
+                                continue  # Move to next document
+                            else:
+                                log_message(cursor, fk_task_run, "WARNING", f"Downloaded file too small via download button: {filename} ({file_size} bytes)")
+                                os.remove(downloaded_path)
+                    except Exception as e:
+                        log_message(cursor, fk_task_run, "WARNING", f"Download button approach failed for {filename}: {str(e)}")
+                        log_message(cursor, fk_task_run, "INFO", f"Falling back to traditional ZIP download method for {filename}")
+
+                # Traditional ZIP download method (fallback)
                 try:
                     download_button = driver.find_element(By.XPATH, "//input[@type='button' and @value='Download Documents']")
                     driver.execute_script("arguments[0].click();", download_button)
                     time.sleep(3)
                 except:
-                    log_message(cursor, fk_task_run, "WARNING", f"Download button not found for {filename}")
+                    log_message(cursor, fk_task_run, "WARNING", f"ZIP download button not found for {filename}")
 
                 zip_file = None
                 start_time = time.time()

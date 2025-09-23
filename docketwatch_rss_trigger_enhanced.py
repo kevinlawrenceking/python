@@ -77,7 +77,8 @@ ENABLE_PDF_DOWNLOAD = True
 ENABLE_SUMMARIZATION = True
 
 # Paths to supporting scripts
-PDF_PROCESSOR_SCRIPT = r"u:\docketwatch\python\combined_pacer_pdf_vprocessor.py"
+METADATA_EXTRACTOR_SCRIPT = r"u:\docketwatch\python\extract_pacer_pdf_metadata.py"
+PDF_PROCESSOR_SCRIPT = r"u:\docketwatch\python\extract_pacer_pdf_file.py"  # Use the original working script
 SUMMARIZER_SCRIPT = r"u:\docketwatch\python\summarize_document_event.py"
 
 # Processing timeouts
@@ -153,7 +154,7 @@ def send_enhanced_docket_email(case_name, case_url, event_no, cleaned_docket_tex
 
 def download_pdfs_for_case_event(case_event_id, cursor, fk_task_run):
     """
-    Download PDFs for a specific case event using the combined processor
+    Download PDFs for a specific case event using the proven omega approach
     
     Returns:
         tuple: (success, downloaded_paths, error_message)
@@ -162,26 +163,54 @@ def download_pdfs_for_case_event(case_event_id, cursor, fk_task_run):
         return True, [], "PDF download disabled"
     
     try:
-        log_message(cursor, fk_task_run, "INFO", f"Starting PDF download for case event {case_event_id}")
+        log_message(cursor, fk_task_run, "INFO", f"Starting omega approach PDF processing for case event {case_event_id}")
         
-        # Use the existing combined PDF processor
-        cmd = [
+        # STEP 1: Always run metadata extraction first (omega approach)
+        log_message(cursor, fk_task_run, "INFO", f"Step 1: Running metadata extraction for case event {case_event_id}")
+        
+        cmd1 = [
+            "python", 
+            METADATA_EXTRACTOR_SCRIPT, 
+            str(case_event_id)
+        ]
+        
+        result1 = subprocess.run(
+            cmd1,
+            cwd=r"u:\docketwatch\python",
+            capture_output=True,
+            text=True,
+            timeout=300  # 5 minutes
+        )
+        
+        if result1.returncode != 0:
+            error_msg = f"Metadata extraction failed: {result1.stderr}"
+            log_message(cursor, fk_task_run, "WARNING", error_msg)
+            return False, [], error_msg
+        
+        log_message(cursor, fk_task_run, "INFO", f"Metadata extraction completed for case event {case_event_id}")
+        
+        # Wait before next step (omega timing)
+        time.sleep(3)
+        
+        # STEP 2: Run PDF download (omega approach)
+        log_message(cursor, fk_task_run, "INFO", f"Step 2: Running PDF download for case event {case_event_id}")
+        
+        cmd2 = [
             "python", 
             PDF_PROCESSOR_SCRIPT, 
             str(case_event_id)
         ]
         
-        # Run the PDF processor with timeout
-        result = subprocess.run(
-            cmd,
+        result2 = subprocess.run(
+            cmd2,
             cwd=r"u:\docketwatch\python",
             capture_output=True,
             text=True,
             timeout=PDF_DOWNLOAD_TIMEOUT
         )
         
-        if result.returncode == 0:
-            log_message(cursor, fk_task_run, "INFO", f"PDF download completed for case event {case_event_id}")
+        if result2.returncode == 0:
+            log_message(cursor, fk_task_run, "INFO", f"PDF download completed using omega approach for case event {case_event_id}")
             
             # Query for downloaded documents
             cursor.execute("""
@@ -193,19 +222,19 @@ def download_pdfs_for_case_event(case_event_id, cursor, fk_task_run):
             return True, downloaded_paths, None
             
         else:
-            error_msg = f"PDF processor failed: {result.stderr}"
+            error_msg = f"PDF download failed: {result2.stderr}"
             log_message(cursor, fk_task_run, "WARNING", error_msg)
             return False, [], error_msg
             
     except subprocess.TimeoutExpired:
-        error_msg = f"PDF download timeout for case event {case_event_id}"
+        error_msg = f"PDF processing timeout for case event {case_event_id}"
         log_message(cursor, fk_task_run, "WARNING", error_msg)
         return False, [], error_msg
         
     except Exception as e:
-        error_msg = f"PDF download error for case event {case_event_id}: {e}"
+        error_msg = f"PDF processing error for case event {case_event_id}: {e}"
         log_message(cursor, fk_task_run, "ERROR", error_msg)
-        error_notifier.log_error("PDF Download Failed", error_msg, fk_task_run=fk_task_run)
+        error_notifier.log_error("PDF Processing Failed", error_msg, fk_task_run=fk_task_run)
         return False, [], error_msg
 
 def summarize_documents_for_case_event(case_event_id, cursor, fk_task_run):

@@ -25,6 +25,7 @@ cursor.execute("""
     INNER JOIN docketwatch.dbo.tools t ON t.id = c.fk_tool
     LEFT JOIN docketwatch.dbo.documents d ON ce.id = d.fk_case_event
     WHERE t.tool_name = 'Pacer'
+        AND CAST(ce.event_date AS DATE) = CAST(GETDATE() AS DATE)  -- Only today's events
         AND ce.event_url IS NOT NULL 
         AND ce.event_url != ''
         AND (
@@ -56,32 +57,78 @@ for row in case_events:
     
     print(f"\n[INFO] Processing case_event ID: {case_id} (Event {event_no}, Case {case_number}, Status: {status}, Docs: {doc_count})")
     
-    # STEP 1: Always run metadata extraction first
+    # Show the event URL for debugging
+    cursor.execute("SELECT event_url FROM docketwatch.dbo.case_events WHERE id = ?", (case_id,))
+    event_url_result = cursor.fetchone()
+    event_url = event_url_result[0] if event_url_result else "NULL"
+    print(f"[DEBUG] Event URL: {event_url}")
+    
+    # For PENDING documents, we need to refresh metadata to get fresh URLs
+    if status == 'PENDING':
+        print(f"[INFO] Document status is PENDING - will refresh metadata to get fresh URLs")
+    
+    # STEP 1: Always run metadata extraction first (especially important for PENDING docs)
     print(f"[STEP 1] Running extract_pacer_pdf_metadata.py for case_event: {case_id}")
     try:
-        subprocess.run([
-            "C:\\Program Files\\Python312\\python.exe",
+        # Force fresh session by running in completely isolated process with timeout
+        result = subprocess.run([
+            "python",
             "u:\\docketwatch\\python\\extract_pacer_pdf_metadata.py",
             str(case_id)
-        ], check=True)
+        ], check=True,
+           cwd="u:\\docketwatch\\python",  # Ensure clean working directory
+           env=None,  # Use clean environment
+           timeout=300)  # 5 minute timeout to prevent hanging
         print(f"[STEP 1] Metadata extraction completed successfully for {case_id}")
-        time.sleep(3)  # Wait before next step
+        time.sleep(5)  # Longer wait for PENDING docs to ensure fresh URLs
+        
+        # Verify that documents were actually created
+        cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE fk_case_event = ?", (case_id,))
+        doc_count_after = cursor.fetchone()[0]
+        print(f"[VERIFICATION] Documents found after metadata extraction: {doc_count_after}")
+        
+        # Check if any documents were created with 'purchased_pending' status (already-purchased documents)
+        cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE fk_case_event = ? AND rel_path = 'purchased_pending'", (case_id,))
+        purchased_pending_count = cursor.fetchone()[0]
+        
+        if purchased_pending_count > 0:
+            print(f"[INFO] Found {purchased_pending_count} already-purchased documents that need special handling")
+            print(f"[INFO] These documents will be handled by the enhanced PDF download script")
+            print(f"[INFO] The PDF download script can now properly handle transaction receipt workflows")
+        
+        if doc_count_after == 0:
+            print(f"[WARNING] No documents created by metadata extraction for case_event {case_id}")
+            print(f"[WARNING] This suggests the metadata extraction found no PDFs or failed silently")
+            continue  # Skip to next case_event since there are no documents to download
     except subprocess.CalledProcessError as e:
         print(f"[ERROR] Metadata extraction failed on case_event {case_id}: {e}")
         continue  # Skip to next case_event if metadata fails
+    except subprocess.TimeoutExpired as e:
+        print(f"[ERROR] Metadata extraction timed out on case_event {case_id}: {e}")
+        print(f"[ERROR] This suggests network issues or PACER being unresponsive")
+        continue  # Skip to next case_event if metadata times out
     
     # STEP 2: Run PDF download script
     print(f"[STEP 2] Running process_pacer_event_pdf_final.py for case_event: {case_id}")
     try:
-        subprocess.run([
-            "C:\\Program Files\\Python312\\python.exe",
+        # Force fresh session by running in completely isolated process with timeout
+        result = subprocess.run([
+            "python",
             "u:\\docketwatch\\python\\process_pacer_event_pdf_final.py",
             str(case_id)
-        ], check=True)
+        ], check=True, 
+           cwd="u:\\docketwatch\\python",  # Ensure clean working directory
+           env=None,  # Use clean environment
+           timeout=300)  # 5 minute timeout to prevent hanging
         print(f"[STEP 2] PDF download completed successfully for {case_id}")
-        time.sleep(3)  # Wait before next case_event
+        time.sleep(5)  # Longer wait to ensure session cleanup
     except subprocess.CalledProcessError as e:
         print(f"[ERROR] PDF download failed on case_event {case_id}: {e}")
+        time.sleep(2)  # Brief pause even on error
+    except subprocess.TimeoutExpired as e:
+        print(f"[ERROR] PDF download timed out on case_event {case_id}: {e}")
+        print(f"[ERROR] This suggests network issues or PACER being unresponsive")
+        time.sleep(2)  # Brief pause even on timeout
     
     print(f"[COMPLETE] Finished processing case_event {case_id}")
     print("-" * 60)

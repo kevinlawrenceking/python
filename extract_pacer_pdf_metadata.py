@@ -148,7 +148,7 @@ def main():
 
         log_message(cursor, fk_task_run, "INFO", "Initializing Chrome WebDriver for PACER login")
         opts = Options()
-        opts.add_argument("--headless=new")
+        opts.add_argument("--headless=new")  # Commented out for debugging
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
@@ -174,6 +174,28 @@ def main():
         driver.get(event_url)
         time.sleep(2)
 
+        # Handle PACER warning page for already purchased documents
+        if "The link to this page may not have originated from within CM/ECF" in driver.page_source:
+            log_message(cursor, fk_task_run, "INFO", "Detected PACER warning page for already purchased document")
+            try:
+                continue_link = driver.find_element(By.LINK_TEXT, "Continue")
+                continue_link.click()
+                time.sleep(3)
+                log_message(cursor, fk_task_run, "INFO", "Clicked 'Continue' link to proceed to document page")
+                log_message(cursor, fk_task_run, "INFO", f"Current URL after Continue: {driver.current_url}")
+                
+                # Debug: Log what page we're on now
+                if "Transaction Receipt" in driver.page_source:
+                    log_message(cursor, fk_task_run, "INFO", "Now on Transaction Receipt page")
+                elif "View Document" in driver.page_source:
+                    log_message(cursor, fk_task_run, "INFO", "Found View Document on current page")
+                else:
+                    log_message(cursor, fk_task_run, "WARNING", "Not on expected page after Continue click")
+                    log_message(cursor, fk_task_run, "DEBUG", f"Page title: {driver.title}")
+                    
+            except Exception as e:
+                log_message(cursor, fk_task_run, "ERROR", f"Failed to click Continue link: {str(e)}")
+        
         if "referrer_form" in driver.page_source:
             try:
                 driver.find_element(By.ID, "referrer_form").submit()
@@ -186,9 +208,212 @@ def main():
 
         log_message(cursor, fk_task_run, "INFO", "Parsing HTML to extract document links")
         soup = BeautifulSoup(driver.page_source, "html.parser")
+        inserted = 0  # Initialize inserted counter
+        
+        # Add detailed logging of the page content to debug detection issues
+        page_text = driver.page_source.lower()
+        log_message(cursor, fk_task_run, "DEBUG", f"Page contains 'transaction receipt': {'transaction receipt' in page_text}")
+        log_message(cursor, fk_task_run, "DEBUG", f"Page contains 'view document': {'view document' in page_text}")
+        log_message(cursor, fk_task_run, "DEBUG", f"Page contains 'continue': {'continue' in page_text}")
+        log_message(cursor, fk_task_run, "DEBUG", f"Page contains 'iframe': {'iframe' in page_text}")
+        log_message(cursor, fk_task_run, "DEBUG", f"Page contains 'show_temp.pl': {'show_temp.pl' in page_text}")
+        log_message(cursor, fk_task_run, "DEBUG", f"Page title: {driver.title}")
+        
+        # Look for the warning message about already purchased documents
+        warning_patterns = [
+            "document has been purchased by this account",
+            "you have already purchased this document",
+            "already purchased",
+            "previously purchased"
+        ]
+        has_warning = any(pattern in page_text for pattern in warning_patterns)
+        log_message(cursor, fk_task_run, "DEBUG", f"Has purchase warning: {has_warning}")
+        
+        # Check if we're on a transaction receipt page (already purchased document)
+        if "Transaction Receipt" in driver.page_source or "View Document" in driver.page_source or has_warning:
+            log_message(cursor, fk_task_run, "INFO", "Detected transaction receipt page - looking for View Document button")
+            log_message(cursor, fk_task_run, "DEBUG", f"Page title: {driver.title}")
+            log_message(cursor, fk_task_run, "DEBUG", f"Current URL: {driver.current_url}")
+            
+            # Look for View Document form or button
+            view_doc_button = soup.find("input", {"type": "submit", "value": "View Document"})
+            if view_doc_button:
+                log_message(cursor, fk_task_run, "INFO", "Found View Document button - clicking to access PDF")
+                
+                # Click the View Document button to navigate to the PDF
+                try:
+                    # Find the button element in the driver and click it
+                    button_element = driver.find_element(By.XPATH, "//input[@type='submit'][@value='View Document']")
+                    button_element.click()
+                    time.sleep(3)  # Wait for navigation
+                    
+                    log_message(cursor, fk_task_run, "INFO", f"Clicked View Document button, now on: {driver.current_url}")
+                    
+                    # Re-parse the new page
+                    soup = BeautifulSoup(driver.page_source, "html.parser")
+                    
+                    # Check if we're now on a PDF viewer page with iframe
+                    if "iframe" in driver.page_source.lower():
+                        log_message(cursor, fk_task_run, "INFO", "After View Document click: detected PDF viewer page with iframe")
+                        iframe = soup.find("iframe")
+                        if iframe and iframe.get("src"):
+                            pdf_src = iframe.get("src")
+                            if not pdf_src.startswith("http"):
+                                pdf_src = base_url + pdf_src
+                            
+                            log_message(cursor, fk_task_run, "INFO", f"Found direct PDF URL in iframe: {pdf_src}")
+                            
+                            # Extract doc_id from the current URL
+                            match = re.search(r'/doc1/(\d+)', driver.current_url)
+                            if match:
+                                doc_id = match.group(1)
+                                log_message(cursor, fk_task_run, "INFO", f"Extracted doc_id {doc_id} from current URL")
+                                
+                                # Check if document already exists
+                                cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
+                                if cursor.fetchone()[0] == 0:
+                                    # For already-purchased documents, store the original document URL 
+                                    # (not the temporary show_temp.pl URL) so it can be accessed again
+                                    # The PDF download script will need to handle the transaction receipt workflow
+                                    original_doc_url = driver.current_url  # This is the stable doc1/XXXXX URL
+                                    cursor.execute("""
+                                        INSERT INTO docketwatch.dbo.documents (
+                                            fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
+                                            pdf_title, pdf_type, pdf_no, rel_path, date_downloaded
+                                        )
+                                        VALUES (?, ?, ?, ?, ?, ?, 'Docket', 0, 'purchased_pending', GETDATE())
+                                    """, (case_id, args.case_event_id, 2, doc_id, original_doc_url, event_description))
+                                    conn.commit()
+                                    log_message(cursor, fk_task_run, "INFO", f"Inserted purchased document {doc_id} with original document URL (not temp PDF URL)")
+                                    inserted = 1
+                                else:
+                                    log_message(cursor, fk_task_run, "INFO", f"Document {doc_id} already exists in database")
+                            else:
+                                log_message(cursor, fk_task_run, "WARNING", "Could not extract doc_id from current URL after View Document click")
+                        else:
+                            log_message(cursor, fk_task_run, "WARNING", "No iframe src found after View Document click")
+                    else:
+                        log_message(cursor, fk_task_run, "WARNING", "No iframe detected after clicking View Document button")
+                        
+                except Exception as e:
+                    log_message(cursor, fk_task_run, "ERROR", f"Error clicking View Document button: {str(e)}")
+            else:
+                log_message(cursor, fk_task_run, "WARNING", "No View Document button found on transaction receipt page")
+                # Let's see what buttons/forms are available
+                all_inputs = soup.find_all("input", {"type": "submit"})
+                log_message(cursor, fk_task_run, "DEBUG", f"Found submit buttons: {[inp.get('value', 'No value') for inp in all_inputs]}")
+                all_forms = soup.find_all("form")
+                log_message(cursor, fk_task_run, "DEBUG", f"Found {len(all_forms)} forms on page")
+        
+        # Check if there's a "Continue" button instead (different already purchased flow)
+        elif "Continue" in driver.page_source and ("already" in page_text or "purchased" in page_text):
+            log_message(cursor, fk_task_run, "INFO", "Detected 'Continue' button on already purchased document page")
+            
+            # Look for Continue button and click it
+            try:
+                continue_button = driver.find_element(By.XPATH, "//input[@type='submit'][@value='Continue']")
+                if continue_button:
+                    log_message(cursor, fk_task_run, "INFO", "Clicking Continue button")
+                    continue_button.click()
+                    time.sleep(3)
+                    
+                    # Now check if we're on the PDF viewer page
+                    soup = BeautifulSoup(driver.page_source, "html.parser")
+                    if "iframe" in driver.page_source.lower():
+                        log_message(cursor, fk_task_run, "INFO", "After Continue: detected PDF viewer page with iframe")
+                        iframe = soup.find("iframe")
+                        if iframe and iframe.get("src"):
+                            pdf_src = iframe.get("src")
+                            if not pdf_src.startswith("http"):
+                                pdf_src = base_url + pdf_src
+                            
+                            log_message(cursor, fk_task_run, "INFO", f"Found direct PDF URL in iframe: {pdf_src}")
+                            
+                            # Try to extract doc_id from the original event URL
+                            match = re.search(r'/doc1/(\d+)', event_url)
+                            if match:
+                                doc_id = match.group(1)
+                                log_message(cursor, fk_task_run, "INFO", f"Extracted doc_id {doc_id} from original event URL")
+                                
+                                # Check if document already exists
+                                cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
+                                if cursor.fetchone()[0] == 0:
+                                    # For already-purchased documents, store the original event URL 
+                                    # (not the temporary show_temp.pl URL) so it can be accessed again
+                                    original_doc_url = event_url  # This is the stable doc1/XXXXX URL
+                                    cursor.execute("""
+                                        INSERT INTO docketwatch.dbo.documents (
+                                            fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
+                                            pdf_title, pdf_type, pdf_no, rel_path, date_downloaded
+                                        )
+                                        VALUES (?, ?, ?, ?, ?, ?, 'Docket', 0, 'purchased_pending', GETDATE())
+                                    """, (case_id, args.case_event_id, 2, doc_id, original_doc_url, event_description))
+                                    conn.commit()
+                                    log_message(cursor, fk_task_run, "INFO", f"Inserted purchased document {doc_id} with original document URL (not temp PDF URL)")
+                                    inserted = 1
+                                else:
+                                    log_message(cursor, fk_task_run, "INFO", f"Document {doc_id} already exists in database")
+                            else:
+                                log_message(cursor, fk_task_run, "WARNING", "Could not extract doc_id from event URL")
+                        else:
+                            log_message(cursor, fk_task_run, "WARNING", "No iframe src found after Continue")
+                    else:
+                        log_message(cursor, fk_task_run, "WARNING", "No iframe detected after clicking Continue")
+                else:
+                    log_message(cursor, fk_task_run, "WARNING", "Continue button not found despite text detection")
+            except Exception as e:
+                log_message(cursor, fk_task_run, "ERROR", f"Error clicking Continue button: {str(e)}")
+        
+        # Check if we're already on a PDF viewer page (with iframe)
+        elif "show_temp.pl" in driver.page_source and "iframe" in driver.page_source:
+            log_message(cursor, fk_task_run, "INFO", "Detected PDF viewer page with iframe - extracting direct PDF URL")
+            
+            # Look for iframe with PDF source
+            iframe = soup.find("iframe")
+            if iframe and iframe.get("src"):
+                pdf_src = iframe.get("src")
+                if not pdf_src.startswith("http"):
+                    pdf_src = base_url + pdf_src
+                
+                log_message(cursor, fk_task_run, "INFO", f"Found direct PDF URL in iframe: {pdf_src}")
+                
+                # Try to extract doc_id from the current URL (not the iframe src)
+                match = re.search(r'/doc1/(\d+)', driver.current_url)
+                if match:
+                    doc_id = match.group(1)
+                    log_message(cursor, fk_task_run, "INFO", f"Extracted doc_id {doc_id} from current URL")
+                    
+                    # Check if document already exists
+                    cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
+                    if cursor.fetchone()[0] == 0:
+                        # For already-purchased documents, store the original document URL 
+                        # (not the temporary show_temp.pl URL) so it can be accessed again
+                        original_doc_url = driver.current_url  # This is the stable doc1/XXXXX URL
+                        cursor.execute("""
+                            INSERT INTO docketwatch.dbo.documents (
+                                fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
+                                pdf_title, pdf_type, pdf_no, rel_path, date_downloaded
+                            )
+                            VALUES (?, ?, ?, ?, ?, ?, 'Docket', 0, 'purchased_pending', GETDATE())
+                        """, (case_id, args.case_event_id, 2, doc_id, original_doc_url, event_description))
+                        conn.commit()
+                        log_message(cursor, fk_task_run, "INFO", f"Inserted purchased document {doc_id} with original document URL (not temp PDF URL)")
+                        inserted = 1
+                    else:
+                        log_message(cursor, fk_task_run, "INFO", f"Document {doc_id} already exists in database")
+                    
+                    # Don't exit early - let user see the browser
+                    log_message(cursor, fk_task_run, "INFO", f"Metadata extraction completed. Inserted {inserted} new documents.")
+                    log_message(cursor, fk_task_run, "INFO", "Browser left open for inspection. Close manually when done.")
+                    return
+                else:
+                    log_message(cursor, fk_task_run, "WARNING", "Could not extract doc_id from current URL")
+            else:
+                log_message(cursor, fk_task_run, "WARNING", "PDF viewer page detected but no iframe found")
+        
+        # Continue with normal document row parsing if not on transaction receipt page
         doc_rows = extract_doc_rows(soup)
-        inserted = 0
-
+        
         log_message(cursor, fk_task_run, "INFO", f"Found {len(doc_rows)} document rows in page")
 
         if not doc_rows:
@@ -217,41 +442,6 @@ def main():
                 log_message(cursor, fk_task_run, "WARNING", "No doc_id found in event URL - no documents to extract")
         else:
             log_message(cursor, fk_task_run, "INFO", f"Processing {len(doc_rows)} document rows")
-            for i, tr in enumerate(doc_rows):
-                pdf_type = "Docket" if i == 0 else "Attachment"
-                doc_data = parse_doc_row(tr, base_url, pdf_type, event_description)
-
-                if not doc_data or not doc_data.get("doc_id"):
-                    log_message(cursor, fk_task_run, "WARNING", f"Failed to parse document row {i+1} - skipping")
-                    continue
-
-                # Force PACER /doc1/ URL format
-                doc_data["pdf_url"] = pacer_site_url + "/doc1/" + str(doc_data["doc_id"])
-                
-                log_message(cursor, fk_task_run, "INFO", 
-                    f"Document {i+1}: {pdf_type} - ID {doc_data['doc_id']} - {doc_data['pdf_title'][:50]}{'...' if len(doc_data['pdf_title']) > 50 else ''}")
-
-                cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_data["doc_id"],))
-                if cursor.fetchone()[0] == 0:
-                    cursor.execute("""
-                        INSERT INTO docketwatch.dbo.documents (
-                            fk_case, fk_case_event, fk_tool, doc_id, pdf_url,
-                            pdf_title, pdf_type, pdf_no, rel_path, date_downloaded
-                        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE())
-                    """, (
-                        case_id, 
-                        args.case_event_id, 2,
-                        doc_data["doc_id"], doc_data["pdf_url"],
-                        doc_data["pdf_title"], doc_data["pdf_type"],
-                        doc_data["pdf_no"], doc_data["rel_path"]
-                    ))
-                    inserted += 1
-                    log_message(cursor, fk_task_run, "INFO", f"Inserted document {doc_data['doc_id']} into database")
-                else:
-                    log_message(cursor, fk_task_run, "INFO", f"Document {doc_data['doc_id']} already exists in database")
-
-            conn.commit()
-            log_message(cursor, fk_task_run, "INFO", f"Metadata extraction completed. Inserted {inserted} new documents.")
 
     except Exception as e:
         log_message(cursor, None, "ERROR", f"Unhandled error: {str(e)}")
