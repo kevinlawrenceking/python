@@ -3,9 +3,12 @@ import logging
 import os
 import sys
 import json
+import requests
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 import smtplib
 from bs4 import BeautifulSoup
 from error_notification_system import create_error_notifier
@@ -28,12 +31,21 @@ SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
 INTERNAL_URL_BASE = "http://docketwatch.tmz.local/court/docketwatch/case_details.cfm?id="
 DOCS_BASE_URL = "http://docketwatch.tmz.local/docs/cases"
+
+# Debug mode - Set to "Y" to send emails only to Kevin for testing
+DEBUG_MODE = os.getenv('DOCKETWATCH_DEBUG', 'N').upper()
+
 EMAIL_RECIPIENTS = [
     "Jennifer.Delgado@tmz.com",
     "Kevin.King@tmz.com",
     "marlee.chartash@tmz.com",
     "Priscilla.Hwang@tmz.com",
     "Shirley.Troche@tmz.com"
+]
+
+# Debug recipients (only Kevin)
+DEBUG_RECIPIENTS = [
+    "Kevin.King@tmz.com"
 ]
 
 
@@ -192,14 +204,17 @@ def get_event_documents(cursor, case_id):
 
 
 def build_email_html(case_number, case_name, celebs, case_id, case_summary, events, case_url):
+    """Build HTML email with full AI summary parsing and attachments."""
     html = f"<h3>TMZ Case Update: {case_number} – {case_name}</h3>"
+    
     if celebs:
         html += f"<p><b>Celebrities involved:</b> {celebs}</p>"
+    
     html += f"<p><b>Internal Link:</b> <a href='{INTERNAL_URL_BASE}{case_id}#dockets'>DocketWatch</a></p>"
     if case_url:
         html += f"<p><b>External Link:</b> <a href='{case_url}'>{case_url}</a></p>"
+    
     html += "<hr/>"
-
     html += f"<p>{len(events)} new case event{'s' if len(events) > 1 else ''} have been added to this case.</p><hr/>"
 
     for idx, (eid, info) in enumerate(events.items(), start=1):
@@ -208,14 +223,71 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
         html += f"Discovered: {info['created_at'].strftime('%Y-%m-%d %H:%M:%S')}</p>"
         num_docs = len(info['documents'])
         html += f"<p>This event includes {num_docs} document{'s' if num_docs != 1 else ''}.</p>"
+        
         for doc in info['documents']:
             if doc["pdf_title"]:
                 html += f"<p><b>{doc['pdf_title']}</b></p>"
             if doc["doc_id"]:
                 pdf_link = f"{DOCS_BASE_URL}/{doc['fk_case']}/E{doc['doc_id']}.pdf"
                 html += f"<p><a href='{pdf_link}'>Download PDF</a></p>"
+            
+            # Process AI Summary with full parsing
             if doc["summary"]:
-                html += doc["summary"] + "<br/>"
+                soup = BeautifulSoup(doc["summary"], 'html.parser')
+                
+                # Look for TMZ story content
+                tmz_story = None
+                newsworthy = None
+                whats_next = None
+                summary_content = None
+                
+                # Parse different sections from the AI summary
+                for tag in soup.find_all(['h3', 'h4', 'h5', 'p', 'div']):
+                    text = tag.get_text().strip()
+                    if 'TMZ STORY' in text.upper() or 'STORY:' in text.upper():
+                        # Get the story content - could be this tag and following siblings
+                        tmz_story = str(tag)
+                        # Get following content that's part of the story
+                        next_sibling = tag.next_sibling
+                        while next_sibling:
+                            if hasattr(next_sibling, 'get_text'):
+                                sibling_text = next_sibling.get_text().strip()
+                                if sibling_text and not any(keyword in sibling_text.upper() for keyword in ['NEWSWORTHY', 'WHAT\'S NEXT']):
+                                    tmz_story += str(next_sibling)
+                                elif sibling_text:
+                                    break
+                            next_sibling = next_sibling.next_sibling
+                    elif 'NEWSWORTHY' in text.upper():
+                        newsworthy = str(tag)
+                    elif 'WHAT\'S NEXT' in text.upper():
+                        whats_next = str(tag)
+                    elif len(text) > 50 and not any(keyword in text.upper() for keyword in ['STORY:', 'NEWSWORTHY', 'WHAT\'S NEXT', 'TMZ STORY']):
+                        if not summary_content:
+                            summary_content = str(tag)
+                
+                # Display regular summary first
+                if summary_content:
+                    html += f"<div>{summary_content}</div>"
+                
+                # Display newsworthy section
+                if newsworthy:
+                    html += f"<div style='background-color: #d4edda; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745;'>{newsworthy}</div>"
+                
+                # Display TMZ story section with special formatting
+                if tmz_story:
+                    html += f"<div style='background-color: #fff3cd; padding: 15px; margin: 15px 0; border: 2px solid #ffc107; border-radius: 5px;'>"
+                    html += f"<h4 style='color: #856404; margin-top: 0;'>📺 TMZ Story</h4>"
+                    html += tmz_story
+                    html += f"</div>"
+                
+                # Display what's next section
+                if whats_next:
+                    html += f"<div style='background-color: #d1ecf1; padding: 10px; margin: 10px 0; border-left: 4px solid #17a2b8;'>{whats_next}</div>"
+                
+                # If no parsed sections found, display the raw summary
+                if not summary_content and not newsworthy and not tmz_story and not whats_next:
+                    html += doc["summary"] + "<br/>"
+        
         html += "<hr/>"
 
     if case_summary:
@@ -224,8 +296,8 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
     return html
 
 
-def send_email(subject, body, recipients):
-    """Send email with proper error handling."""
+def send_email(subject, body, recipients, events=None):
+    """Send email with proper error handling and PDF attachments."""
     try:
         # Clean the subject and body
         subject = clean_text(subject)
@@ -236,6 +308,33 @@ def send_email(subject, body, recipients):
         msg["From"] = FROM_EMAIL
         msg["To"] = ", ".join(recipients)
         msg.attach(MIMEText(body, "html", "utf-8"))
+        
+        # Add PDF attachments if events provided
+        if events:
+            for eid, info in events.items():
+                for doc in info['documents']:
+                    if doc["doc_id"]:
+                        try:
+                            pdf_url = f"{DOCS_BASE_URL}/{doc['fk_case']}/E{doc['doc_id']}.pdf"
+                            pdf_filename = f"E{doc['doc_id']}.pdf"
+                            
+                            # Try to fetch the PDF
+                            response = requests.get(pdf_url, timeout=30)
+                            if response.status_code == 200:
+                                # Create attachment
+                                attachment = MIMEBase('application', 'pdf')
+                                attachment.set_payload(response.content)
+                                encoders.encode_base64(attachment)
+                                attachment.add_header(
+                                    'Content-Disposition',
+                                    f'attachment; filename={pdf_filename}'
+                                )
+                                msg.attach(attachment)
+                                logger.info(f"Added PDF attachment: {pdf_filename}")
+                            else:
+                                logger.warning(f"Could not fetch PDF: {pdf_url} (status: {response.status_code})")
+                        except Exception as pdf_error:
+                            logger.warning(f"Failed to attach PDF {pdf_url}: {pdf_error}")
         
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
             server.sendmail(FROM_EMAIL, recipients, msg.as_string())
@@ -266,6 +365,14 @@ def mark_documents_emailed(cursor, case_id):
 
 def main():
     """Main function with comprehensive error handling."""
+    # Log debug mode status
+    if DEBUG_MODE == 'Y':
+        logger.info("🔧 DEBUG MODE ENABLED - Emails will only be sent to debug recipients")
+        logger.info(f"Debug recipients: {DEBUG_RECIPIENTS}")
+    else:
+        logger.info("📧 Production mode - Emails will be sent to all recipients")
+        logger.info(f"Production recipients: {EMAIL_RECIPIENTS}")
+    
     if len(sys.argv) < 2:
         error_msg = "Missing required case_id argument"
         logger.error(error_msg)
@@ -297,8 +404,18 @@ def main():
             logger.info(f"No unemailed documents for case {case_id}")
             return
 
+        # Determine recipients based on debug mode
+        recipients = DEBUG_RECIPIENTS if DEBUG_MODE == 'Y' else EMAIL_RECIPIENTS
+        if DEBUG_MODE == 'Y':
+            logger.info(f"DEBUG MODE: Sending email only to debug recipients: {recipients}")
+        
+        # Create email subject with debug prefix if in debug mode
+        subject = f"TMZ Case Update: {case_number}"
+        if DEBUG_MODE == 'Y':
+            subject = f"[DEBUG] {subject}"
+        
         html = build_email_html(case_number, case_name, celebs, case_id, case_summary, events, case_url)
-        send_email(f"TMZ Case Update: {case_number}", html, EMAIL_RECIPIENTS)
+        send_email(subject, html, recipients, events)
         mark_documents_emailed(cursor, case_id)
         conn.commit()
         
