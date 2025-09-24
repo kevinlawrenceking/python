@@ -127,7 +127,7 @@ def get_case_celebrities(cursor, case_id):
 
 # --- Gemini Model Configuration ---
 
-GEMINI_MODEL_NAME = "gemini-2.5-pro"
+GEMINI_MODEL_NAME = "gemini-2.5-flash-lite"
 SCRIPT_NAME = "docketwatch_case_events_alert_plus.py"  # For logging purposes
 
 def generate_summaries(cursor, case_number, case_name, today_updates, backstory_events, article_refs, celebrities_text):

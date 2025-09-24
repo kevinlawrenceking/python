@@ -11,7 +11,7 @@ API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyBFifwhmbta61-IPtgYCzEa7X_svoIzE5s")
 
 # Choose your Gemini 1.5 model. 'flash' is generally faster and cheaper for simple tasks.
 # 'pro' is more capable for complex tasks.
-MODEL_NAME = "gemini-2.5-pro"
+MODEL_NAME = "gemini-2.5-flash-lite"
 # MODEL_NAME = "gemini-1.5-pro" # Uncomment to test the Pro model
 
 TEST_PROMPT = "Hello, Gemini! What's the capital of France?"

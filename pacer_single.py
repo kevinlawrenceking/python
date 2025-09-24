@@ -162,7 +162,7 @@ def convert_to_clean_html(summary_text):
 # --- GLOBAL CONFIGURATION (snippet) ---
 
 # Gemini model configuration
-# NOTE: "gemini-2.5-pro" is not a valid model name as of late 2024.
+# NOTE: "gemini-2.5-flash-lite" is not a valid model name as of late 2024.
 # Using "gemini-1.5-pro", which is the latest and most capable public model.
 GEMINI_MODEL_NAME = "gemini-1.5-pro"
 # NOTE: gemini-1.5-pro has a very large context window (1M tokens). You can

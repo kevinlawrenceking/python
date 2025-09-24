@@ -218,7 +218,7 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
     
     # Start with container and header
     html = f"""
-    <div style='font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;'>
+    <div style='font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px 36px;'>
         <h2 style='color: #e74c3c; border-bottom: 2px solid #e74c3c; padding-bottom: 10px;'>
             TMZ Case Update: {case_number} – {case_name}
         </h2>
@@ -227,7 +227,7 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
     # Celebrity involvement
     if celebs:
         html += f"""
-        <div style='background-color: #fff3cd; padding: 12px; border-left: 4px solid #ffc107; margin: 15px 0;'>
+        <div style='padding: 12px; border: 2px solid #ffc107; margin: 15px 0; border-radius: 6px;'>
             <strong>🌟 CELEBRITIES INVOLVED:</strong> {celebs}
         </div>
         """
@@ -238,33 +238,22 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
         html += f" | <a href='{case_url}'>Court Website</a>"
     html += "</p>"
     
-    # Count total attached documents
-    total_docs = sum(len(info['documents']) for info in events.values())
-    if total_docs > 0:
-        html += f"""
-        <div style='background-color: #d4edda; padding: 10px; border-left: 4px solid #28a745; margin: 15px 0;'>
-            📎 <strong>{total_docs} PDF document{'s' if total_docs != 1 else ''} attached to this email</strong>
-        </div>
-        """
-    
-    html += f"<hr/><p><b>{len(events)} new case event{'s' if len(events) > 1 else ''} added to this case</b></p><hr/>"
+
 
     # Process each event
     for idx, (eid, info) in enumerate(events.items(), start=1):
         html += f"""
-        <div style='border: 1px solid #dee2e6; border-radius: 8px; margin: 20px 0; padding: 0; overflow: hidden;'>
-            <div style='background-color: #f8f9fa; padding: 15px; border-bottom: 1px solid #dee2e6;'>
-                <h3 style='margin: 0; color: #495057;'>#{idx} – {info['event_description']}</h3>
-                <p style='margin: 5px 0 0 0; color: #6c757d;'>
-                    <b>Event Date:</b> {info['event_date'].strftime('%B %d, %Y')} | 
-                    <b>Discovered:</b> {info['created_at'].strftime('%B %d, %Y at %I:%M %p')}
-                </p>
-            </div>
+        <div style='margin: 30px 0;'>
+            <h3 style='margin: 0 0 10px 0; color: #495057; font-size: 18px;'>#{idx} – {info['event_description']}</h3>
+            <p style='margin: 0 0 20px 0; color: #6c757d; font-size: 14px;'>
+                <b>Event Date:</b> {info['event_date'].strftime('%B %d, %Y')} | 
+                <b>Discovered:</b> {info['created_at'].strftime('%B %d, %Y at %I:%M %p')}
+            </p>
         """
         
         # Process documents
         for doc in info['documents']:
-            html += f"<div style='padding: 20px;'>"
+            html += f"<div style='margin-left: 36px; margin-right: 36px; margin-bottom: 25px;'>"
             
             if doc["pdf_title"]:
                 # Create friendly attachment name
@@ -273,7 +262,7 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
                     friendly_name = friendly_name[:47] + "..."
                 
                 html += f"""
-                <div style='background-color: #e8f4fd; padding: 12px; border-radius: 6px; margin-bottom: 15px;'>
+                <div style='padding: 8px 0; margin-bottom: 15px;'>
                     <strong>📋 Document:</strong> {friendly_name} 
                     <span style='color: #28a745; font-size: 12px; font-weight: bold;'>✓ ATTACHED</span>
                 </div>
@@ -283,8 +272,8 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
             if doc["event_summary"]:
                 html += f"""
                 <div style='margin: 15px 0;'>
-                    <h4 style='color: #495057; margin-bottom: 10px;'>📄 Summary</h4>
-                    <div style='line-height: 1.6; padding: 10px; background-color: #f8f9fa; border-radius: 4px;'>
+                    <h4 style='color: #495057; margin-bottom: 10px; font-size: 16px;'>📄 Summary</h4>
+                    <div style='line-height: 1.6;'>
                         {doc["event_summary"]}
                     </div>
                 </div>
@@ -293,7 +282,7 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
             # Newsworthy highlight
             if doc["newsworthiness"] and doc["newsworthiness"].upper() == "YES":
                 html += f"""
-                <div style='background-color: #d4edda; padding: 12px; border-left: 4px solid #28a745; margin: 15px 0; border-radius: 4px;'>
+                <div style='margin: 15px 0;'>
                     <strong>📰 NEWSWORTHY:</strong> {doc["newsworthiness_reason"] or "This document contains newsworthy information."}
                 </div>
                 """
@@ -301,9 +290,9 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
             # TMZ Story section - the main feature
             if doc["story_headline"] and doc["story_body"]:
                 html += f"""
-                <div style='border: 2px solid #e74c3c; background-color: #fef9e7; padding: 20px; margin: 20px 0; border-radius: 8px;'>
+                <div style='border: 2px solid #e74c3c; padding: 20px; margin: 20px 0; border-radius: 8px;'>
                     <div style='text-align: center; margin-bottom: 15px;'>
-                        <span style='background-color: #e74c3c; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px;'>
+                        <span style='color: #e74c3c; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px; border: 1px solid #e74c3c;'>
                             📺 TMZ EXCLUSIVE
                         </span>
                     </div>
@@ -334,7 +323,7 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
             # What's Next section
             if doc["whats_next"]:
                 html += f"""
-                <div style='background-color: #d1ecf1; padding: 12px; border-left: 4px solid #17a2b8; margin: 15px 0; border-radius: 4px;'>
+                <div style='margin: 15px 0;'>
                     <strong>🔮 WHAT'S NEXT:</strong> {doc["whats_next"]}
                 </div>
                 """
@@ -350,8 +339,8 @@ def build_email_html(case_number, case_name, celebs, case_id, case_summary, even
     # Case background summary
     if case_summary:
         html += f"""
-        <div style='background-color: #e8f4fd; padding: 15px; border-left: 4px solid #2196f3; margin: 20px 0; border-radius: 4px;'>
-            <h4 style='color: #1976d2; margin-top: 0;'>📋 Case Background Summary</h4>
+        <div style='margin: 30px 0 20px 0;'>
+            <h4 style='color: #1976d2; margin-top: 0; font-size: 16px;'>📋 Case Background Summary</h4>
             <div style='line-height: 1.6;'>{case_summary}</div>
         </div>
         """

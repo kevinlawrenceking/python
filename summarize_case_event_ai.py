@@ -19,7 +19,7 @@ def summarize_case_event(event_id):
             return
 
         genai.configure(api_key=row[0])
-        model = genai.GenerativeModel("gemini-2.5-pro")
+        model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
         # Get documents linked to this event
         cursor.execute("""

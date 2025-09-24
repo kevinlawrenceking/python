@@ -21,7 +21,7 @@ from summary_parser import parse_ai_summary, save_structured_summary
 DSN = "Docketwatch"
 POPPLER_PATH = r"C:\\Poppler\\bin"
 TESSERACT_PATH = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-MODEL_NAME = "gemini-2.5-pro"
+MODEL_NAME = "gemini-2.5-flash-lite"
 RULES = r"""
 SYSTEM: You are a senior legal journalist at a major entertainment news organization. Your task is to analyze court documents and create precise, actionable summaries for reporters covering celebrity cases, high-profile litigation, and entertainment industry legal matters.
 

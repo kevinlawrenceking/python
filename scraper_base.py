@@ -302,7 +302,7 @@ def generate_ai_summary_for_documents(cursor, case_event_id, docs_root_dir):
     Returns the number of documents summarized.
     """
     script_name = os.path.basename(__file__)
-    model_name = "gemini-2.5-pro"
+    model_name = "gemini-2.5-flash-lite"
     
     # Get target documents
     cursor.execute("""
@@ -380,7 +380,7 @@ def summarize_case_update_old(cursor, case_update_id):
     Returns (summary_ap, summary_tmz_html, is_storyworthy).
     """
     script_name = os.path.basename(__file__)
-    model_name = "gemini-2.5-pro"
+    model_name = "gemini-2.5-flash-lite"
     
     # 1. Load all documents for the case_update
     cursor.execute("""
@@ -1099,7 +1099,7 @@ def generate_ai_summary_for_documents_older(cursor, case_event_id, docs_root_dir
         return 0
     gemini_key = key_row[0]
     genai.configure(api_key=gemini_key)
-    model = genai.GenerativeModel("gemini-2.5-pro")
+    model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
     # Get target documents
     cursor.execute("""
