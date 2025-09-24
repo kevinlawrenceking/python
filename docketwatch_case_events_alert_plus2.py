@@ -163,7 +163,10 @@ def get_event_documents(cursor, case_id):
     try:
         # NOTE: doc_id changed from int to varchar - query automatically handles this
         cursor.execute("""
-            SELECT e.id AS event_id, e.event_description, e.event_date, e.created_at, d.doc_uid, d.fk_case_event, d.rel_path, d.pdf_title, d.summary_ai_html, d.doc_id
+            SELECT e.id AS event_id, e.event_description, e.event_date, e.created_at, 
+                   d.doc_uid, d.fk_case_event, d.rel_path, d.pdf_title, d.summary_ai_html, d.doc_id,
+                   d.event_summary, d.newsworthiness, d.newsworthiness_reason, 
+                   d.story_headline, d.story_sub_head, d.story_body, d.whats_next
             FROM docketwatch.dbo.case_events e
             LEFT JOIN docketwatch.dbo.documents d ON e.id = d.fk_case_event
             WHERE e.fk_cases = ? AND e.emailed = 0
@@ -186,7 +189,14 @@ def get_event_documents(cursor, case_id):
                         "doc_id": row.doc_id,
                         "fk_case": case_id,
                         "pdf_title": clean_text(row.pdf_title) if row.pdf_title else "",
-                        "summary": clean_text(row.summary_ai_html) if row.summary_ai_html else ""
+                        "summary": clean_text(row.summary_ai_html) if row.summary_ai_html else "",
+                        "event_summary": clean_text(row.event_summary) if row.event_summary else "",
+                        "newsworthiness": row.newsworthiness if hasattr(row, 'newsworthiness') and row.newsworthiness else "",
+                        "newsworthiness_reason": clean_text(row.newsworthiness_reason) if row.newsworthiness_reason else "",
+                        "story_headline": clean_text(row.story_headline) if row.story_headline else "",
+                        "story_sub_head": clean_text(row.story_sub_head) if row.story_sub_head else "",
+                        "story_body": clean_text(row.story_body) if row.story_body else "",
+                        "whats_next": clean_text(row.whats_next) if row.whats_next else ""
                     })
         except UnicodeDecodeError as e:
             error_msg = f"Unicode decode error processing event documents for case_id {case_id}: {e}"
@@ -204,95 +214,149 @@ def get_event_documents(cursor, case_id):
 
 
 def build_email_html(case_number, case_name, celebs, case_id, case_summary, events, case_url):
-    """Build HTML email with full AI summary parsing and attachments."""
-    html = f"<h3>TMZ Case Update: {case_number} – {case_name}</h3>"
+    """Build enhanced HTML email using individual AI summary fields."""
     
+    # Start with container and header
+    html = f"""
+    <div style='font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;'>
+        <h2 style='color: #e74c3c; border-bottom: 2px solid #e74c3c; padding-bottom: 10px;'>
+            TMZ Case Update: {case_number} – {case_name}
+        </h2>
+    """
+    
+    # Celebrity involvement
     if celebs:
-        html += f"<p><b>Celebrities involved:</b> {celebs}</p>"
+        html += f"""
+        <div style='background-color: #fff3cd; padding: 12px; border-left: 4px solid #ffc107; margin: 15px 0;'>
+            <strong>🌟 CELEBRITIES INVOLVED:</strong> {celebs}
+        </div>
+        """
     
-    html += f"<p><b>Internal Link:</b> <a href='{INTERNAL_URL_BASE}{case_id}#dockets'>DocketWatch</a></p>"
+    # Links section
+    html += f"<p><b>🔗 Links:</b> <a href='{INTERNAL_URL_BASE}{case_id}#dockets'>DocketWatch</a>"
     if case_url:
-        html += f"<p><b>External Link:</b> <a href='{case_url}'>{case_url}</a></p>"
+        html += f" | <a href='{case_url}'>Court Website</a>"
+    html += "</p>"
     
-    html += "<hr/>"
-    html += f"<p>{len(events)} new case event{'s' if len(events) > 1 else ''} have been added to this case.</p><hr/>"
+    # Count total attached documents
+    total_docs = sum(len(info['documents']) for info in events.values())
+    if total_docs > 0:
+        html += f"""
+        <div style='background-color: #d4edda; padding: 10px; border-left: 4px solid #28a745; margin: 15px 0;'>
+            📎 <strong>{total_docs} PDF document{'s' if total_docs != 1 else ''} attached to this email</strong>
+        </div>
+        """
+    
+    html += f"<hr/><p><b>{len(events)} new case event{'s' if len(events) > 1 else ''} added to this case</b></p><hr/>"
 
+    # Process each event
     for idx, (eid, info) in enumerate(events.items(), start=1):
-        html += f"<h4>#{idx} – {info['event_description']}</h4>"
-        html += f"<p><b>Event date:</b> {info['event_date'].strftime('%Y-%m-%d')}<br/>"
-        html += f"Discovered: {info['created_at'].strftime('%Y-%m-%d %H:%M:%S')}</p>"
-        num_docs = len(info['documents'])
-        html += f"<p>This event includes {num_docs} document{'s' if num_docs != 1 else ''}.</p>"
+        html += f"""
+        <div style='border: 1px solid #dee2e6; border-radius: 8px; margin: 20px 0; padding: 0; overflow: hidden;'>
+            <div style='background-color: #f8f9fa; padding: 15px; border-bottom: 1px solid #dee2e6;'>
+                <h3 style='margin: 0; color: #495057;'>#{idx} – {info['event_description']}</h3>
+                <p style='margin: 5px 0 0 0; color: #6c757d;'>
+                    <b>Event Date:</b> {info['event_date'].strftime('%B %d, %Y')} | 
+                    <b>Discovered:</b> {info['created_at'].strftime('%B %d, %Y at %I:%M %p')}
+                </p>
+            </div>
+        """
         
+        # Process documents
         for doc in info['documents']:
-            if doc["pdf_title"]:
-                html += f"<p><b>{doc['pdf_title']}</b></p>"
-            if doc["doc_id"]:
-                pdf_link = f"{DOCS_BASE_URL}/{doc['fk_case']}/E{doc['doc_id']}.pdf"
-                html += f"<p><a href='{pdf_link}'>Download PDF</a></p>"
+            html += f"<div style='padding: 20px;'>"
             
-            # Process AI Summary with full parsing
-            if doc["summary"]:
-                soup = BeautifulSoup(doc["summary"], 'html.parser')
+            if doc["pdf_title"]:
+                # Create friendly attachment name
+                friendly_name = doc["pdf_title"]
+                if len(friendly_name) > 50:
+                    friendly_name = friendly_name[:47] + "..."
                 
-                # Look for TMZ story content
-                tmz_story = None
-                newsworthy = None
-                whats_next = None
-                summary_content = None
+                html += f"""
+                <div style='background-color: #e8f4fd; padding: 12px; border-radius: 6px; margin-bottom: 15px;'>
+                    <strong>📋 Document:</strong> {friendly_name} 
+                    <span style='color: #28a745; font-size: 12px; font-weight: bold;'>✓ ATTACHED</span>
+                </div>
+                """
+            
+            # Use new AI summary fields for better formatting
+            if doc["event_summary"]:
+                html += f"""
+                <div style='margin: 15px 0;'>
+                    <h4 style='color: #495057; margin-bottom: 10px;'>📄 Summary</h4>
+                    <div style='line-height: 1.6; padding: 10px; background-color: #f8f9fa; border-radius: 4px;'>
+                        {doc["event_summary"]}
+                    </div>
+                </div>
+                """
+            
+            # Newsworthy highlight
+            if doc["newsworthiness"] and doc["newsworthiness"].upper() == "YES":
+                html += f"""
+                <div style='background-color: #d4edda; padding: 12px; border-left: 4px solid #28a745; margin: 15px 0; border-radius: 4px;'>
+                    <strong>📰 NEWSWORTHY:</strong> {doc["newsworthiness_reason"] or "This document contains newsworthy information."}
+                </div>
+                """
+            
+            # TMZ Story section - the main feature
+            if doc["story_headline"] and doc["story_body"]:
+                html += f"""
+                <div style='border: 2px solid #e74c3c; background-color: #fef9e7; padding: 20px; margin: 20px 0; border-radius: 8px;'>
+                    <div style='text-align: center; margin-bottom: 15px;'>
+                        <span style='background-color: #e74c3c; color: white; padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 14px;'>
+                            📺 TMZ EXCLUSIVE
+                        </span>
+                    </div>
+                    <h2 style='color: #e74c3c; margin-top: 0; font-size: 24px; line-height: 1.2; text-align: center;'>
+                        {doc["story_headline"]}
+                    </h2>
+                """
                 
-                # Parse different sections from the AI summary
-                for tag in soup.find_all(['h3', 'h4', 'h5', 'p', 'div']):
-                    text = tag.get_text().strip()
-                    if 'TMZ STORY' in text.upper() or 'STORY:' in text.upper():
-                        # Get the story content - could be this tag and following siblings
-                        tmz_story = str(tag)
-                        # Get following content that's part of the story
-                        next_sibling = tag.next_sibling
-                        while next_sibling:
-                            if hasattr(next_sibling, 'get_text'):
-                                sibling_text = next_sibling.get_text().strip()
-                                if sibling_text and not any(keyword in sibling_text.upper() for keyword in ['NEWSWORTHY', 'WHAT\'S NEXT']):
-                                    tmz_story += str(next_sibling)
-                                elif sibling_text:
-                                    break
-                            next_sibling = next_sibling.next_sibling
-                    elif 'NEWSWORTHY' in text.upper():
-                        newsworthy = str(tag)
-                    elif 'WHAT\'S NEXT' in text.upper():
-                        whats_next = str(tag)
-                    elif len(text) > 50 and not any(keyword in text.upper() for keyword in ['STORY:', 'NEWSWORTHY', 'WHAT\'S NEXT', 'TMZ STORY']):
-                        if not summary_content:
-                            summary_content = str(tag)
+                if doc["story_sub_head"]:
+                    html += f"""
+                    <h3 style='color: #d35400; font-size: 16px; font-style: italic; text-align: center; margin-bottom: 20px; font-weight: 500;'>
+                        {doc["story_sub_head"]}
+                    </h3>
+                    """
                 
-                # Display regular summary first
-                if summary_content:
-                    html += f"<div>{summary_content}</div>"
+                # Format story body with proper paragraphs
+                story_paragraphs = doc["story_body"].split('\n\n') if doc["story_body"] else []
+                for paragraph in story_paragraphs:
+                    if paragraph.strip():
+                        html += f"""
+                        <p style='line-height: 1.7; margin-bottom: 16px; font-size: 15px; text-align: justify;'>
+                            {paragraph.strip()}
+                        </p>
+                        """
                 
-                # Display newsworthy section
-                if newsworthy:
-                    html += f"<div style='background-color: #d4edda; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745;'>{newsworthy}</div>"
-                
-                # Display TMZ story section with special formatting
-                if tmz_story:
-                    html += f"<div style='background-color: #fff3cd; padding: 15px; margin: 15px 0; border: 2px solid #ffc107; border-radius: 5px;'>"
-                    html += f"<h4 style='color: #856404; margin-top: 0;'>📺 TMZ Story</h4>"
-                    html += tmz_story
-                    html += f"</div>"
-                
-                # Display what's next section
-                if whats_next:
-                    html += f"<div style='background-color: #d1ecf1; padding: 10px; margin: 10px 0; border-left: 4px solid #17a2b8;'>{whats_next}</div>"
-                
-                # If no parsed sections found, display the raw summary
-                if not summary_content and not newsworthy and not tmz_story and not whats_next:
-                    html += doc["summary"] + "<br/>"
+                html += f"</div>"
+            
+            # What's Next section
+            if doc["whats_next"]:
+                html += f"""
+                <div style='background-color: #d1ecf1; padding: 12px; border-left: 4px solid #17a2b8; margin: 15px 0; border-radius: 4px;'>
+                    <strong>🔮 WHAT'S NEXT:</strong> {doc["whats_next"]}
+                </div>
+                """
+            
+            # Fallback to old summary field if new fields are empty
+            elif doc["summary"] and not doc["event_summary"]:
+                html += f"<div style='margin: 15px 0;'>{doc['summary']}</div>"
+            
+            html += f"</div>"  # Close document div
         
-        html += "<hr/>"
+        html += f"</div>"  # Close event div
 
+    # Case background summary
     if case_summary:
-        html += f"<h4>Case Background Summary</h4><div>{case_summary}</div><hr/>"
+        html += f"""
+        <div style='background-color: #e8f4fd; padding: 15px; border-left: 4px solid #2196f3; margin: 20px 0; border-radius: 4px;'>
+            <h4 style='color: #1976d2; margin-top: 0;'>📋 Case Background Summary</h4>
+            <div style='line-height: 1.6;'>{case_summary}</div>
+        </div>
+        """
 
+    html += "</div>"  # Close main container
     return html
 
 
@@ -316,7 +380,16 @@ def send_email(subject, body, recipients, events=None):
                     if doc["doc_id"]:
                         try:
                             pdf_url = f"{DOCS_BASE_URL}/{doc['fk_case']}/E{doc['doc_id']}.pdf"
-                            pdf_filename = f"E{doc['doc_id']}.pdf"
+                            
+                            # Create friendly filename
+                            if doc.get("pdf_title"):
+                                # Clean the title for filename
+                                friendly_name = doc["pdf_title"][:50]  # Limit length
+                                friendly_name = "".join(c for c in friendly_name if c.isalnum() or c in (' ', '-', '_')).rstrip()
+                                friendly_name = friendly_name.replace(' ', '_')
+                                pdf_filename = f"{friendly_name}_{doc['doc_id']}.pdf"
+                            else:
+                                pdf_filename = f"Document_{doc['doc_id']}.pdf"
                             
                             # Try to fetch the PDF
                             response = requests.get(pdf_url, timeout=30)
@@ -327,7 +400,7 @@ def send_email(subject, body, recipients, events=None):
                                 encoders.encode_base64(attachment)
                                 attachment.add_header(
                                     'Content-Disposition',
-                                    f'attachment; filename={pdf_filename}'
+                                    f'attachment; filename="{pdf_filename}"'
                                 )
                                 msg.attach(attachment)
                                 logger.info(f"Added PDF attachment: {pdf_filename}")
