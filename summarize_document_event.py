@@ -205,9 +205,12 @@ def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
 
 def process_single_pdf(doc_uid: str):
     conn, cur = get_cursor()
+    log_message(cur, None, "INFO", f"Starting PDF processing for doc_uid: {doc_uid}")
+    
     key = get_util(cur, "gemini_api")
     docs_root = get_util(cur, "docs_root")
     if not (key and docs_root):
+        log_message(cur, None, "ERROR", "Missing Gemini key or docs_root configuration")
         print("Missing Gemini key or docs_root.")
         return
 
@@ -225,6 +228,7 @@ WHERE p.doc_uid = ?
     """, doc_uid)
     row = cur.fetchone()
     if not row:
+        log_message(cur, None, "ERROR", f"PDF document not found for doc_uid: {doc_uid}")
         print("PDF id not found.")
         return
 
@@ -239,10 +243,12 @@ WHERE p.doc_uid = ?
     abs_path = os.path.join(docs_root, rel_row[0]) if rel_row else None
 
     if (not ocr_text or len(ocr_text.strip()) < 100) and abs_path and os.path.isfile(abs_path):
+        log_message(cur, None, "INFO", f"Extracting OCR text from PDF: {abs_path}")
         raw = pdf_to_text(abs_path)
         clean = clean_ocr_text(raw)
         try:
             clean = refine_ocr_with_ai(clean, key)
+            log_message(cur, None, "INFO", f"OCR text refined with AI for {doc_uid}")
         except Exception as e:
             log_message(cur, None, "WARNING", f"Refinement failed for {doc_uid}: {e}")
         cur.execute("""
@@ -251,18 +257,22 @@ WHERE p.doc_uid = ?
             WHERE doc_uid = CAST(? AS uniqueidentifier)
         """, (raw, clean, datetime.now(), doc_uid))
         conn.commit()
+        log_message(cur, None, "INFO", f"OCR text updated in database for {doc_uid}")
         ocr_text = clean
 
     pdf_text = clean_ocr_text(ocr_text or "")
     if len(pdf_text.strip()) < 100:
+        log_message(cur, None, "WARNING", f"Skipping Gemini summary for {doc_uid} - OCR result too poor (length: {len(pdf_text.strip())})")
         print("Skipping Gemini summary — OCR result is too poor.")
         return
 
     try:
+        log_message(cur, None, "INFO", f"Requesting Gemini summary for {doc_uid}")
         gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text, key)
         gem = fix_encoding_garbage(gem)
         gem = normalize_quotes(gem)
         html = BeautifulSoup(markdown2.markdown(gem), "html.parser").prettify()
+        log_message(cur, None, "INFO", f"Gemini summary generated successfully for {doc_uid}")
         
         # Parse the structured AI summary
         parsed_summary = parse_ai_summary(gem)
