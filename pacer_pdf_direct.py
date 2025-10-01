@@ -86,7 +86,6 @@ def download_pdf_from_iframe(driver, cursor, fk_task_run, timeout=20):
         log_message(cursor, fk_task_run, "ERROR", f"Error capturing PDF via CDP: {e}")
         return None
 
-def 
 def download_from_billing_form(driver, cursor, fk_task_run):
     """
     On PACER billing page with 'View Document', do NOT click.
@@ -259,7 +258,7 @@ def main():
                         with open(final_dest_path, 'wb') as f:
                             f.write(pdf_content)
                         log_message(cursor, fk_task_run, "INFO", f"PDF saved via billing POST: {filename} ({len(pdf_content)} bytes)")
-                        rel_path = f"cases\{fk_case}\{filename}"
+                        rel_path = f"cases\\{fk_case}\\{filename}"
                         cursor.execute("""
                             UPDATE docketwatch.dbo.documents 
                             SET rel_path = ?, date_downloaded = GETDATE()

@@ -318,7 +318,7 @@ def main():
 
         # Setup headless Chrome
         opts = Options()
-        opts.add_argument("--headless=new")
+        ## opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
@@ -436,17 +436,18 @@ def main():
                 time.sleep(3)
                 
                 # Get PACER credentials
-                cursor.execute("SELECT username, password FROM docketwatch.dbo.pacer_login WHERE login_url = ?", 
-                             ("https://pacer.login.uscourts.gov/csologin/login.jsf",))
+                cursor.execute("SELECT username, pass, login_url FROM dbo.tools WHERE id = 2")
                 creds = cursor.fetchone()
                 if not creds:
                     raise RuntimeError("No PACER credentials found")
                 
+                username, password, login_url = creds
+                
                 # Login
                 username_field = driver.find_element(By.ID, "loginForm:loginName")
                 password_field = driver.find_element(By.ID, "loginForm:password")
-                username_field.send_keys(creds.username)
-                password_field.send_keys(creds.password)
+                username_field.send_keys(username)
+                password_field.send_keys(password)
                 
                 # Enter client code
                 try:
@@ -456,7 +457,7 @@ def main():
                 except:
                     log_message(cursor, fk_task_run, "WARNING", "Client code field not found")
                 
-                login_button = driver.find_element(By.ID, "loginForm:loginButton")
+                login_button = driver.find_element(By.NAME, "loginForm:fbtnLogin")
                 login_button.click()
                 time.sleep(5)
                 log_message(cursor, fk_task_run, "INFO", "PACER login completed for purchased document downloads")

@@ -8,7 +8,7 @@ cursor = conn.cursor()
 
 # --- Query to find case_events that need processing (no documents OR pending documents) ---
 cursor.execute("""
-    SELECT TOP 200 
+    SELECT TOP 1 
         ce.id,
         ce.event_no,
         ce.event_description,
