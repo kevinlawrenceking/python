@@ -16,6 +16,7 @@ from scraper_base import log_message, setup_logging
 import unicodedata
 import google.generativeai as genai
 from summary_parser import parse_ai_summary, save_structured_summary
+import logging
 
 # Configuration
 DSN = "Docketwatch"
@@ -160,39 +161,54 @@ def clean_ocr_text(txt):
     txt = clean_unicode(txt, fix_unicode=True)
     return normalize_quotes(txt.strip())
 
+def _simple_log(message: str, level: str = "INFO"):
+    """Wrapper to safely log without requiring DB cursor/task context."""
+    try:
+        # Supply None for cursor and fk_task_run so base function just standard-logs
+        log_message(None, None, level, message)
+    except TypeError:
+        # Fallback if signature changes elsewhere
+        if level == "ERROR":
+            logging.error(message)
+        elif level == "WARNING":
+            logging.warning(message)
+        else:
+            logging.info(message)
+
+
 def get_available_model(api_key: str) -> str:
-    """Get the best available Gemini model for moderate volume processing"""
+    """Get the best available Gemini model for moderate volume processing."""
     genai.configure(api_key=api_key)
-    
-    # List of models in order of preference (using known working models)
+
     preferred_models = [
-        "gemini-pro",             # Most reliable and widely available
-        "gemini-1.0-pro",         # Alternative stable option
-        "gemini-1.5-pro",         # If available
-        "gemini-1.5-flash"        # Backup option
+        "gemini-pro",
+        "gemini-1.0-pro",
+        "gemini-1.5-pro",
+        "gemini-1.5-flash",
     ]
-    
+
     try:
         available_models = [m.name for m in genai.list_models()]
-        log_message(f"Available models: {available_models[:5]}...")  # Log first 5 for debugging
-        
+        _simple_log(f"Available models (sample): {available_models[:8]}")
+
+        # Normalize names (strip 'models/' prefix) for comparison
+        normalized = {name.replace('models/', '') for name in available_models}
         for model_name in preferred_models:
-            # Check both with and without 'models/' prefix
-            if model_name in available_models or f"models/{model_name}" in available_models:
-                log_message(f"Selected model: {model_name}")
+            if model_name in normalized:
+                _simple_log(f"Selected model: {model_name}")
                 return model_name
-        
-        # If no preferred models found, use the first available one that supports generateContent
+
+        # Fallback: pick first model supporting generateContent
         for model in genai.list_models():
-            if 'generateContent' in model.supported_generation_methods:
-                model_name = model.name.replace('models/', '')
-                log_message(f"Using first available model: {model_name}")
-                return model_name
-                
+            if 'generateContent' in getattr(model, 'supported_generation_methods', []):
+                chosen = model.name.replace('models/', '')
+                _simple_log(f"Fallback selected model: {chosen}")
+                return chosen
+
     except Exception as e:
-        log_message(f"Warning: Could not list models ({e}), using default")
-    
-    return "gemini-pro"  # Safe default
+        _simple_log(f"Warning: model discovery failed ({e}); using default", "WARNING")
+
+    return "gemini-pro"
 
 def refine_ocr_with_ai(text: str, api_key: str) -> str:
     genai.configure(api_key=api_key)
@@ -209,8 +225,19 @@ Fix split words, misspellings, and remove junk characters.
 
 Return only the corrected text. Do not summarize or explain.
 """
-    response = model.generate_content(prompt)
-    return response.candidates[0].content.parts[0].text.strip()
+    try:
+        response = model.generate_content(prompt)
+        return response.candidates[0].content.parts[0].text.strip()
+    except Exception as e:
+        if '404' in str(e) and 'not found' in str(e):
+            _simple_log(f"Refine OCR model {model_name} 404. Retrying with gemini-pro.", "WARNING")
+            try:
+                fallback = genai.GenerativeModel("gemini-pro")
+                response = fallback.generate_content(prompt)
+                return response.candidates[0].content.parts[0].text.strip()
+            except Exception as inner:
+                _simple_log(f"Fallback refine OCR failed: {inner}", "ERROR")
+        raise
 
 def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
     genai.configure(api_key=api_key)
@@ -234,9 +261,32 @@ def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
     # print(full_prompt[:16000])
     # print("=========== GEMINI PROMPT END ===========")
 
-    # Submit to Gemini and return result
-    response = model.generate_content(full_prompt[:16000])
-    return response.text.strip()
+    # Submit with retry handling for model issues
+    attempt_models = [model_name]
+    for alt in ["gemini-pro", "gemini-1.0-pro", "gemini-1.5-pro", "gemini-1.5-flash"]:
+        if alt not in attempt_models:
+            attempt_models.append(alt)
+
+    last_err = None
+    for idx, mname in enumerate(attempt_models):
+        try:
+            if idx > 0:
+                _simple_log(f"Retrying summary with alternate model {mname}", "WARNING")
+            alt_model = genai.GenerativeModel(mname)
+            response = alt_model.generate_content(full_prompt[:16000])
+            # Prefer response.text if present, else drill into candidates
+            if hasattr(response, 'text') and response.text:
+                return response.text.strip()
+            return response.candidates[0].content.parts[0].text.strip()
+        except Exception as e:
+            last_err = e
+            if '404' in str(e) and 'not found' in str(e):
+                _simple_log(f"Model {mname} not found (404)", "WARNING")
+            else:
+                _simple_log(f"Model {mname} error: {e}", "WARNING")
+            continue
+    _simple_log(f"All model attempts failed: {last_err}", "ERROR")
+    raise last_err
 
 
 def process_single_pdf(doc_uid: str):
