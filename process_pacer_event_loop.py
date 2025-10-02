@@ -8,17 +8,14 @@ while True:
         conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
         cursor = conn.cursor()
 
-        # Query to find applicable case_event IDs 
-        # Include all case events created today, but if documents exist, only where rel_path = 'pending'
+        # Query to find applicable case_event IDs
+        # Note: documents table now has doc_id as varchar type
         cursor.execute("""
-        SELECT distinct TOP 10 e.[id] AS case_id, e.created_at
+        SELECT DISTINCT TOP 10 e.[id] AS case_id, created_at
         FROM [docketwatch].[dbo].[case_events] e 
-        INNER JOIN [docketwatch].[dbo].[cases] c ON c.id = e.fk_cases
-        LEFT JOIN [docketwatch].[dbo].[documents] d ON d.fk_case_event = e.id
-        WHERE c.fk_tool = 2 
-            AND CAST(e.created_at AS DATE) = CAST(GETDATE() AS DATE)
-            AND (d.fk_case_event IS NULL OR d.rel_path = 'pending')
-        ORDER BY e.created_at DESC
+        INNER JOIN [docketwatch].[dbo].[documents] d ON d.fk_case_event = e.id
+        WHERE d.fk_case_event IS NOT NULL AND d.rel_path = 'pending'
+        ORDER BY created_at DESC
         """)
 
         case_ids = [row.case_id for row in cursor.fetchall()]
@@ -28,12 +25,12 @@ while True:
             print(f"Running for case_event ID: {case_id}")
             try:
                 subprocess.run(
-                    ["python", "u:\\docketwatch\\python\\process_pacer_event_pdf.py", str(case_id)],
+                    ["python", "u:\\docketwatch\\python\\process_pacer_event.py", str(case_id)],
                     check=True
                 )
                 time.sleep(2)  # slight delay between each subprocess
             except subprocess.CalledProcessError as e:
-                print(f"Error running extract_pacer_pdf_file.py for case_id {case_id}: {e}")
+                print(f"Error running process_pacer_event.py for case_id {case_id}: {e}")
 
     except Exception as e:
         print(f"Unexpected error: {e}")
