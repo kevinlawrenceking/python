@@ -21,7 +21,7 @@ from summary_parser import parse_ai_summary, save_structured_summary
 DSN = "Docketwatch"
 POPPLER_PATH = r"C:\\Poppler\\bin"
 TESSERACT_PATH = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-MODEL_NAME = "gemini-1.5-flash"
+# Model selection handled dynamically by get_available_model() - optimized for moderate volume
 RULES = r"""
 SYSTEM: You are a senior legal journalist at a major entertainment news organization. Your task is to analyze court documents and create precise, actionable summaries for reporters covering celebrity cases, high-profile litigation, and entertainment industry legal matters.
 
@@ -160,9 +160,33 @@ def clean_ocr_text(txt):
     txt = clean_unicode(txt, fix_unicode=True)
     return normalize_quotes(txt.strip())
 
+def get_available_model(api_key: str) -> str:
+    """Get the best available Gemini model for moderate volume processing"""
+    genai.configure(api_key=api_key)
+    
+    # List of models in order of preference (reliability and features first)
+    preferred_models = [
+        "gemini-1.5-flash",       # Good balance of speed, cost, and reliability
+        "gemini-1.5-pro",         # High quality for complex documents
+        "gemini-1.0-pro",         # Reliable fallback
+        "gemini-pro"              # Legacy fallback
+    ]
+    
+    try:
+        available_models = [m.name for m in genai.list_models()]
+        for model_name in preferred_models:
+            # Check both with and without 'models/' prefix
+            if model_name in available_models or f"models/{model_name}" in available_models:
+                return model_name
+    except Exception as e:
+        print(f"Warning: Could not list models ({e}), using default")
+    
+    return preferred_models[0]  # Default to cheapest
+
 def refine_ocr_with_ai(text: str, api_key: str) -> str:
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(MODEL_NAME)
+    model_name = get_available_model(api_key)
+    model = genai.GenerativeModel(model_name)
     prompt = f"""
 SYSTEM: You are an expert legal document cleaner.
 Your job is to correct OCR errors in legal text while preserving original meaning.
