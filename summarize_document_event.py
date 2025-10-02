@@ -203,7 +203,8 @@ Return only the corrected text. Do not summarize or explain.
 
 def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(MODEL_NAME)
+    model_name = get_available_model(api_key)
+    model = genai.GenerativeModel(model_name)
 
     # Ensure input size is controlled
     case_summary = (case_summary or "")[:2000]  # #2: Increased limit to preserve case detail
