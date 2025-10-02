@@ -164,24 +164,35 @@ def get_available_model(api_key: str) -> str:
     """Get the best available Gemini model for moderate volume processing"""
     genai.configure(api_key=api_key)
     
-    # List of models in order of preference (reliability and features first)
+    # List of models in order of preference (using known working models)
     preferred_models = [
-        "gemini-1.5-flash",       # Good balance of speed, cost, and reliability
-        "gemini-1.5-pro",         # High quality for complex documents
-        "gemini-1.0-pro",         # Reliable fallback
-        "gemini-pro"              # Legacy fallback
+        "gemini-pro",             # Most reliable and widely available
+        "gemini-1.0-pro",         # Alternative stable option
+        "gemini-1.5-pro",         # If available
+        "gemini-1.5-flash"        # Backup option
     ]
     
     try:
         available_models = [m.name for m in genai.list_models()]
+        log_message(f"Available models: {available_models[:5]}...")  # Log first 5 for debugging
+        
         for model_name in preferred_models:
             # Check both with and without 'models/' prefix
             if model_name in available_models or f"models/{model_name}" in available_models:
+                log_message(f"Selected model: {model_name}")
                 return model_name
+        
+        # If no preferred models found, use the first available one that supports generateContent
+        for model in genai.list_models():
+            if 'generateContent' in model.supported_generation_methods:
+                model_name = model.name.replace('models/', '')
+                log_message(f"Using first available model: {model_name}")
+                return model_name
+                
     except Exception as e:
-        print(f"Warning: Could not list models ({e}), using default")
+        log_message(f"Warning: Could not list models ({e}), using default")
     
-    return preferred_models[0]  # Default to cheapest
+    return "gemini-pro"  # Safe default
 
 def refine_ocr_with_ai(text: str, api_key: str) -> str:
     genai.configure(api_key=api_key)
