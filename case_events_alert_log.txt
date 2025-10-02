@@ -18,3 +18,5 @@ Skipping Gemini summary — OCR result is too poor.
 START: Fri 09/19/2025 16:33:53.68 
 No doc_uid argument supplied. Processing latest unsummarized document: 48A63436-8694-402D-90F2-91F7EA56CC46
 Skipping Gemini summary — OCR result is too poor.
+START: Thu 10/02/2025 11:19:57.44 
+No doc_uid argument supplied. Processing latest unsummarized document: 34C0F5FC-66D9-4EA3-BBAC-A6E5E9670AC0

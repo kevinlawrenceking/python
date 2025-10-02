@@ -2,36 +2,85 @@ import pyodbc
 import subprocess
 import time
 import logging
+import os
 from datetime import datetime
 
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('u:/docketwatch/python/logs/extract_pacer_pdf_file_loop.log'),
-        logging.StreamHandler()
-    ]
-)
+# Ensure logs directory exists
+log_dir = 'u:/docketwatch/python/logs'
+os.makedirs(log_dir, exist_ok=True)
+
+# Get the script filename without extension for log naming
+script_name = os.path.splitext(os.path.basename(__file__))[0]
+log_file = f'{log_dir}/{script_name}.log'
+
+# Setup logging with error handling
+try:
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ]
+    )
+    logging.info(f"Logging initialized successfully - {log_file}")
+except Exception as e:
+    print(f"Failed to setup logging: {e}")
+    # Fallback to console only
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+print("Starting PACER PDF extraction loop...")
+
+# Test if we can connect to database first
+try:
+    test_conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
+    test_cursor = test_conn.cursor()
+    test_cursor.execute("SELECT 1")
+    test_conn.close()
+    logging.info("Database connectivity test passed")
+    print("Database connectivity test passed")
+except Exception as test_error:
+    logging.error(f"Database connectivity test failed: {test_error}")
+    print(f"Database connectivity test failed: {test_error}")
+    exit(1)
 
 while True:
     try:
+        logging.info("Starting new iteration of PDF extraction loop")
+        print("Starting new iteration...")
+        
         # Database connection
-        conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
-        cursor = conn.cursor()
+        try:
+            conn = pyodbc.connect("DSN=Docketwatch;TrustServerCertificate=yes;")
+            cursor = conn.cursor()
+            logging.info("Database connection established")
+        except Exception as db_error:
+            logging.error(f"Database connection failed: {db_error}")
+            print(f"Database connection failed: {db_error}")
+            time.sleep(60)
+            continue
 
         # Query to find applicable case_event IDs 
         # Include all case events created today, but if documents exist, only where rel_path = 'pending'
-        cursor.execute("""
-        SELECT distinct TOP 3 e.[id] AS case_id, e.created_at
-        FROM [docketwatch].[dbo].[case_events] e 
-        INNER JOIN [docketwatch].[dbo].[cases] c ON c.id = e.fk_cases
-        LEFT JOIN [docketwatch].[dbo].[documents] d ON d.fk_case_event = e.id
-        WHERE c.fk_tool = 2 and e.emailed <> 1
-            AND CAST(e.created_at AS DATE) = CAST(GETDATE() AS DATE)
-            AND (d.fk_case_event IS NULL)
-        ORDER BY e.created_at DESC
-        """)
+        try:
+            cursor.execute("""
+            SELECT distinct TOP 3 e.[id] AS case_id, e.created_at
+            FROM [docketwatch].[dbo].[case_events] e 
+            INNER JOIN [docketwatch].[dbo].[cases] c ON c.id = e.fk_cases
+            LEFT JOIN [docketwatch].[dbo].[documents] d ON d.fk_case_event = e.id
+            WHERE c.fk_tool = 2 and e.emailed <> 1
+                AND CAST(e.created_at AS DATE) = CAST(GETDATE() AS DATE)
+                AND (d.fk_case_event IS NULL)
+            ORDER BY e.created_at DESC
+            """)
+            logging.info("Query executed successfully")
+        except Exception as query_error:
+            logging.error(f"Query execution failed: {query_error}")
+            print(f"Query execution failed: {query_error}")
+            cursor.close()
+            conn.close()
+            time.sleep(60)  
+            continue
 
         case_ids = [row.case_id for row in cursor.fetchall()]
         logging.info(f"Found {len(case_ids)} case_events to process at {datetime.now()}")
@@ -77,14 +126,21 @@ while True:
                 print(unexpected_msg)
 
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        error_msg = f"Unexpected error in main loop: {e}"
+        logging.error(error_msg)
+        print(error_msg)
+        import traceback
+        logging.error(f"Traceback: {traceback.format_exc()}")
 
     finally:
         try:
-            cursor.close()
-            conn.close()
-        except:
-            pass
+            if 'cursor' in locals():
+                cursor.close()
+            if 'conn' in locals():
+                conn.close()
+        except Exception as cleanup_error:
+            logging.warning(f"Error during cleanup: {cleanup_error}")
 
+    logging.info("Sleeping for 60 seconds...")
     print("Sleeping for 60 seconds...\n")
     time.sleep(60)

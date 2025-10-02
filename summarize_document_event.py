@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from pdf2image import convert_from_path
 from cleantext import clean as clean_unicode
-from scraper_base import log_message
+from scraper_base import log_message, setup_logging
 import unicodedata
 import google.generativeai as genai
 from summary_parser import parse_ai_summary, save_structured_summary
@@ -204,6 +204,10 @@ def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
 
 
 def process_single_pdf(doc_uid: str):
+    # Setup logging with the script filename
+    script_filename = os.path.splitext(os.path.basename(__file__))[0]
+    setup_logging(f"u:/docketwatch/python/logs/{script_filename}.log")
+    
     conn, cur = get_cursor()
     log_message(cur, None, "INFO", f"Starting PDF processing for doc_uid: {doc_uid}")
     
