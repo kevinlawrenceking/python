@@ -53,8 +53,12 @@ def main():
     setup_logging(f"u:/docketwatch/python/logs/{script_filename}.log")
 
     try:
+        log_message(None, None, "INFO", f"=== SCRIPT START: case_event_id={args.case_event_id} ===")
         conn, cursor = get_db_cursor()
+        log_message(None, None, "INFO", "Database connection established")
+        
         # Ensure arr_de_seq_nums is populated
+        log_message(None, None, "INFO", "Updating arr_de_seq_nums for case_events with missing values")
         cursor.execute("""
             UPDATE docketwatch.dbo.case_events
             SET arr_de_seq_nums = 
@@ -68,9 +72,13 @@ def main():
             AND arr_de_seq_nums IS NULL
             AND event_url LIKE '%de_seq_num%'
         """)
+        rows_updated = cursor.rowcount
         conn.commit()
+        log_message(None, None, "INFO", f"Updated arr_de_seq_nums for {rows_updated} rows")
+        
         context = get_task_context_by_tool_id(cursor, 2)
         fk_task_run = context["fk_task_run"] if context else None
+        log_message(cursor, fk_task_run, "INFO", f"Task context retrieved: fk_task_run={fk_task_run}")
 
         log_message(cursor, fk_task_run, "INFO", f"Processing case_event_id: {args.case_event_id}")
 
@@ -80,6 +88,7 @@ def main():
             log_message(cursor, fk_task_run, "ERROR", "PACER credentials not found in DB.")
             return
         USERNAME, PASSWORD, LOGIN_URL = row
+        log_message(cursor, fk_task_run, "INFO", f"PACER credentials retrieved. Login URL: {LOGIN_URL}")
 
         cursor.execute("""
             SELECT c.id AS case_id,
@@ -96,13 +105,18 @@ def main():
             return
 
         case_id, pacer_id, base_url, event_description, event_url = row
+        log_message(cursor, fk_task_run, "INFO", f"Event retrieved: case_id={case_id}, pacer_id={pacer_id}, base_url={base_url}")
+        log_message(cursor, fk_task_run, "INFO", f"Event URL: {event_url}")
+        log_message(cursor, fk_task_run, "INFO", f"Event description: {event_description}")
 
         # Setup headless Chrome
+        log_message(cursor, fk_task_run, "INFO", "Initializing Chrome driver with headless options")
         opts = Options()
         opts.add_argument("--headless=new")
         opts.add_argument("--disable-gpu")
         opts.add_argument("--no-sandbox")
         opts.add_argument("--disable-dev-shm-usage")
+        log_message(cursor, fk_task_run, "INFO", f"Download directory set to: {FINAL_PDF_DIR}")
         prefs = {
             "download.default_directory": FINAL_PDF_DIR,
             "download.prompt_for_download": False,
@@ -113,21 +127,29 @@ def main():
         opts.add_experimental_option("prefs", prefs)
         driver = webdriver.Chrome(service=Service(CHROMEDRIVER_PATH), options=opts)
         wait = WebDriverWait(driver, 15)
+        log_message(cursor, fk_task_run, "INFO", "Chrome driver initialized successfully")
 
         # Login
+        log_message(cursor, fk_task_run, "INFO", f"Navigating to login page: {LOGIN_URL}")
         driver.get(LOGIN_URL)
+        log_message(cursor, fk_task_run, "INFO", "Waiting for login form elements...")
         wait.until(EC.presence_of_element_located((By.NAME, "loginForm:loginName"))).send_keys(USERNAME)
         driver.find_element(By.NAME, "loginForm:password").send_keys(PASSWORD)
         try:
             driver.find_element(By.NAME, "loginForm:clientCode").send_keys("DocketWatch")
+            log_message(cursor, fk_task_run, "INFO", "Client code field found and filled")
         except:
+            log_message(cursor, fk_task_run, "INFO", "Client code field not found (optional)")
             pass
         driver.find_element(By.NAME, "loginForm:fbtnLogin").click()
         time.sleep(3)
+        log_message(cursor, fk_task_run, "INFO", "Login button clicked, waiting for redirect...")
 
         # Load the event page
+        log_message(cursor, fk_task_run, "INFO", f"Loading event page: {event_url}")
         driver.get(event_url)
         time.sleep(2)
+        log_message(cursor, fk_task_run, "INFO", f"Event page loaded. Page title: {driver.title[:100]}")
 
         if "referrer_form" in driver.page_source:
             try:
@@ -137,14 +159,18 @@ def main():
             except Exception as e:
                 log_message(cursor, fk_task_run, "ERROR", f"Referrer form submission failed: {str(e)}")
 
+        log_message(cursor, fk_task_run, "INFO", "Parsing page source for document rows...")
         soup = BeautifulSoup(driver.page_source, "html.parser")
         doc_rows = extract_doc_rows(soup)
+        log_message(cursor, fk_task_run, "INFO", f"Found {len(doc_rows)} document rows on page")
         inserted = 0
 
         if not doc_rows:
+            log_message(cursor, fk_task_run, "INFO", "No doc_rows found, checking for fallback doc_id in event_url")
             match = re.search(r'/doc1/(\d+)', event_url)
             if match:
                 doc_id = str(match.group(1))  # Convert to string for varchar schema
+                log_message(cursor, fk_task_run, "INFO", f"Fallback doc_id extracted: {doc_id}")
                 cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_id,))
                 if cursor.fetchone()[0] == 0:
                     # INSERT into documents table - doc_id is varchar, isfound defaults to NULL
@@ -158,12 +184,19 @@ def main():
                     ))
                     conn.commit()
                     log_message(cursor, fk_task_run, "INFO", f"Inserted fallback docket PDF {doc_id}")
+                else:
+                    log_message(cursor, fk_task_run, "INFO", f"Fallback doc_id {doc_id} already exists in documents table")
+            else:
+                log_message(cursor, fk_task_run, "WARNING", "No doc_id found in event_url for fallback")
         else:
+            log_message(cursor, fk_task_run, "INFO", f"Processing {len(doc_rows)} document rows")
             for i, tr in enumerate(doc_rows):
                 pdf_type = "Docket" if i == 0 else "Attachment"
                 doc_data = parse_doc_row(tr, base_url, pdf_type, event_description)
                 if not doc_data or not doc_data["doc_id"]:
+                    log_message(cursor, fk_task_run, "WARNING", f"Row {i}: Failed to parse doc_data or missing doc_id")
                     continue
+                log_message(cursor, fk_task_run, "INFO", f"Row {i}: Parsed doc_id={doc_data['doc_id']}, type={pdf_type}, title={doc_data['pdf_title'][:50]}")
                 cursor.execute("SELECT COUNT(*) FROM docketwatch.dbo.documents WHERE doc_id = ?", (doc_data["doc_id"],))
                 if cursor.fetchone()[0] == 0:
                     # INSERT into documents table - doc_id is varchar, isfound defaults to NULL
@@ -179,10 +212,14 @@ def main():
                         doc_data["pdf_no"], doc_data["rel_path"]
                     ))
                     inserted += 1
+                    log_message(cursor, fk_task_run, "INFO", f"Row {i}: Inserted doc_id={doc_data['doc_id']}")
+                else:
+                    log_message(cursor, fk_task_run, "INFO", f"Row {i}: doc_id={doc_data['doc_id']} already exists, skipping")
             conn.commit()
             log_message(cursor, fk_task_run, "INFO", f"Inserted metadata for {inserted} documents.")
 
         # Now query for those documents with rel_path = 'pending' and download the actual PDFs
+        log_message(cursor, fk_task_run, "INFO", "Querying for documents with rel_path='pending' to download PDFs")
         cursor.execute("""
          
  SELECT 
@@ -229,8 +266,9 @@ def main():
 		        WHERE e.id = ? 
         """, (args.case_event_id,))
         rows = cursor.fetchall()
+        log_message(cursor, fk_task_run, "INFO", f"Found {len(rows)} documents to download")
 
-        for row in rows:
+        for idx, row in enumerate(rows, 1):
             doc_id = row.doc_id
             doc_uid = row.doc_uid
             fk_case = row.fk_case
@@ -240,99 +278,144 @@ def main():
             os.makedirs(case_dir, exist_ok=True)
             dest_path = os.path.join(case_dir, filename)
 
+            log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Starting download for doc_id={doc_id}, doc_uid={doc_uid}")
+            log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Destination: {dest_path}")
             try:
-                log_message(cursor, fk_task_run, "INFO", f"Download URL for doc_id {doc_id}: {download_url}")
+                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Download URL: {download_url}")
                 driver.get(download_url)
+                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Navigated to download URL, waiting 8 seconds...")
                 time.sleep(8)
+                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Page title after navigation: {driver.title[:100]}")
 
                 if "Warning:" in driver.page_source and "referrer_form" in driver.page_source:
+                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] CSRF referrer form detected")
                     try:
                         form = driver.find_element(By.ID, "referrer_form")
                         driver.execute_script("arguments[0].submit();", form)
                         time.sleep(3)
-                        log_message(cursor, fk_task_run, "INFO", "Submitted CSRF referrer form.")
+                        log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Submitted CSRF referrer form.")
                     except Exception as e:
-                        log_message(cursor, fk_task_run, "ERROR", f"CSRF form submission failed: {str(e)}")
+                        log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] CSRF form submission failed: {str(e)}")
 
+                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Looking for Download Documents button...")
                 try:
                     download_button = driver.find_element(By.XPATH, "//input[@type='button' and @value='Download Documents']")
+                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Download button found, clicking...")
                     driver.execute_script("arguments[0].click();", download_button)
                     time.sleep(3)
+                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Download button clicked")
                 except:
-                    log_message(cursor, fk_task_run, "WARNING", f"Download button not found for {filename}")
+                    log_message(cursor, fk_task_run, "WARNING", f"[{idx}/{len(rows)}] Download button not found for {filename}")
 
+                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Waiting for ZIP file to appear in {FINAL_PDF_DIR}...")
                 zip_file = None
                 start_time = time.time()
+                wait_count = 0
                 while time.time() - start_time < 30:
                     zips = [f for f in os.listdir(FINAL_PDF_DIR) if f.endswith(".zip")]
+                    wait_count += 1
+                    if wait_count % 5 == 0:
+                        log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Still waiting for ZIP... ({int(time.time() - start_time)}s elapsed, found {len(zips)} zip files)")
                     if zips:
                         latest = max([os.path.join(FINAL_PDF_DIR, f) for f in zips], key=os.path.getctime)
-                        if not os.path.exists(latest + ".crdownload"):
+                        crdownload_path = latest + ".crdownload"
+                        if not os.path.exists(crdownload_path):
                             zip_file = latest
+                            log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] ZIP file found: {os.path.basename(zip_file)}")
                             break
+                        else:
+                            if wait_count % 5 == 0:
+                                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] ZIP still downloading (.crdownload exists)")
                     time.sleep(1)
 
                 if zip_file:
-                    with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-                        zip_ref.extractall(FINAL_PDF_DIR)
-                        for name in zip_ref.namelist():
-                            extracted_pdf = os.path.join(FINAL_PDF_DIR, name)
-                            if os.path.exists(extracted_pdf):
-                                file_size = os.path.getsize(extracted_pdf)
-                                if file_size < 2048:
-                                    log_message(cursor, fk_task_run, "WARNING", f"Downloaded file too small (<2KB): {filename} ({file_size} bytes)")
-                                    os.remove(extracted_pdf)
-                                    continue
+                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Processing ZIP file: {zip_file}")
+                    try:
+                        with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+                            namelist = zip_ref.namelist()
+                            log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] ZIP contains {len(namelist)} files: {namelist}")
+                            zip_ref.extractall(FINAL_PDF_DIR)
+                            log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Extracted ZIP to {FINAL_PDF_DIR}")
+                            
+                            for name in namelist:
+                                extracted_pdf = os.path.join(FINAL_PDF_DIR, name)
+                                log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Checking extracted file: {name}")
+                                if os.path.exists(extracted_pdf):
+                                    file_size = os.path.getsize(extracted_pdf)
+                                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Extracted file size: {file_size} bytes")
+                                    if file_size < 2048:
+                                        log_message(cursor, fk_task_run, "WARNING", f"[{idx}/{len(rows)}] Downloaded file too small (<2KB): {filename} ({file_size} bytes)")
+                                        os.remove(extracted_pdf)
+                                        continue
 
-                                os.rename(extracted_pdf, dest_path)
-                                rel_path = f"cases\\{fk_case}\\{filename}"
-                                cursor.execute("""
-                                    UPDATE docketwatch.dbo.documents
-                                    SET rel_path = ?, date_downloaded = GETDATE()
-                                    WHERE doc_uid = ?
-                                """, (rel_path, doc_uid))
-                                conn.commit()
-                                log_message(cursor, fk_task_run, "INFO", f"Downloaded and saved: {filename} ({file_size} bytes)")
-                                
-                                # Run summarize_document_event.py on the newly downloaded document
-                                try:
-                                    summarize_script = os.path.join(os.path.dirname(__file__), "summarize_document_event.py")
-                                    summarize_cmd = [sys.executable, summarize_script, str(doc_uid)]
-                                    log_message(cursor, fk_task_run, "INFO", f"Launching summarization: {' '.join(summarize_cmd)}")
+                                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Renaming {name} to {filename}")
+                                    os.rename(extracted_pdf, dest_path)
+                                    rel_path = f"cases\\{fk_case}\\{filename}"
+                                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Updating database: rel_path={rel_path}, doc_uid={doc_uid}")
+                                    cursor.execute("""
+                                        UPDATE docketwatch.dbo.documents
+                                        SET rel_path = ?, date_downloaded = GETDATE()
+                                        WHERE doc_uid = ?
+                                    """, (rel_path, doc_uid))
+                                    conn.commit()
+                                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Downloaded and saved: {filename} ({file_size} bytes)")
                                     
-                                    result = subprocess.run(
-                                        summarize_cmd,
-                                        capture_output=True,
-                                        text=True,
-                                        timeout=300  # 5 minute timeout for summarization
-                                    )
-                                    
-                                    if result.returncode == 0:
-                                        log_message(cursor, fk_task_run, "INFO", f"Summarization completed for doc_uid {doc_uid}")
-                                    else:
-                                        log_message(cursor, fk_task_run, "WARNING", f"Summarization returned code {result.returncode} for doc_uid {doc_uid}")
-                                        if result.stderr:
-                                            log_message(cursor, fk_task_run, "WARNING", f"Summarization stderr: {result.stderr[:500]}")
-                                except subprocess.TimeoutExpired:
-                                    log_message(cursor, fk_task_run, "ERROR", f"Summarization timeout for doc_uid {doc_uid}")
-                                except Exception as summ_ex:
-                                    log_message(cursor, fk_task_run, "ERROR", f"Summarization failed for doc_uid {doc_uid}: {str(summ_ex)}")
+                                    # Run summarize_document_event.py on the newly downloaded document
+                                    try:
+                                        summarize_script = os.path.join(os.path.dirname(__file__), "summarize_document_event.py")
+                                        summarize_cmd = [sys.executable, summarize_script, str(doc_uid)]
+                                        log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Launching summarization: {' '.join(summarize_cmd)}")
+                                        
+                                        result = subprocess.run(
+                                            summarize_cmd,
+                                            capture_output=True,
+                                            text=True,
+                                            timeout=300  # 5 minute timeout for summarization
+                                        )
+                                        
+                                        if result.returncode == 0:
+                                            log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Summarization completed for doc_uid {doc_uid}")
+                                        else:
+                                            log_message(cursor, fk_task_run, "WARNING", f"[{idx}/{len(rows)}] Summarization returned code {result.returncode} for doc_uid {doc_uid}")
+                                            if result.stderr:
+                                                log_message(cursor, fk_task_run, "WARNING", f"[{idx}/{len(rows)}] Summarization stderr: {result.stderr[:500]}")
+                                    except subprocess.TimeoutExpired:
+                                        log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] Summarization timeout for doc_uid {doc_uid}")
+                                    except Exception as summ_ex:
+                                        log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] Summarization failed for doc_uid {doc_uid}: {str(summ_ex)}")
+                                else:
+                                    log_message(cursor, fk_task_run, "WARNING", f"[{idx}/{len(rows)}] Extracted file not found: {extracted_pdf}")
 
-                    os.remove(zip_file)
+                        log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Deleting ZIP file: {zip_file}")
+                        os.remove(zip_file)
+                    except zipfile.BadZipFile as ze:
+                        log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] Bad ZIP file: {str(ze)}")
+                    except Exception as ze:
+                        log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] ZIP processing error: {str(ze)}")
                 else:
-                    log_message(cursor, fk_task_run, "WARNING", f"ZIP not found for {filename}")
+                    log_message(cursor, fk_task_run, "WARNING", f"[{idx}/{len(rows)}] ZIP not found after 30 second timeout for {filename}")
+                    # Check if there are any files in the directory
+                    all_files = os.listdir(FINAL_PDF_DIR)
+                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Files currently in {FINAL_PDF_DIR}: {len(all_files)} total")
+                    recent_files = [f for f in all_files if (time.time() - os.path.getctime(os.path.join(FINAL_PDF_DIR, f))) < 60]
+                    log_message(cursor, fk_task_run, "INFO", f"[{idx}/{len(rows)}] Recent files (< 60s): {recent_files}")
 
             except Exception as ex:
-                log_message(cursor, fk_task_run, "ERROR", f"Download failed for {filename}: {str(ex)}")
+                log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] Download failed for {filename}: {str(ex)}")
+                log_message(cursor, fk_task_run, "ERROR", f"[{idx}/{len(rows)}] Exception traceback: {traceback.format_exc()}")
 
     except Exception as e:
-        log_message(cursor, None, "ERROR", f"Unhandled error: {str(e)}")
+        log_message(cursor if 'cursor' in locals() else None, None, "ERROR", f"Unhandled error: {str(e)}")
+        log_message(cursor if 'cursor' in locals() else None, None, "ERROR", f"Traceback: {traceback.format_exc()}")
         traceback.print_exc()
     finally:
         if 'driver' in locals():
+            log_message(cursor if 'cursor' in locals() else None, None, "INFO", "Closing Chrome driver")
             driver.quit()
         if 'conn' in locals():
+            log_message(cursor if 'cursor' in locals() else None, None, "INFO", "Closing database connection")
             conn.close()
+        log_message(None, None, "INFO", "=== SCRIPT END ===")
 
 if __name__ == "__main__":
     main()
