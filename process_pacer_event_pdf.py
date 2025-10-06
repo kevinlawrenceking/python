@@ -88,7 +88,7 @@ def main():
                 e.event_description, e.event_url
             FROM docketwatch.dbo.case_events e
             INNER JOIN docketwatch.dbo.cases c ON c.id = e.fk_cases
-            WHERE e.id = ?
+            WHERE event_Url is not null and e.id = ?
         """, (args.case_event_id,))
         row = cursor.fetchone()
         if not row:

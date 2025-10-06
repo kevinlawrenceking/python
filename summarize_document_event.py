@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import json
+import time
 import cv2
 import numpy as np
 import pyodbc
@@ -23,6 +24,11 @@ DSN = "Docketwatch"
 POPPLER_PATH = r"C:\\Poppler\\bin"
 TESSERACT_PATH = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 # Model selection handled dynamically by get_available_model() - optimized for moderate volume
+FAST_OCR_DPI = 200          # First-pass DPI for scanned docs
+HIGH_QUALITY_OCR_DPI = 300  # Escalation DPI only if needed
+OCR_TEXT_THRESHOLD = 200    # If below this after fast OCR, escalate
+EARLY_EXIT_TEXT_THRESHOLD = 1200  # Stop OCR early once enough text captured
+CACHED_MODEL_NAME = None    # Cache selected model to avoid repeated list_models calls
 RULES = r"""
 SYSTEM: You are a senior legal journalist at a major entertainment news organization. Your task is to analyze court documents and create precise, actionable summaries for reporters covering celebrity cases, high-profile litigation, and entertainment industry legal matters.
 
@@ -137,21 +143,58 @@ def tesseract_page(img):
     return txt
 
 def pdf_to_text(path):
+    """Extract text quickly; escalate quality only if needed.
+
+    Strategy:
+    1. Try native PDF text extraction (PyPDF2) - very fast.
+    2. If insufficient (< OCR_TEXT_THRESHOLD), run fast OCR at lower DPI.
+    3. If still insufficient, escalate to high DPI only until enough text gathered.
+    4. Early exit once EARLY_EXIT_TEXT_THRESHOLD reached to avoid wasting time.
+    """
+    # 1. Native text extraction
     text = ""
     try:
         with open(path, "rb") as f:
             reader = PyPDF2.PdfReader(f)
             for pg in reader.pages:
-                text += (pg.extract_text() or "") + "\n"
+                extracted = pg.extract_text() or ""
+                if extracted:
+                    text += extracted + "\n"
+        if len(text.strip()) >= OCR_TEXT_THRESHOLD:
+            return text
     except Exception:
         pass
-    if len(text.strip()) >= 200:
-        return text
-    pages = convert_from_path(path, dpi=300, poppler_path=POPPLER_PATH)
-    for pil in pages:
+
+    # 2. Fast low-DPI OCR
+    try:
+        pages = convert_from_path(path, dpi=FAST_OCR_DPI, poppler_path=POPPLER_PATH)
+    except Exception as e:
+        _simple_log(f"Fast OCR conversion failed: {e}", "WARNING")
+        return text  # Return whatever we have (may be empty)
+
+    ocr_text = ""
+    for idx, pil in enumerate(pages, start=1):
         img = preprocess(cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR))
-        text += tesseract_page(img) + "\n"
-    return text
+        ocr_text += tesseract_page(img) + "\n"
+        if len(ocr_text) >= EARLY_EXIT_TEXT_THRESHOLD:
+            break
+
+    if len(ocr_text.strip()) >= OCR_TEXT_THRESHOLD:
+        return ocr_text
+
+    # 3. Escalate selectively (high DPI) only if still too little text
+    try:
+        pages_hq = convert_from_path(path, dpi=HIGH_QUALITY_OCR_DPI, poppler_path=POPPLER_PATH)
+    except Exception as e:
+        _simple_log(f"High-quality OCR conversion failed: {e}", "WARNING")
+        return ocr_text or text
+
+    for idx, pil in enumerate(pages_hq, start=1):
+        img = preprocess(cv2.cvtColor(np.array(pil), cv2.COLOR_RGB2BGR))
+        ocr_text += tesseract_page(img) + "\n"
+        if len(ocr_text) >= EARLY_EXIT_TEXT_THRESHOLD:
+            break
+    return ocr_text or text
 
 def clean_ocr_text(txt):
     txt = re.sub(r'^Page \d+\s*\n', '', txt, flags=re.MULTILINE)
@@ -177,38 +220,28 @@ def _simple_log(message: str, level: str = "INFO"):
 
 
 def get_available_model(api_key: str) -> str:
-    """Get the best available Gemini model for moderate volume processing."""
+    """Get the best available Gemini model for moderate volume processing (cached)."""
+    global CACHED_MODEL_NAME
+    if CACHED_MODEL_NAME:
+        return CACHED_MODEL_NAME
+
     genai.configure(api_key=api_key)
-
-    preferred_models = [
-        "gemini-pro",
-        "gemini-1.0-pro",
-        "gemini-1.5-pro",
-        "gemini-1.5-flash",
-    ]
-
+    preferred_models = ["gemini-pro", "gemini-1.0-pro", "gemini-1.5-pro", "gemini-1.5-flash"]
     try:
         available_models = [m.name for m in genai.list_models()]
-        _simple_log(f"Available models (sample): {available_models[:8]}")
-
-        # Normalize names (strip 'models/' prefix) for comparison
         normalized = {name.replace('models/', '') for name in available_models}
         for model_name in preferred_models:
             if model_name in normalized:
-                _simple_log(f"Selected model: {model_name}")
+                CACHED_MODEL_NAME = model_name
                 return model_name
-
-        # Fallback: pick first model supporting generateContent
         for model in genai.list_models():
             if 'generateContent' in getattr(model, 'supported_generation_methods', []):
-                chosen = model.name.replace('models/', '')
-                _simple_log(f"Fallback selected model: {chosen}")
-                return chosen
-
-    except Exception as e:
-        _simple_log(f"Warning: model discovery failed ({e}); using default", "WARNING")
-
-    return "gemini-pro"
+                CACHED_MODEL_NAME = model.name.replace('models/', '')
+                return CACHED_MODEL_NAME
+    except Exception:
+        pass
+    CACHED_MODEL_NAME = "gemini-pro"
+    return CACHED_MODEL_NAME
 
 def refine_ocr_with_ai(text: str, api_key: str) -> str:
     genai.configure(api_key=api_key)
@@ -293,7 +326,9 @@ def process_single_pdf(doc_uid: str):
     # Setup logging with the script filename
     script_filename = os.path.splitext(os.path.basename(__file__))[0]
     setup_logging(f"u:/docketwatch/python/logs/{script_filename}.log")
-    
+    t_start = time.time()
+    stage_times = {}
+
     conn, cur = get_cursor()
     log_message(cur, None, "INFO", f"Starting PDF processing for doc_uid: {doc_uid}")
     
@@ -333,6 +368,7 @@ WHERE p.doc_uid = ?
     abs_path = os.path.join(docs_root, rel_row[0]) if rel_row else None
 
     if (not ocr_text or len(ocr_text.strip()) < 100) and abs_path and os.path.isfile(abs_path):
+        t_ocr_start = time.time()
         log_message(cur, None, "INFO", f"Extracting OCR text from PDF: {abs_path}")
         raw = pdf_to_text(abs_path)
         clean = clean_ocr_text(raw)
@@ -349,6 +385,7 @@ WHERE p.doc_uid = ?
         conn.commit()
         log_message(cur, None, "INFO", f"OCR text updated in database for {doc_uid}")
         ocr_text = clean
+        stage_times['ocr_total_sec'] = round(time.time() - t_ocr_start, 2)
 
     pdf_text = clean_ocr_text(ocr_text or "")
     if len(pdf_text.strip()) < 100:
@@ -357,6 +394,7 @@ WHERE p.doc_uid = ?
         return
 
     try:
+        t_ai_start = time.time()
         log_message(cur, None, "INFO", f"Requesting Gemini summary for {doc_uid}")
         gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text, key)
         gem = fix_encoding_garbage(gem)
@@ -366,6 +404,7 @@ WHERE p.doc_uid = ?
         
         # Parse the structured AI summary
         parsed_summary = parse_ai_summary(gem)
+        stage_times['ai_summary_sec'] = round(time.time() - t_ai_start, 2)
         
     except Exception as e:
         log_message(cur, None, "ERROR", f"Gemini fail {doc_uid}: {e}")
@@ -387,32 +426,86 @@ WHERE p.doc_uid = ?
         log_message(cur, None, "INFO", f"PDF {doc_uid} processed (summary only)")
     
     conn.commit()
+    stage_times['total_sec'] = round(time.time() - t_start, 2)
+    if stage_times:
+        timing_msg = ", ".join(f"{k}={v}" for k, v in stage_times.items())
+        log_message(cur, None, "INFO", f"Timing: {timing_msg}")
     cur.close(); conn.close()
 
 def get_default_doc_uid():
     """Get the latest document that needs summarization."""
     conn, cur = get_cursor()
     try:
+        # Updated selection logic per request: prioritize today's tracked case documents
+        # that have not yet been summarized.
         cur.execute("""
-            SELECT doc_uid AS default_doc_uid 
-            FROM docketwatch.dbo.documents 
-            WHERE pdf_type <> 'Filing' AND summary_ai IS NULL AND fk_tool = 2 AND pdf_url IS NOT NULL
-            ORDER BY date_downloaded DESC
+            SELECT TOP 1 p.doc_uid AS default_doc_uid
+            FROM docketwatch.dbo.documents p
+            LEFT JOIN docketwatch.dbo.case_events e ON e.id = p.fk_case_event
+            JOIN docketwatch.dbo.cases c ON c.id = p.fk_case
+            WHERE p.summary_ai IS NULL
+              AND c.fk_tool = 2
+              AND c.status = 'Tracked'
+              AND CAST(p.date_downloaded AS DATE) = CAST(GETDATE() AS DATE)
+            ORDER BY p.date_downloaded DESC
         """)
         row = cur.fetchone()
-        return row.default_doc_uid if row else None
+        return getattr(row, 'default_doc_uid', None) if row else None
     finally:
         conn.close()
 
+def parse_cli_args(argv):
+    """Parse CLI for optional doc_uid and ordering.
+
+    Recognized:
+      --order=asc|desc  Choose selection order for default doc (date_downloaded)
+      <doc_uid>         If provided (and not starting with --), process that specific doc
+    """
+    order = 'DESC'  # default newest-first
+    doc_uid = None
+    for arg in argv:
+        if arg.startswith('--order='):
+            val = arg.split('=', 1)[1].strip().lower()
+            if val in ('asc', 'desc'):
+                order = val.upper()
+        elif not arg.startswith('--') and doc_uid is None:
+            # Treat as doc_uid
+            doc_uid = arg.strip()
+    return doc_uid, order
+
+
+def get_default_doc_uid(order: str = 'DESC'):
+    """Get a document that needs summarization using specified order by date_downloaded."""
+    conn, cur = get_cursor()
+    try:
+        order_sql = 'ASC' if str(order).upper() == 'ASC' else 'DESC'
+        cur.execute(f"""
+            SELECT TOP 1 p.doc_uid AS default_doc_uid
+            FROM docketwatch.dbo.documents p
+            LEFT JOIN docketwatch.dbo.case_events e ON e.id = p.fk_case_event
+            JOIN docketwatch.dbo.cases c ON c.id = p.fk_case
+            WHERE p.summary_ai IS NULL
+              AND c.fk_tool = 2
+              AND c.status = 'Tracked'
+              AND CAST(p.date_downloaded AS DATE) = CAST(GETDATE() AS DATE)
+            ORDER BY p.date_downloaded {order_sql}
+        """)
+        row = cur.fetchone()
+        return getattr(row, 'default_doc_uid', None) if row else None
+    finally:
+        conn.close()
+
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        # No argument supplied, find the default document to process
-        default_doc_uid = get_default_doc_uid()
+    doc_arg, order = parse_cli_args(sys.argv[1:])
+    if not doc_arg:
+        # No doc_uid supplied, find one based on order
+        default_doc_uid = get_default_doc_uid(order)
         if default_doc_uid:
-            print(f"No doc_uid argument supplied. Processing latest unsummarized document: {default_doc_uid}")
+            print(f"No doc_uid argument supplied. Selecting by date_downloaded {order}. Doc: {default_doc_uid}")
             process_single_pdf(default_doc_uid)
         else:
-            print("No unsummarized documents found.")
-            print("Usage: python summarize_document_event.py <doc_uid>")
+            print("No unsummarized documents found for today.")
+            print("Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]")
     else:
-        process_single_pdf(sys.argv[1])
+        process_single_pdf(doc_arg)

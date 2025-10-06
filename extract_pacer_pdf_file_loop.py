@@ -60,17 +60,18 @@ while True:
             time.sleep(60)
             continue
 
-        # Query to find applicable case_event IDs 
-        # Include all case events created today, but if documents exist, only where rel_path = 'pending'
+        # Query to find applicable case_event IDs
+        # Include all case events created today, with no documents yet, and not currently marked processing
         try:
             cursor.execute("""
-            SELECT distinct TOP 3 e.[id] AS case_id, e.created_at
+            SELECT DISTINCT TOP 3 e.[id] AS case_id, e.created_at
             FROM [docketwatch].[dbo].[case_events] e 
             INNER JOIN [docketwatch].[dbo].[cases] c ON c.id = e.fk_cases
             LEFT JOIN [docketwatch].[dbo].[documents] d ON d.fk_case_event = e.id
-            WHERE c.fk_tool = 2 and e.emailed <> 1
+            WHERE c.fk_tool = 2 
                 AND CAST(e.created_at AS DATE) = CAST(GETDATE() AS DATE)
                 AND (d.fk_case_event IS NULL)
+                AND ISNULL(e.processing, 0) <> 1
             ORDER BY e.created_at DESC
             """)
             logging.info("Query executed successfully")
@@ -90,6 +91,26 @@ while True:
             logging.info(f"Starting processing for case_event ID: {case_id}")
             print(f"Running for case_event ID: {case_id}")
             try:
+                # Mark as processing = 1 to avoid duplicate work by other processes
+                try:
+                    cursor.execute(
+                        """
+                        UPDATE docketwatch.dbo.case_events
+                        SET processing = 1
+                        WHERE id = CAST(? AS uniqueidentifier) AND ISNULL(processing,0) <> 1
+                        """,
+                        (str(case_id),)
+                    )
+                    if cursor.rowcount == 0:
+                        logging.info(f"Skipped case_event {case_id}: already marked processing by another worker.")
+                        print(f"Skip (already processing): {case_id}")
+                        continue
+                    conn.commit()
+                except Exception as mark_err:
+                    logging.error(f"Failed to mark processing=1 for {case_id}: {mark_err}")
+                    print(f"Failed to mark processing=1 for {case_id}: {mark_err}")
+                    continue
+
                 # Run with timeout and capture output for better debugging
                 result = subprocess.run(
                     ["python", "u:\\docketwatch\\python\\process_pacer_event_pdf.py", str(case_id)],
@@ -102,6 +123,20 @@ while True:
                 print(f"Success for case_id {case_id}")
                 if result.stdout:
                     print(f"Output: {result.stdout.strip()}")
+                # Reset processing flag on success
+                try:
+                    cursor.execute(
+                        """
+                        UPDATE docketwatch.dbo.case_events
+                        SET processing = 0
+                        WHERE id = CAST(? AS uniqueidentifier)
+                        """,
+                        (str(case_id),)
+                    )
+                    conn.commit()
+                except Exception as reset_err:
+                    logging.warning(f"Could not reset processing=0 for {case_id}: {reset_err}")
+                    print(f"Warn: could not reset processing=0 for {case_id}: {reset_err}")
                 
                 # Longer delay between processes to avoid PACER session conflicts
                 time.sleep(5)
@@ -116,14 +151,17 @@ while True:
                 if e.stderr:
                     logging.error(f"STDERR: {e.stderr}")
                     print(f"STDERR: {e.stderr}")
+                # Do NOT reset processing to 0 on failure so it won't be retried automatically
             except subprocess.TimeoutExpired as e:
                 timeout_msg = f"Timeout for case_id {case_id} after 5 minutes"
                 logging.warning(timeout_msg)
                 print(timeout_msg)
+                # Do NOT reset processing to 0 on timeout
             except Exception as e:
                 unexpected_msg = f"Unexpected error for case_id {case_id}: {e}"
                 logging.error(unexpected_msg)
                 print(unexpected_msg)
+                # Do NOT reset processing to 0 on unexpected errors
 
     except Exception as e:
         error_msg = f"Unexpected error in main loop: {e}"

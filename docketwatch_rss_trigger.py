@@ -29,6 +29,7 @@ DEPENDENCIES:
 import sys
 import os
 import re
+import html as html_lib
 import time
 import smtplib
 import logging
@@ -242,6 +243,10 @@ try:
                 pub_date = parsedate_to_datetime(item.pubDate.text.strip()) if item.pubDate else None
                 desc_raw = item.description.text.strip() if item.description else ""
 
+                # Decode common HTML entities early
+                if desc_raw:
+                    desc_raw = html_lib.unescape(desc_raw)
+
                 # Quick pulls from the common PACER RSS formatting
                 event_description_match = re.search(r'\[(.*?)\]', desc_raw)
                 event_description = event_description_match.group(1) if event_description_match else ""
@@ -252,8 +257,36 @@ try:
                     # If we cannot find an event number, still log rss entry but skip case_events insert
                     event_no = -1  # diagnostic value
 
-                event_url_match = re.search(r'href="([^"]+)"', desc_raw)
-                event_url = event_url_match.group(1) if event_url_match else link
+                # Robust event_url extraction:
+                # Strategy order:
+                # 1. First <a href> inside description (BeautifulSoup HTML parser)
+                # 2. Regex fallback (legacy)
+                # 3. If still missing and description contains doc1/ pattern textually, extract that
+                # 4. Final fallback: use the item link (docket report)
+                event_url = None
+                try:
+                    # Parse description as HTML fragment
+                    frag = BeautifulSoup(desc_raw, 'html.parser')
+                    a_tag = frag.find('a')
+                    if a_tag and a_tag.get('href'):
+                        event_url = a_tag['href'].strip()
+                except Exception as parse_err:
+                    log_message(cursor, fk_task_run, "WARNING", f"Description parse failure: {parse_err}")
+                if not event_url:
+                    m_href = re.search(r'href="([^"]+)"', desc_raw)
+                    if m_href:
+                        event_url = m_href.group(1).strip()
+                if not event_url and 'doc1/' in desc_raw:
+                    # Attempt crude extraction: find substring starting at doc1/
+                    m_doc = re.search(r'(https?://[^\s"<>]*doc1/[^\s"<>]+)', desc_raw)
+                    if m_doc:
+                        event_url = m_doc.group(1)
+                if not event_url:
+                    event_url = link  # fallback to docket report URL
+                # Normalize: strip trailing punctuation / artifacts
+                event_url = event_url.strip().rstrip(').;') if event_url else link
+                if not event_url or event_url == link:
+                    log_message(cursor, fk_task_run, "WARNING", f"Fallback event_url used (no direct doc link) for pacer_id {pacer_id} event_no {event_no}")
 
                 title = item.title.text.strip() if item.title else ""
                 case_number, case_name_from_title = (title.split(" ", 1) if " " in title else ("", title))
@@ -274,6 +307,10 @@ try:
                     exists = cursor.fetchone()[0] > 0
 
                     if not exists:
+                        # Warn and fallback if event_url is blank/whitespace
+                        if not event_url or not event_url.strip():
+                            log_message(cursor, fk_task_run, "WARNING", f"Blank event_url detected for case {db_case_name} event_no {event_no}; using link fallback.", fk_case=fk_case)
+                            event_url = link  # ensure we don't insert pure blank
                         log_id = log_message(cursor, fk_task_run, "ALERT",
                                              f"New RSS docket for {db_case_name} - Event No: {event_no}",
                                              fk_case=fk_case)
