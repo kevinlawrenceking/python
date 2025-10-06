@@ -1,4 +1,4 @@
-import sys, argparse, pyodbc, os, time, traceback, zipfile, re
+import sys, argparse, pyodbc, os, time, traceback, zipfile, re, subprocess
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -293,6 +293,30 @@ def main():
                                 """, (rel_path, doc_uid))
                                 conn.commit()
                                 log_message(cursor, fk_task_run, "INFO", f"Downloaded and saved: {filename} ({file_size} bytes)")
+                                
+                                # Run summarize_document_event.py on the newly downloaded document
+                                try:
+                                    summarize_script = os.path.join(os.path.dirname(__file__), "summarize_document_event.py")
+                                    summarize_cmd = [sys.executable, summarize_script, str(doc_uid)]
+                                    log_message(cursor, fk_task_run, "INFO", f"Launching summarization: {' '.join(summarize_cmd)}")
+                                    
+                                    result = subprocess.run(
+                                        summarize_cmd,
+                                        capture_output=True,
+                                        text=True,
+                                        timeout=300  # 5 minute timeout for summarization
+                                    )
+                                    
+                                    if result.returncode == 0:
+                                        log_message(cursor, fk_task_run, "INFO", f"Summarization completed for doc_uid {doc_uid}")
+                                    else:
+                                        log_message(cursor, fk_task_run, "WARNING", f"Summarization returned code {result.returncode} for doc_uid {doc_uid}")
+                                        if result.stderr:
+                                            log_message(cursor, fk_task_run, "WARNING", f"Summarization stderr: {result.stderr[:500]}")
+                                except subprocess.TimeoutExpired:
+                                    log_message(cursor, fk_task_run, "ERROR", f"Summarization timeout for doc_uid {doc_uid}")
+                                except Exception as summ_ex:
+                                    log_message(cursor, fk_task_run, "ERROR", f"Summarization failed for doc_uid {doc_uid}: {str(summ_ex)}")
 
                     os.remove(zip_file)
                 else:

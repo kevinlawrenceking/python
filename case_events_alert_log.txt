@@ -397,3 +397,23 @@ Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
 START: Mon 10/06/2025 10:15:19.43 summarize_document_event --order 
 No unsummarized documents found for today.
 Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Mon 10/06/2025 14:00:00.53 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 9F4F1DE0-E1A9-481C-9C11-A531D617C6C0
+START: Mon 10/06/2025 14:03:00.17 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 739E835A-8B47-4E5D-BEBB-6A99DDDFA42F
+Skipping Gemini summary — OCR result is too poor.
+START: Mon 10/06/2025 14:06:00.18 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 739E835A-8B47-4E5D-BEBB-6A99DDDFA42F
+Skipping Gemini summary — OCR result is too poor.
+START: Mon 10/06/2025 14:09:00.17 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 739E835A-8B47-4E5D-BEBB-6A99DDDFA42F
+Skipping Gemini summary — OCR result is too poor.
+START: Mon 10/06/2025 14:12:00.17 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 739E835A-8B47-4E5D-BEBB-6A99DDDFA42F
+Skipping Gemini summary — OCR result is too poor.
+START: Mon 10/06/2025 14:15:00.21 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 739E835A-8B47-4E5D-BEBB-6A99DDDFA42F
+Skipping Gemini summary — OCR result is too poor.
+START: Mon 10/06/2025 14:18:22.95 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 739E835A-8B47-4E5D-BEBB-6A99DDDFA42F
+Skipping Gemini summary — OCR result is too poor.
