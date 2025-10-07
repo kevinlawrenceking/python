@@ -64,15 +64,21 @@ while True:
         # Include all case events created today, with no documents yet, and not currently marked processing
         try:
             cursor.execute("""
-            SELECT DISTINCT TOP 3 e.[id] AS case_id, e.created_at
-            FROM [docketwatch].[dbo].[case_events] e 
-            INNER JOIN [docketwatch].[dbo].[cases] c ON c.id = e.fk_cases
-            LEFT JOIN [docketwatch].[dbo].[documents] d ON d.fk_case_event = e.id
-            WHERE c.fk_tool = 2 
-                AND CAST(e.created_at AS DATE) = CAST(GETDATE() AS DATE)
-                AND (d.fk_case_event IS NULL)
-                AND ISNULL(e.processing, 0) <> 1
-            ORDER BY e.created_at DESC
+            SELECT DISTINCT TOP 5    
+            e.id AS case_id,
+            e.created_at,
+            c.fk_priority
+            FROM docketwatch.dbo.case_events e
+            INNER JOIN docketwatch.dbo.cases c
+            ON c.id = e.fk_cases
+            LEFT JOIN docketwatch.dbo.documents d
+            ON d.fk_case_event = e.id
+            WHERE c.fk_tool = 2
+            AND e.event_date >= DATEADD(DAY, -3, CAST(GETDATE() AS DATE))
+            AND e.event_date <= CAST(GETDATE() AS DATE)
+            AND (d.fk_case_event IS NULL)
+            AND ISNULL(e.processing, 0) <> 1
+            ORDER BY c.fk_priority DESC, e.created_at DESC
             """)
             logging.info("Query executed successfully")
         except Exception as query_error:
