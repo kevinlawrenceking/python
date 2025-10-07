@@ -40,8 +40,8 @@ def create_sample_email_html():
     }
     
     # Import the build function (simulate it here)
-    INTERNAL_URL_BASE = "http://docketwatch.tmz.local/court/docketwatch/case_details.cfm?id="
-    DOCS_BASE_URL = "http://docketwatch.tmz.local/docs/cases"
+    INTERNAL_URL_BASE = "https://docketwatch.tmz.tv/court/docketwatch/case_details.cfm?id="
+    DOCS_BASE_URL = "https://docketwatch.tmz.tv/docs/cases"
     
     # Build the HTML
     html = f"<h3>TMZ Case Update: {case_number} – {case_name}</h3>"

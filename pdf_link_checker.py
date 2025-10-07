@@ -111,7 +111,7 @@ def main():
         cursor.execute("""
             SELECT doc_uid, 
                    isfound,
-                   'http://docketwatch.tmz.local/docs/cases/' + 
+                   'https://docketwatch.tmz.tv/docs/cases/' + 
                    CAST(d.fk_case AS VARCHAR) + '/E' + 
                    CAST(d.doc_id AS VARCHAR) + '.pdf' AS http_url,
                    d.fk_case,

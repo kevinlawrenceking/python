@@ -37,8 +37,8 @@ dbug = "Y"  # Set to "Y" for debugging - emails will only go to Kevin
 FROM_EMAIL = "it@tmz.com"
 SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
-INTERNAL_URL_BASE = "http://docketwatch.tmz.local/court/docketwatch/case_details.cfm?id="
-DOCS_BASE_URL = "http://docketwatch.tmz.local/docs/cases"
+INTERNAL_URL_BASE = "https://docketwatch.tmz.tv/court/docketwatch/case_details.cfm?id="
+DOCS_BASE_URL = "https://docketwatch.tmz.tv/docs/cases"
 EMAIL_RECIPIENTS = [
     "Jennifer.Delgado@tmz.com",
     "Kevin.King@tmz.com",
