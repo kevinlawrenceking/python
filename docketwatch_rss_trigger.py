@@ -35,6 +35,7 @@ import smtplib
 import logging
 import requests
 import pyodbc
+import subprocess
 
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -66,6 +67,9 @@ print(f"Logging to: {LOG_FILE}")
 # Email Configuration
 # =========================
 
+# *** TOGGLE EMAIL ALERTS ON/OFF HERE ***
+SEND_EMAILS = False  # Set to False to disable all email notifications
+
 FROM_EMAIL = "it@tmz.com"
 TO_EMAILS = [
     "Jennifer.Delgado@tmz.com",
@@ -78,6 +82,10 @@ SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
 
 def send_docket_email(case_name, case_url, event_no, cleaned_docket_text):
+    if not SEND_EMAILS:
+        log_message(cursor, fk_task_run, "INFO", f"Email disabled - skipping notification for {case_name}")
+        return
+    
     subject = f"DocketWatch Alert: {case_name} - New Docket Discovered"
     body = f"""
     <html><body>
@@ -321,6 +329,36 @@ try:
                         """, (pub_date, event_no, event_description, fk_case, log_id, event_url))
 
                         conn.commit()
+                        
+                        # Get the newly inserted case_event ID
+                        cursor.execute("SELECT id FROM docketwatch.dbo.case_events WHERE fk_task_run_log = ?", (log_id,))
+                        new_case_event = cursor.fetchone()
+                        if new_case_event:
+                            case_event_id = str(new_case_event[0])
+                            
+                            # Immediately download the PDF
+                            try:
+                                pdf_script = os.path.join(os.path.dirname(__file__), "process_pacer_event_pdf.py")
+                                pdf_cmd = [sys.executable, pdf_script, case_event_id]
+                                log_message(cursor, fk_task_run, "INFO", f"Launching PDF download for case_event {case_event_id}", fk_case=fk_case)
+                                
+                                result = subprocess.run(
+                                    pdf_cmd,
+                                    capture_output=True,
+                                    text=True,
+                                    timeout=300  # 5 minute timeout
+                                )
+                                
+                                if result.returncode == 0:
+                                    log_message(cursor, fk_task_run, "INFO", f"PDF download completed for case_event {case_event_id}", fk_case=fk_case)
+                                else:
+                                    log_message(cursor, fk_task_run, "WARNING", f"PDF download returned code {result.returncode} for case_event {case_event_id}", fk_case=fk_case)
+                                    if result.stderr:
+                                        log_message(cursor, fk_task_run, "WARNING", f"PDF download stderr: {result.stderr[:500]}", fk_case=fk_case)
+                            except subprocess.TimeoutExpired:
+                                log_message(cursor, fk_task_run, "ERROR", f"PDF download timeout (5 min) for case_event {case_event_id}", fk_case=fk_case)
+                            except Exception as pdf_ex:
+                                log_message(cursor, fk_task_run, "ERROR", f"PDF download failed for case_event {case_event_id}: {str(pdf_ex)}", fk_case=fk_case)
 
                         # Send email alert
                         try:

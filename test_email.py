@@ -57,7 +57,7 @@ def send_summary_email(doc_uid):
     downloaded_str = date_downloaded.strftime('%B %d, %Y') if date_downloaded else 'Unknown'
 
     virtual_path = f"http://docketwatch/dwdocs/cases/{fk_case}/{doc_id}.pdf"
-    docketwatch_link = f"http://docketwatch/court/docketwatch/case_details.cfm?id={fk_case}#docket"
+    docketwatch_link = f"http://docketwatch/court/case_details.cfm?id={fk_case}#docket"
 
     subject = f"DocketWatch PDF Summary: {case_name} Docket No. {event_no} [{event_desc}]"
     body = f"""

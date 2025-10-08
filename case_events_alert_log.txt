@@ -524,3 +524,599 @@ Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
 START: Tue 10/07/2025 11:12:00.17 summarize_document_event --order 
 No unsummarized documents found for today.
 Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 11:15:00.20 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 11:18:00.21 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 12:57:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:00:00.18 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:03:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:06:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:12:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:15:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:18:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:36:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:39:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:42:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:45:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:48:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:51:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:54:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 13:57:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:03:00.16 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 3918F1B6-7F57-486C-B220-E067E247ADD1
+START: Tue 10/07/2025 17:06:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 63BCF502-75C0-4C14-9C0D-B09E642E60C3
+START: Tue 10/07/2025 17:09:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:12:00.21 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:15:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:18:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:21:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:24:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:27:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:30:00.18 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:33:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:36:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:39:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:42:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:45:00.26 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:48:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:51:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:54:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 17:57:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:00:00.23 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:03:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:06:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:12:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:15:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:18:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:21:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:24:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:27:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:30:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:33:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:36:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:39:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:42:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:45:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:48:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 1C1E021E-25FF-4928-A58A-7438E137C7C2
+START: Tue 10/07/2025 18:51:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:54:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 18:57:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:00:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:03:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:06:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:09:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:12:00.19 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:15:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:18:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:21:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:24:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:27:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:30:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:33:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:36:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:39:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:42:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:45:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:48:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:51:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:54:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 19:57:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:00:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:03:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:06:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:12:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:15:00.16 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: B6521226-0077-4A79-8028-BEFD026D210A
+START: Tue 10/07/2025 20:18:00.14 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: D5A18996-9202-4A00-B0DF-73D990F8E26A
+START: Tue 10/07/2025 20:21:00.12 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 064678E8-D8E4-40E6-9ED1-E0AA3232FE80
+START: Tue 10/07/2025 20:24:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 9A58F510-FB07-4CA2-9083-BDE0862730C8
+START: Tue 10/07/2025 20:27:00.14 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 46536EAD-AFC5-410D-A3C1-4C9F27DA95BB
+START: Tue 10/07/2025 20:30:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 5372213C-728A-4931-B51B-59E8204A8AD8
+START: Tue 10/07/2025 20:33:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: DB537EAF-15C2-43BE-BAE0-CB12EBD8FC64
+START: Tue 10/07/2025 20:36:00.14 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: C9FCA490-4456-478B-B476-E84D46DD59B3
+START: Tue 10/07/2025 20:39:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: CE297BE9-6041-431D-9B93-F8AEB166E785
+START: Tue 10/07/2025 20:42:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 6C9B1DF9-C739-4599-AD05-D139F730DF21
+START: Tue 10/07/2025 20:45:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: ECD6BFDE-E103-4F6E-B996-F5CE86E8E0A0
+START: Tue 10/07/2025 20:48:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: CD70F413-C734-4E33-8D64-CEA06C8B9FC3
+START: Tue 10/07/2025 20:51:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:54:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 20:57:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:00:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:03:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:06:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:12:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:15:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:18:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:21:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:24:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:27:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:30:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:33:00.12 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: E0DEFAC1-644B-4463-9F64-56CEE9CF8113
+START: Tue 10/07/2025 21:36:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:39:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:42:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:45:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:48:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:51:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:54:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 21:57:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:00:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:03:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:06:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:12:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:15:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:18:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:21:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:24:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:27:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:30:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:33:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:36:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:39:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:42:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:45:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:48:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:51:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:54:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 22:57:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:00:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:03:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:06:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:09:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:12:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:15:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:18:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:21:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:24:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:27:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:30:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:33:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:36:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:39:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:42:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:45:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:48:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:51:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:54:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Tue 10/07/2025 23:57:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:00:00.17 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:03:00.12 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:06:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:09:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:12:00.16 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:15:00.14 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:18:00.15 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 8809F83A-F51F-44D8-9C41-C17D8C60FDC5
+START: Wed 10/08/2025 10:21:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 47F50BE3-FCC4-4C45-B062-6359162B5D56
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:24:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 47F50BE3-FCC4-4C45-B062-6359162B5D56
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:27:00.12 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 47F50BE3-FCC4-4C45-B062-6359162B5D56
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 10:30:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 47F50BE3-FCC4-4C45-B062-6359162B5D56
+START: Wed 10/08/2025 10:33:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:36:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:39:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:42:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:45:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:48:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:51:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:54:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 10:57:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:00:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:03:00.13 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 2F4CC6B3-BC65-40D9-A5BD-EE539303FAC8
+START: Wed 10/08/2025 11:06:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:12:00.17 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:15:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:18:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:21:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:24:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:27:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:30:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:33:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:36:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:39:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:42:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:45:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:48:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:51:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:54:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 11:57:00.12 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 12:00:00.18 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 12:03:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 12:06:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 12:09:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 12:12:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Wed 10/08/2025 12:15:00.16 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: A92FBE6D-980E-4B6F-A004-1A5D596243B3
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 12:18:00.14 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: A92FBE6D-980E-4B6F-A004-1A5D596243B3
+Skipping Gemini summary — OCR result is too poor.
+START: Wed 10/08/2025 12:24:00.14 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: A92FBE6D-980E-4B6F-A004-1A5D596243B3
+Skipping Gemini summary — OCR result is too poor.

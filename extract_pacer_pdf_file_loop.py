@@ -78,6 +78,7 @@ while True:
             AND e.event_date <= CAST(GETDATE() AS DATE)
             AND (d.fk_case_event IS NULL)
             AND ISNULL(e.processing, 0) <> 1
+            and e.status <> 'New'
             ORDER BY c.fk_priority DESC, e.created_at DESC
             """)
             logging.info("Query executed successfully")

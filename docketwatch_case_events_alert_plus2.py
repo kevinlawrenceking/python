@@ -29,7 +29,7 @@ logger = logging.getLogger()
 FROM_EMAIL = "it@tmz.com"
 SMTP_SERVER = "mx0a-00195501.pphosted.com"
 SMTP_PORT = 25
-INTERNAL_URL_BASE = "https://docketwatch.tmz.tv/court/docketwatch/case_details.cfm?id="
+INTERNAL_URL_BASE = "https://docketwatch.tmz.tv/court/case_details.cfm?id="
 DOCS_BASE_URL = "https://docketwatch.tmz.tv/docs/cases"
 
 # Debug mode - Set to "Y" to send emails only to Kevin for testing

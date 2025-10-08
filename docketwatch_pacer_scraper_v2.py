@@ -387,7 +387,7 @@ def main():
                 cursor.execute("""
                     INSERT INTO dbo.case_events (
                         event_date, event_no, event_description, fk_cases, status, fk_task_run_log
-                    ) VALUES (?, ?, ?, ?, 'New', ?)
+                    ) VALUES (?, ?, ?, ?, 'Newx', ?)
                 """, (event_date, event_no, cleaned_docket_text, fk_case, log_id))
                 conn.commit()
                 send_docket_email(case_name, case_url, event_no, cleaned_docket_text)
