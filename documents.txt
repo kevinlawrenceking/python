@@ -1,0 +1,82 @@
+USE [docketwatch]
+GO
+
+/****** Object:  Table [dbo].[documents]    Script Date: 10/8/2025 2:45:25 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[documents](
+	[doc_uid] [uniqueidentifier] NOT NULL,
+	[fk_case] [int] NULL,
+	[fk_case_event] [uniqueidentifier] NULL,
+	[fk_tool] [int] NOT NULL,
+	[doc_id] [nvarchar](50) NULL,
+	[rel_path] [varchar](520) NOT NULL,
+	[file_size] [int] NULL,
+	[total_pages] [int] NULL,
+	[date_downloaded] [datetime] NOT NULL,
+	[pdf_title] [varchar](300) NULL,
+	[pdf_no] [int] NULL,
+	[ocr_text_raw] [nvarchar](max) NULL,
+	[ocr_text] [nvarchar](max) NULL,
+	[summary_ai] [nvarchar](max) NULL,
+	[summary_ai_html] [nvarchar](max) NULL,
+	[is_storyworthy] [bit] NULL,
+	[ai_processed_at] [datetime] NULL,
+	[pdf_type] [nvarchar](50) NULL,
+	[pdf_url] [varchar](1000) NULL,
+	[search_text] [nvarchar](max) NULL,
+	[summary_email_sent_at] [datetime] NULL,
+	[isfound] [bit] NOT NULL,
+	[status] [nvarchar](50) NULL,
+	[error_message] [nvarchar](max) NULL,
+	[event_summary] [nvarchar](max) NULL,
+	[newsworthiness] [nvarchar](10) NULL,
+	[newsworthiness_reason] [nvarchar](max) NULL,
+	[story_headline] [nvarchar](max) NULL,
+	[story_sub_head] [nvarchar](300) NULL,
+	[story_body] [nvarchar](max) NULL,
+	[whats_next] [nvarchar](1000) NULL,
+ CONSTRAINT [PK_documents] PRIMARY KEY CLUSTERED 
+(
+	[doc_uid] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+ CONSTRAINT [UQ_documents_doc_id] UNIQUE NONCLUSTERED 
+(
+	[doc_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[documents] ADD  CONSTRAINT [DF__documents__doc_u__76C54013]  DEFAULT (newid()) FOR [doc_uid]
+GO
+
+ALTER TABLE [dbo].[documents] ADD  CONSTRAINT [DF__documents__date___77B9644C]  DEFAULT (getdate()) FOR [date_downloaded]
+GO
+
+ALTER TABLE [dbo].[documents] ADD  CONSTRAINT [DF_documents_isfound]  DEFAULT ((0)) FOR [isfound]
+GO
+
+ALTER TABLE [dbo].[documents]  WITH CHECK ADD  CONSTRAINT [FK_documents_case] FOREIGN KEY([fk_case])
+REFERENCES [dbo].[cases] ([id])
+GO
+
+ALTER TABLE [dbo].[documents] CHECK CONSTRAINT [FK_documents_case]
+GO
+
+ALTER TABLE [dbo].[documents]  WITH CHECK ADD  CONSTRAINT [FK_documents_event] FOREIGN KEY([fk_case_event])
+REFERENCES [dbo].[case_events] ([id])
+GO
+
+ALTER TABLE [dbo].[documents] CHECK CONSTRAINT [FK_documents_event]
+GO
+
+ALTER TABLE [dbo].[documents]  WITH CHECK ADD  CONSTRAINT [CK_documents_case_or_event] CHECK  (([fk_case] IS NOT NULL OR [fk_case_event] IS NOT NULL))
+GO
+
+ALTER TABLE [dbo].[documents] CHECK CONSTRAINT [CK_documents_case_or_event]
+GO
+
