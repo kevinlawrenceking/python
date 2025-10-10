@@ -7,9 +7,8 @@ import json
 
 # --- CONFIG ---
 BATCH_LIMIT = 100
-GEMINI_MODEL = "gemini-1.5-flash"  # Most cost-effective model with vision support
+MODEL_ID = 7  # ID from gemini_models table - now dynamic!
 TEMPERATURE = 0.2  # low for rule-following
-MAX_TOKENS = 300   # increased for comprehensive analysis
 SLEEP_SECONDS = 1.0  # slightly longer for complex processing
 DEBUG_MODE = False
 
@@ -40,11 +39,34 @@ def load_prompt_rules():
         keywords_rules = f.read()
     return headline_rules, shotdesc_rules, keywords_rules
 
-# --- Gemini Key Retrieval ---
+# --- Gemini Key & Model Retrieval ---
 def get_gemini_key(cursor):
-    cursor.execute("SELECT gemini_api FROM docketwatch.dbo.utilities")
+    cursor.execute("SELECT gemini_api_damz as gemini_api FROM docketwatch.dbo.utilities")
     row = cursor.fetchone()
     return row[0] if row and row[0] else None
+
+def get_gemini_model(cursor, model_id=7):
+    cursor.execute("""
+        SELECT model_name, display_name, max_tokens, supports_vision
+        FROM docketwatch.dbo.gemini_models 
+        WHERE id = ? AND is_active = 1
+    """, (model_id,))
+    row = cursor.fetchone()
+    if row:
+        return {
+            'model_name': row[0],
+            'display_name': row[1], 
+            'max_tokens': row[2],
+            'supports_vision': row[3]
+        }
+    else:
+        print(f"WARNING: Model ID {model_id} not found or inactive, using fallback")
+        return {
+            'model_name': 'gemini-2.5-flash-image',
+            'display_name': 'Fallback Model',
+            'max_tokens': 300,
+            'supports_vision': True
+        }
 
 def get_image_path(cursor, fk_asset):
     cursor.execute("""
@@ -254,10 +276,10 @@ REMEMBER:
 """
 
 # --- Comprehensive Gemini Analysis ---
-def analyze_comprehensive(prompt, image_path, gemini_key):
+def analyze_comprehensive(prompt, image_path, gemini_key, model_name, max_tokens):
     try:
         genai.configure(api_key=gemini_key)
-        model = genai.GenerativeModel(GEMINI_MODEL)
+        model = genai.GenerativeModel(model_name)
 
         # Check if image file exists
         if not image_path or not os.path.exists(image_path):
@@ -277,7 +299,7 @@ def analyze_comprehensive(prompt, image_path, gemini_key):
             [prompt, image_file],
             generation_config={
                 "temperature": TEMPERATURE,
-                "max_output_tokens": MAX_TOKENS
+                "max_output_tokens": max_tokens
             }
         )
 
@@ -363,6 +385,18 @@ def main():
     if DEBUG_MODE:
         print(f"[DEBUG] Loaded rules - Headlines: {len(headline_rules)}, ShotDesc: {len(shotdesc_rules)}, Keywords: {len(keywords_rules)} chars")
 
+    # Get dynamic model configuration
+    model_config = get_gemini_model(cursor, MODEL_ID)
+    gemini_model_name = model_config['model_name']
+    max_tokens = model_config['max_tokens']
+    
+    print(f"Using model: {model_config['display_name']} ({gemini_model_name})")
+    print(f"Max tokens: {max_tokens}, Vision support: {model_config['supports_vision']}")
+    
+    if not model_config['supports_vision']:
+        print("ERROR: Selected model does not support vision - image processing will fail!")
+        return
+
     gemini_key = get_gemini_key(cursor)
     if not gemini_key:
         print("ERROR: Gemini API key not found.")
@@ -391,7 +425,7 @@ def main():
                shot_description,
                keywords
         FROM docketwatch.dbo.[damz_test_low]
-        WHERE headline IS NOT NULL and [version] = 2
+        WHERE headline IS NOT NULL and [version] = 3
           AND (headline_type IS NULL OR headline_new IS NULL OR shot_description_new IS NULL OR keywords_new IS NULL OR emotion IS NULL)
         ORDER BY fk_asset
     """)
@@ -421,7 +455,7 @@ def main():
             print(f"[DEBUG] image_path: {image_path}")
 
         prompt = build_comprehensive_prompt(headline_rules, shotdesc_rules, keywords_rules, headline, shot_description, keywords)
-        type_final, headline_final, description_final, keywords_final, emotion_final = analyze_comprehensive(prompt, image_path, gemini_key)
+        type_final, headline_final, description_final, keywords_final, emotion_final = analyze_comprehensive(prompt, image_path, gemini_key, gemini_model_name, max_tokens)
 
         if type_final and headline_final and description_final and keywords_final and emotion_final:
             # Update all fields
