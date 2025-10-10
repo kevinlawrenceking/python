@@ -2917,3 +2917,5 @@ START: Fri 10/10/2025 15:03:00.13 summarize_document_event --order
 No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: BACB74EC-9DE6-4436-9B0B-84A01D33770D
 START: Fri 10/10/2025 15:06:00.14 summarize_document_event --order 
 No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: BACB74EC-9DE6-4436-9B0B-84A01D33770D
+START: Fri 10/10/2025 15:09:00.12 summarize_document_event --order 
+No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: BACB74EC-9DE6-4436-9B0B-84A01D33770D
