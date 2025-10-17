@@ -417,7 +417,30 @@ def ensure_extraction_schema(data: Dict[str, Any]) -> Dict[str, Any]:
     normalized["counts_dismissed"] = _clean_int_list(data.get("counts_dismissed"))
     normalized["counts_alleged"] = _clean_int_list(data.get("counts_alleged"))
     normalized["statutes"] = [str(s).strip() for s in _clean_list(data.get("statutes")) if str(s).strip()]
-    normalized["adjudication_mode"] = _clean_str(data.get("adjudication_mode"), "unknown").lower()
+    mode_raw = _clean_str(data.get("adjudication_mode"), "unknown").lower()
+    mode_map = {
+        "guilty plea": "plea_guilty",
+        "pleaded guilty": "plea_guilty",
+        "plead guilty": "plea_guilty",
+        "plea guilty": "plea_guilty",
+        "pleaded not guilty": "plea_not_guilty",
+        "not guilty plea": "plea_not_guilty",
+        "trial guilty": "trial_guilty",
+        "jury verdict guilty": "trial_guilty",
+        "bench verdict guilty": "trial_guilty",
+        "jury verdict not guilty": "trial_not_guilty",
+        "bench verdict not guilty": "trial_not_guilty",
+    }
+    if mode_raw in mode_map:
+        normalized["adjudication_mode"] = mode_map[mode_raw]
+    elif "guilty" in mode_raw and "plea" in mode_raw:
+        normalized["adjudication_mode"] = "plea_guilty"
+    elif "not guilty" in mode_raw and "plea" in mode_raw:
+        normalized["adjudication_mode"] = "plea_not_guilty"
+    elif "guilty" in mode_raw and ("verdict" in mode_raw or "trial" in mode_raw):
+        normalized["adjudication_mode"] = "trial_guilty"
+    else:
+        normalized["adjudication_mode"] = mode_raw
 
     sentence = data.get("sentence") or {}
     normalized["sentence"] = {
@@ -445,6 +468,77 @@ def ensure_extraction_schema(data: Dict[str, Any]) -> Dict[str, Any]:
     normalized["verbatim_support"] = support_entries
 
     normalized["confidence"] = _clean_str(data.get("confidence"), "low").lower()
+
+    # Enrich count lists by scanning supporting text when counts are mentioned explicitly.
+    number_words = {
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9,
+        "ten": 10,
+        "eleven": 11,
+        "twelve": 12,
+    }
+
+    def _extract_counts(text: str) -> List[int]:
+        if not text:
+            return []
+        lower = text.lower()
+        digit_matches = [int(num) for num in re.findall(r"count(?:s)?(?:\s+number)?\s*(\d+)", lower)]
+        word_matches = [number_words[word] for word in re.findall(r"count(?:s)?(?:\s+number)?\s*(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)", lower)]
+        return digit_matches + word_matches
+
+    counts_convicted_set = set(normalized["counts_convicted"])
+    counts_dismissed_set = set(normalized["counts_dismissed"])
+    counts_alleged_set = set(normalized["counts_alleged"])
+
+    def _classify_counts(text: str) -> None:
+        if not text:
+            return
+        for fragment in re.split(r"[.;]\s*", text):
+            if not fragment:
+                continue
+            lower = fragment.lower()
+            if "count" not in lower:
+                continue
+            digits = _extract_counts(fragment)
+            if not digits:
+                continue
+            if any(keyword in lower for keyword in ("plead", "pled", "pled guilty", "guilty", "convicted")):
+                counts_convicted_set.update(digits)
+            elif any(keyword in lower for keyword in ("dismiss", "acquit", "vacate")):
+                counts_dismissed_set.update(digits)
+            else:
+                counts_alleged_set.update(digits)
+
+    text_sources: List[str] = [
+        normalized.get("filing_action_summary", ""),
+        normalized.get("court_status", ""),
+        normalized.get("newsworthiness_reason", ""),
+    ]
+    text_sources.extend(normalized.get("requested_relief", []))
+    text_sources.extend(normalized.get("orders", []))
+    text_sources.extend(normalized.get("special_conditions", []))
+    text_sources.extend(normalized.get("financial_terms", []))
+    text_sources.extend(normalized.get("hearing_schedule", []))
+    text_sources.extend(normalized.get("next_actions", []))
+    text_sources.extend(normalized.get("protective_terms", []))
+    for support in normalized.get("verbatim_support", []):
+        quote = support.get("quote") if isinstance(support, dict) else None
+        if quote:
+            text_sources.append(quote)
+
+    for source_text in text_sources:
+        _classify_counts(source_text)
+
+    normalized["counts_convicted"] = sorted(counts_convicted_set)
+    normalized["counts_dismissed"] = sorted(counts_dismissed_set)
+    normalized["counts_alleged"] = sorted(counts_alleged_set)
     return normalized
 
 
