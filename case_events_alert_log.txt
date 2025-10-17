@@ -8133,3 +8133,6 @@ Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
 START: Fri 10/17/2025 11:45:00.15 summarize_document_event --order 
 No unsummarized documents found for today.
 Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Fri 10/17/2025 11:48:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
