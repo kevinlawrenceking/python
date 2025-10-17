@@ -179,7 +179,8 @@ SUMMARY_PROMPT_TEMPLATE = (
     "Rules:\n"
     "- If DATA.adjudication_mode is 'unknown' or empty, explicitly state the plea status is not provided and do not mention any plea, verdict, conviction, or sentencing language.\n"
     "- Mention counts only if the specific count numbers appear in DATA.counts_alleged, DATA.counts_convicted, or DATA.counts_dismissed.\n"
-    "- If those count lists are empty, avoid referencing count numbers.\n"
+    "- If those count lists are empty, avoid referencing count numbers entirely—use generic phrases like 'charges' or 'offenses' instead.\n"
+    "- When mentioning dismissed counts, write 'dismissed counts X, Y, Z' using the exact numbers from DATA.counts_dismissed; never write 'three counts' or 'several counts'.\n"
     "- When DATA lacks details, acknowledge the absence instead of inventing facts.\n\n"
     "You will receive a single JSON object named DATA. You must write the HTML sections exactly as specified."
     " If DATA lacks details, state \"No specific information in this document\" where needed.\n\n"
@@ -510,10 +511,13 @@ def ensure_extraction_schema(data: Dict[str, Any]) -> Dict[str, Any]:
             digits = _extract_counts(fragment)
             if not digits:
                 continue
-            if any(keyword in lower for keyword in ("dismiss", "acquit", "vacate")):
+            # Check dismiss/acquit first since those are most specific
+            if any(keyword in lower for keyword in ("dismiss", "acquit", "vacate", "withdrawn")):
                 counts_dismissed_set.update(digits)
-            elif any(keyword in lower for keyword in ("plead", "pled", "pled guilty", "guilty", "convicted")):
+            # Then check for plea/guilty/convicted, but ONLY if no dismiss words present
+            elif any(keyword in lower for keyword in ("plead guilty", "pled guilty", "pleaded guilty", "convicted of")):
                 counts_convicted_set.update(digits)
+            # Generic "guilty" or "plea" alone is too ambiguous - treat as alleged
             else:
                 counts_alleged_set.update(digits)
 
