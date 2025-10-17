@@ -423,6 +423,7 @@ def ensure_extraction_schema(data: Dict[str, Any]) -> Dict[str, Any]:
         "pleaded guilty": "plea_guilty",
         "plead guilty": "plea_guilty",
         "plea guilty": "plea_guilty",
+        "plea": "plea_guilty",
         "pleaded not guilty": "plea_not_guilty",
         "not guilty plea": "plea_not_guilty",
         "trial guilty": "trial_guilty",
@@ -509,10 +510,10 @@ def ensure_extraction_schema(data: Dict[str, Any]) -> Dict[str, Any]:
             digits = _extract_counts(fragment)
             if not digits:
                 continue
-            if any(keyword in lower for keyword in ("plead", "pled", "pled guilty", "guilty", "convicted")):
-                counts_convicted_set.update(digits)
-            elif any(keyword in lower for keyword in ("dismiss", "acquit", "vacate")):
+            if any(keyword in lower for keyword in ("dismiss", "acquit", "vacate")):
                 counts_dismissed_set.update(digits)
+            elif any(keyword in lower for keyword in ("plead", "pled", "pled guilty", "guilty", "convicted")):
+                counts_convicted_set.update(digits)
             else:
                 counts_alleged_set.update(digits)
 
@@ -688,7 +689,8 @@ def local_validate(extraction: Dict[str, Any], summary_html: str) -> List[str]:
         missing = sorted(mentioned_counts - counts_supported)
         contradictions.append(f"Count references not supported by extraction: {missing}")
 
-    if "sex trafficking" in text and not any("1591" in str(statute).lower() for statute in extraction.get("statutes", [])):
+    # Only flag sex trafficking if it's explicitly called out by name (not just a synonym for prostitution)
+    if re.search(r"\bsex traffick", text) and not any("1591" in str(statute).lower() for statute in extraction.get("statutes", [])):
         contradictions.append("Sex trafficking language present without supporting statute in DATA")
 
     return contradictions

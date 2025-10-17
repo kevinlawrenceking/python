@@ -8187,3 +8187,12 @@ Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
 START: Fri 10/17/2025 12:39:00.13 summarize_document_event --order 
 No unsummarized documents found for today.
 Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Fri 10/17/2025 12:42:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Fri 10/17/2025 12:45:00.16 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Fri 10/17/2025 12:48:00.15 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
