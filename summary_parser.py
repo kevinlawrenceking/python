@@ -3,11 +3,17 @@ AI Summary Parser
 
 Parses structured AI summaries into database-ready components.
 Extracts event summary, newsworthiness, story elements, key details, and next steps.
+
+Phase 4 Update: Now also writes to articles table for evolving daily articles.
 """
 
 import re
+import logging
+from datetime import datetime
 from bs4 import BeautifulSoup
 import pyodbc
+
+logger = logging.getLogger(__name__)
 
 
 def parse_ai_summary(summary_text):
@@ -97,7 +103,7 @@ def parse_ai_summary(summary_text):
     return result
 
 
-def save_structured_summary(cursor, doc_uid, parsed_summary):
+def save_structured_summary(cursor, doc_uid, parsed_summary, enable_articles=False):
     """
     Save the parsed summary components to the database.
     
@@ -105,9 +111,14 @@ def save_structured_summary(cursor, doc_uid, parsed_summary):
         cursor: Database cursor
         doc_uid: Document GUID
         parsed_summary: Dict from parse_ai_summary()
+        enable_articles: If True, also write to articles table (Phase 4 feature)
+    
+    Phase 4 Update:
+        When enable_articles=True, this function will ALSO upsert to the articles table
+        while keeping the documents table writes for backward compatibility.
     """
     
-    # Update main document fields
+    # LEGACY: Update main document fields (keep for backward compatibility)
     cursor.execute("""
         UPDATE docketwatch.dbo.documents 
         SET 
@@ -129,6 +140,52 @@ def save_structured_summary(cursor, doc_uid, parsed_summary):
         parsed_summary['whats_next'][:1000],
         doc_uid
     ))
+    
+    # NEW PHASE 4: Also write to articles table if enabled
+    if enable_articles:
+        try:
+            # Import here to avoid circular dependency
+            from article_manager import upsert_article_for_event
+            
+            # Get document metadata needed for article creation
+            cursor.execute("""
+                SELECT d.fk_case, d.fk_case_event, e.event_date
+                FROM docketwatch.dbo.documents d
+                LEFT JOIN docketwatch.dbo.case_events e ON d.fk_case_event = e.id
+                WHERE d.doc_uid = CAST(? AS uniqueidentifier)
+            """, (doc_uid,))
+            
+            row = cursor.fetchone()
+            if row and row.fk_case and row.fk_case_event:
+                fk_case = row.fk_case
+                event_id = str(row.fk_case_event)
+                event_date = row.event_date or datetime.now().date()
+                
+                # Only create article if story has content
+                if parsed_summary.get('story_headline') or parsed_summary.get('story_body'):
+                    article_id = upsert_article_for_event(
+                        cursor=cursor,
+                        fk_case=fk_case,
+                        event_id=event_id,
+                        event_date=event_date,
+                        story_headline=parsed_summary.get('story_headline'),
+                        story_sub_head=parsed_summary.get('story_sub_head'),
+                        story_body=parsed_summary.get('story_body'),
+                        generated_by='summary_parser'
+                    )
+                    
+                    if article_id:
+                        logger.info(f"Created/updated article {article_id} for document {doc_uid}")
+                    else:
+                        logger.warning(f"Failed to create article for document {doc_uid}")
+            else:
+                logger.debug(f"Document {doc_uid} has no case_event link, skipping article creation")
+                
+        except ImportError:
+            logger.warning("article_manager module not available, skipping articles table write")
+        except Exception as e:
+            logger.error(f"Error writing to articles table for doc {doc_uid}: {e}")
+            # Don't fail the whole operation - documents table was already updated
     
     # Clear existing key details for this document
     cursor.execute("""

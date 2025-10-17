@@ -1,0 +1,296 @@
+Here is a copy-paste prompt for GitHub Copilot. Feed this into your editor at the root of the DocketWatch repo.
+
+---
+
+Title: Extract evolving newsroom articles from documents into a new articles table; add linkage from case_events; implement daily lifecycle and migrations
+
+Goal:
+
+* Move story fields out of dbo.documents into a new dbo.articles table.
+* Maintain one evolving article per case per calendar day in Pending status.
+* As new case_events/docs arrive that day, rewrite the single Pending article.
+* If article is set to Completed, subsequent events go to a new Pending article.
+* At midnight, auto-close any remaining Pending to Closed.
+* Link case_events to the active article via fk_article.
+* Backfill from existing documents.story_* fields.
+* Keep costs low and logging consistent with gemini_api_log.
+
+Database: SQL Server, database name docketwatch.
+
+Deliverables:
+
+1. SQL DDL for new tables, columns, indexes, constraints.
+2. SQL data migration script.
+3. Stored procedures and a SQL Agent job for lifecycle.
+4. Minimal app changes:
+
+   * Python summarizer/writer: route writes to articles table.
+   * CF UI: show evolving article on case page; allow status change.
+5. Tests: deterministic SQL unit checks and a dry-run mode.
+
+Constraints:
+
+* Do not drop columns from documents yet; mark as deprecated in code.
+* Use existing conventions: fk_case int, GUID PKs via NEWID(), created_at via GETDATE().
+* Keep names lower friction for CF queries.
+* Default articleStatus = Pending.
+* One and only one Pending article per case per day: enforce with filtered unique index.
+
+SQL DDL (create new table and relationships):
+
+```sql
+USE docketwatch;
+GO
+
+IF OBJECT_ID('dbo.articles','U') IS NULL
+BEGIN
+  CREATE TABLE dbo.articles (
+    id UNIQUEIDENTIFIER NOT NULL CONSTRAINT PK_articles PRIMARY KEY DEFAULT NEWID(),
+    fk_case INT NOT NULL,
+    article_date DATE NOT NULL, -- calendar date used for the evolving article grouping
+    articleStatus NVARCHAR(20) NOT NULL CONSTRAINT DF_articles_status DEFAULT ('Pending'), -- Pending|Completed|Closed
+    story_headline NVARCHAR(MAX) NULL,
+    story_sub_head NVARCHAR(300) NULL,
+    story_body NVARCHAR(MAX) NULL,
+    image_url NVARCHAR(500) NULL,
+    created_at DATETIME NOT NULL CONSTRAINT DF_articles_created_at DEFAULT (GETDATE()),
+    updated_at DATETIME NULL,
+    version INT NOT NULL CONSTRAINT DF_articles_version DEFAULT (1),
+    ai_model NVARCHAR(100) NULL,
+    ai_prompt NVARCHAR(MAX) NULL,
+    ai_tokens_input INT NULL,
+    ai_tokens_output INT NULL,
+    ai_cost DECIMAL(10,6) NULL,
+    generated_by NVARCHAR(100) NULL, -- service or user
+    is_published BIT NOT NULL CONSTRAINT DF_articles_is_published DEFAULT (0),
+    published_at DATETIME NULL,
+    notes NVARCHAR(MAX) NULL
+  );
+
+  -- FK to cases
+  ALTER TABLE dbo.articles
+    ADD CONSTRAINT FK_articles_cases
+    FOREIGN KEY (fk_case) REFERENCES dbo.cases(id);
+
+  -- Only one Pending article per case per day
+  CREATE UNIQUE INDEX UX_articles_case_date_pending
+    ON dbo.articles(fk_case, article_date, articleStatus)
+    WHERE articleStatus = 'Pending';
+
+  -- Helpful lookups
+  CREATE INDEX IX_articles_case_date ON dbo.articles(fk_case, article_date);
+  CREATE INDEX IX_articles_status ON dbo.articles(articleStatus);
+END
+GO
+
+-- Link case_events to an article
+IF COL_LENGTH('dbo.case_events','fk_article') IS NULL
+  ALTER TABLE dbo.case_events ADD fk_article UNIQUEIDENTIFIER NULL;
+
+-- Index to find events without link
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='IX_case_events_fk_article' AND object_id=OBJECT_ID('dbo.case_events'))
+  CREATE INDEX IX_case_events_fk_article ON dbo.case_events(fk_article);
+GO
+```
+
+Migration (backfill articles from existing documents.story_*):
+
+* Strategy: for PACER docs where story fields are present, group by (fk_case, CAST(date_downloaded AS DATE)). Create one article per group. Pick latest non-NULL story_body by ai_processed_at DESC as source text; same for headline/subhead. Link same-day case_events to the new article by matching event_date = CAST(date_downloaded AS DATE).
+
+```sql
+;WITH c AS (
+  SELECT
+    d.fk_case,
+    CAST(d.date_downloaded AS DATE) AS article_date,
+    MAX(CASE WHEN d.story_body IS NOT NULL THEN d.ai_processed_at END) AS newest_ai_body_time
+  FROM dbo.documents d
+  WHERE d.story_body IS NOT NULL OR d.story_headline IS NOT NULL OR d.story_sub_head IS NOT NULL
+  GROUP BY d.fk_case, CAST(d.date_downloaded AS DATE)
+),
+best AS (
+  SELECT
+    c.fk_case,
+    c.article_date,
+    d.story_headline,
+    d.story_sub_head,
+    d.story_body,
+    d.ai_processed_at,
+    d.pdf_url
+  FROM c
+  JOIN dbo.documents d
+    ON d.fk_case = c.fk_case
+   AND CAST(d.date_downloaded AS DATE) = c.article_date
+   AND d.ai_processed_at = c.newest_ai_body_time
+)
+INSERT INTO dbo.articles (fk_case, article_date, articleStatus, story_headline, story_sub_head, story_body, image_url, created_at, updated_at, version, ai_model, ai_tokens_input, ai_tokens_output, ai_cost, generated_by)
+SELECT
+  b.fk_case,
+  b.article_date,
+  'Closed', -- historical migration ends the day; future engine will create Pending
+  b.story_headline,
+  b.story_sub_head,
+  b.story_body,
+  NULL,
+  GETDATE(),
+  b.ai_processed_at,
+  1,
+  NULL, NULL, NULL, NULL,
+  'migration'
+FROM best b
+WHERE NOT EXISTS (
+  SELECT 1 FROM dbo.articles a
+  WHERE a.fk_case = b.fk_case AND a.article_date = b.article_date
+);
+GO
+
+-- Link historic events to their article by date
+UPDATE e
+SET e.fk_article = a.id
+FROM dbo.case_events e
+JOIN dbo.articles a
+  ON a.fk_case = e.fk_cases
+ AND a.article_date = e.event_date;
+GO
+
+-- Optional: mark documents.story_* as deprecated for code, keep data in place.
+```
+
+Stored procedure: upsert evolving article and attach event
+
+```sql
+CREATE OR ALTER PROCEDURE dbo.upsert_article_for_event
+  @fk_case INT,
+  @event_id UNIQUEIDENTIFIER, -- case_events.id
+  @event_date DATE,
+  @story_headline NVARCHAR(MAX) = NULL,
+  @story_sub_head NVARCHAR(300) = NULL,
+  @story_body NVARCHAR(MAX) = NULL,
+  @image_url NVARCHAR(500) = NULL,
+  @ai_model NVARCHAR(100) = NULL,
+  @ai_tokens_input INT = NULL,
+  @ai_tokens_output INT = NULL,
+  @ai_cost DECIMAL(10,6) = NULL,
+  @generated_by NVARCHAR(100) = 'pipeline',
+  @article_id UNIQUEIDENTIFIER OUTPUT
+AS
+BEGIN
+  SET NOCOUNT ON;
+  BEGIN TRAN;
+
+  -- Find or create the single Pending article for this case and day
+  SELECT TOP 1 @article_id = id
+  FROM dbo.articles
+  WHERE fk_case = @fk_case
+    AND article_date = @event_date
+    AND articleStatus = 'Pending'
+  ORDER BY created_at DESC;
+
+  IF @article_id IS NULL
+  BEGIN
+    INSERT INTO dbo.articles (fk_case, article_date, articleStatus, story_headline, story_sub_head, story_body, image_url, created_at, updated_at, version, ai_model, ai_tokens_input, ai_tokens_output, ai_cost, generated_by)
+    VALUES (@fk_case, @event_date, 'Pending', @story_headline, @story_sub_head, @story_body, @image_url, GETDATE(), GETDATE(), 1, @ai_model, @ai_tokens_input, @ai_tokens_output, @ai_cost, @generated_by);
+    SET @article_id = SCOPE_IDENTITY(); -- not valid for GUID, so:
+    SELECT @article_id = id FROM dbo.articles WHERE fk_case=@fk_case AND article_date=@event_date AND articleStatus='Pending';
+  END
+  ELSE
+  BEGIN
+    -- Evolve article: overwrite or append body; bump version
+    UPDATE dbo.articles
+      SET story_headline = COALESCE(@story_headline, story_headline),
+          story_sub_head = COALESCE(@story_sub_head, story_sub_head),
+          story_body     = COALESCE(@story_body, story_body),
+          image_url      = COALESCE(@image_url, image_url),
+          ai_model       = COALESCE(@ai_model, ai_model),
+          ai_tokens_input = COALESCE(@ai_tokens_input, ai_tokens_input),
+          ai_tokens_output = COALESCE(@ai_tokens_output, ai_tokens_output),
+          ai_cost        = COALESCE(@ai_cost, ai_cost),
+          updated_at     = GETDATE(),
+          version        = version + 1
+    WHERE id = @article_id;
+  END
+
+  -- Link the event to the article
+  UPDATE dbo.case_events SET fk_article = @article_id WHERE id = @event_id;
+
+  COMMIT;
+END
+GO
+```
+
+Stored procedure: mark Completed and start a new Pending on next event automatically (handled by upsert). UI will call this to lock in a cut.
+
+```sql
+CREATE OR ALTER PROCEDURE dbo.complete_article
+  @article_id UNIQUEIDENTIFIER,
+  @username NVARCHAR(100) = NULL
+AS
+BEGIN
+  UPDATE dbo.articles
+    SET articleStatus = 'Completed',
+        updated_at = GETDATE(),
+        generated_by = COALESCE(@username, generated_by)
+  WHERE id = @article_id AND articleStatus = 'Pending';
+END
+GO
+```
+
+Midnight job: close any still-Pending articles for yesterday. Create a SQL Agent job or a CF scheduler equivalent. Provide T-SQL step:
+
+```sql
+-- Close yesterday's still-pending at 00:05
+UPDATE dbo.articles
+  SET articleStatus = 'Closed',
+      updated_at = GETDATE()
+WHERE articleStatus = 'Pending'
+  AND article_date < CAST(GETDATE() AS DATE);
+```
+
+Python pipeline changes (high level, Copilot to implement in code):
+
+* In summarization step after case_event summary is produced, call stored proc upsert_article_for_event with:
+
+  * fk_case from the event
+  * event_id = case_events.id
+  * event_date = case_events.event_date
+  * story fields from Gemini output
+  * AI accounting fields (model, tokens, cost)
+* Stop writing story_headline, story_sub_head, story_body into documents. Leave event/document summaries as is.
+* If newsroom toggles article to Completed via CF, upsert will create a new Pending for subsequent events automatically.
+* Log to gemini_api_log as before.
+
+ColdFusion UI changes:
+
+* Case details page: new tab Articles showing the evolving article for today on top, historical list by article_date below.
+* Show articleStatus badge. Buttons: Mark Completed, Publish Toggle, Edit Headline/Subhead/Body, Image URL.
+* When user marks Completed, call dbo.complete_article.
+* When midnight close happens, articleStatus shows Closed.
+
+Optional fields included above:
+
+* version, updated_at, ai_model, ai_tokens_input, ai_tokens_output, ai_cost, generated_by, is_published, published_at, notes.
+
+Tests (Copilot to write):
+
+* Create a test case with two events same day -> one Pending article, version increments, both events linked.
+* Mark Completed, send third event same day -> new Pending created, first remains Completed.
+* Midnight close converts any leftover Pending from prior days to Closed.
+* Backfill migration creates Closed articles and links legacy events by date.
+* Unique index blocks creation of a second Pending for same case/date.
+
+Rollback plan:
+
+* If needed, drop FK on case_events.fk_article and delete inserted rows from dbo.articles where generated_by='migration'.
+* Revert app to writing story_* on documents only.
+
+Notes:
+
+* Keep document columns story_* for now but stop updating them. Mark deprecated in code comments.
+* Favor event_date for grouping; if null, fallback to CAST(GETDATE() AS DATE).
+
+Acceptance criteria:
+
+* No duplicate Pending per case per date is possible.
+* New events on same day evolve the same article.
+* Status transitions work as specified.
+* UI exposes status control and displays evolving article.
+* Migration completes without errors and preserves historical content.
