@@ -176,6 +176,11 @@ SUMMARY_PROMPT_TEMPLATE = (
     "{hard_rules}\n{professional_guidance}\n"
     "Role: Senior legal journalist. Write a concise, factual brief for reporters. Use only the provided structured JSON."
     " Do not add or guess. Prioritize filing_action_summary, requested_relief, court_status, orders, financial_terms, statutes, and sentence details.\n\n"
+    "Rules:\n"
+    "- If DATA.adjudication_mode is 'unknown' or empty, explicitly state the plea status is not provided and do not mention any plea, verdict, conviction, or sentencing language.\n"
+    "- Mention counts only if the specific count numbers appear in DATA.counts_alleged, DATA.counts_convicted, or DATA.counts_dismissed.\n"
+    "- If those count lists are empty, avoid referencing count numbers.\n"
+    "- When DATA lacks details, acknowledge the absence instead of inventing facts.\n\n"
     "You will receive a single JSON object named DATA. You must write the HTML sections exactly as specified."
     " If DATA lacks details, state \"No specific information in this document\" where needed.\n\n"
     "DATA:\n{extraction_json}\n\n"
@@ -823,8 +828,11 @@ WHERE p.doc_uid = ?
                 verifier_result = "FAILED_LOCAL"
                 verifier_notes = "; ".join(local_flags)
                 persist_guard_metadata(cur, doc_uid, verifier_result=verifier_result, verifier_notes=verifier_notes)
+                snapshot = extraction_json_str or serialize_extraction(extraction)
+                preview_json = (snapshot[:400] + ("…" if len(snapshot) > 400 else "")) if snapshot else ""
+                preview_html = (summary_html[:400] + ("…" if len(summary_html) > 400 else "")) if summary_html else ""
                 conn.commit()
-                log_message(cur, None, "ERROR", f"Local validation failed for {doc_uid}: {verifier_notes}")
+                log_message(cur, None, "ERROR", f"Local validation failed for {doc_uid}: {verifier_notes}. Extraction preview: {preview_json}. Summary preview: {preview_html}")
                 return
 
             passed, verdict = verify_summary(extraction, summary_html, key)
