@@ -3,6 +3,7 @@ import re
 import sys
 import json
 import time
+import traceback
 from typing import Any, Dict, List, Optional, Tuple
 import cv2
 import numpy as np
@@ -849,7 +850,8 @@ WHERE p.doc_uid = ?
         stage_times['ai_summary_sec'] = round(time.time() - t_ai_start, 2)
 
     except Exception as e:
-        log_message(cur, None, "ERROR", f"Gemini fail {doc_uid}: {e}")
+        tb = traceback.format_exc()
+        log_message(cur, None, "ERROR", f"Gemini fail {doc_uid}: {e}\n{tb}")
         return
 
     if FACT_GUARD:
