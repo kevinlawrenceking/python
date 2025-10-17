@@ -485,7 +485,7 @@ def extraction_has_substance(extraction: Dict[str, Any]) -> bool:
     return False
 
 
-def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date: str, api_key: str) -> Tuple[str, Dict[str, Any]]:
+def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date: str, api_key: str, doc_uid: Optional[str] = None) -> Tuple[str, Dict[str, Any]]:
     model = genai.GenerativeModel(get_available_model(api_key))
     prompt = EXTRACTION_PROMPT_TEMPLATE.format(
         hard_rules=HARD_RULES_PREFACE,
@@ -519,6 +519,12 @@ def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date
         else:
             data = None
         if data is None:
+            preview_raw = trimmed[:400]
+            preview_repr = repr(preview_raw)
+            if doc_uid:
+                _simple_log(f"Extraction parse failure for {doc_uid}: {preview_repr}", "ERROR")
+            else:
+                _simple_log(f"Extraction parse failure preview: {preview_repr}", "ERROR")
             preview = trimmed.replace("\n", " ")
             preview = preview[:400] + ("…" if len(preview) > 400 else "")
             raise ValueError(f"Extraction JSON parse failed: {exc}. Preview: {preview}")
@@ -794,7 +800,7 @@ WHERE p.doc_uid = ?
 
         if FACT_GUARD:
             log_message(cur, None, "INFO", f"FACT_GUARD enabled for {doc_uid}; using extract-verify pipeline")
-            raw_extraction, extraction = extract_facts(pdf_text, summ or "", ev_desc or "", ev_date or "", key)
+            raw_extraction, extraction = extract_facts(pdf_text, summ or "", ev_desc or "", ev_date or "", key, doc_uid)
             extraction_json_str = serialize_extraction(extraction)
             persist_guard_metadata(cur, doc_uid, extraction_json=raw_extraction)
 
