@@ -614,6 +614,10 @@ def serialize_extraction(extraction: Dict[str, Any]) -> str:
 
 
 def extraction_has_substance(extraction: Dict[str, Any]) -> bool:
+    """
+    Check if extraction contains meaningful information beyond just "unknown" values.
+    Returns True if ANY field has substantive content.
+    """
     string_keys = [
         "filing_action_summary",
         "court_status",
@@ -634,16 +638,28 @@ def extraction_has_substance(extraction: Dict[str, Any]) -> bool:
         "protective_terms",
     ]
 
+    # Check string fields for non-unknown values
     for key in string_keys:
         value = str(extraction.get(key) or "").strip().lower()
-        if value and value != "unknown":
+        if value and value not in ("unknown", "none", "n/a", ""):
             return True
 
+    # Check list fields for any content
     for key in list_keys:
         items = extraction.get(key) or []
         if isinstance(items, list) and any(str(item).strip() for item in items):
             return True
 
+    # Check parties
+    parties = extraction.get("parties") or {}
+    if isinstance(parties, dict):
+        plaintiff = str(parties.get("plaintiff") or "").strip().lower()
+        defendant = str(parties.get("defendant") or "").strip().lower()
+        if (plaintiff and plaintiff not in ("unknown", "none", "n/a")) or \
+           (defendant and defendant not in ("unknown", "none", "n/a")):
+            return True
+
+    # Check sentence fields
     sentence = extraction.get("sentence") or {}
     if any((sentence.get("imprisonment_months") or 0, sentence.get("supervised_release_years") or 0,
             sentence.get("fine_usd") or 0, sentence.get("restitution_usd") or 0)):
@@ -732,7 +748,11 @@ def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date
     )
     
     if not raw_json or not raw_json.strip():
+        _simple_log(f"Extraction response was EMPTY for {doc_uid or 'unknown'}", "ERROR")
         raise ValueError("Extraction response was empty")
+    
+    # Log raw response length for debugging
+    _simple_log(f"Extraction raw response length: {len(raw_json)} chars for {doc_uid or 'unknown'}", "INFO")
     
     raw_json = unwrap_code_fence(raw_json)
     trimmed = raw_json.strip()
@@ -1217,8 +1237,14 @@ WHERE p.doc_uid = ?
                 verifier_result = "FAILED_EXTRACTION"
                 verifier_notes = "Extractor returned only unknown values."
                 persist_guard_metadata(cur, doc_uid, verifier_result=verifier_result, verifier_notes=verifier_notes)
+                
+                # Log detailed extraction for debugging
+                extraction_preview = json.dumps(extraction, indent=2)[:1000]
+                raw_preview = (raw_extraction or "")[:500]
+                log_message(cur, None, "ERROR", f"Extraction produced no substantive facts for {doc_uid}. " +
+                           f"Extraction preview: {extraction_preview}. Raw response preview: {raw_preview}")
+                
                 conn.commit()
-                log_message(cur, None, "ERROR", f"Extraction produced no substantive facts for {doc_uid}")
                 return
 
             summary_html = render_summary(extraction)  # No API key
