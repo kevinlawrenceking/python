@@ -35,13 +35,13 @@ def parse_ai_summary(summary_text):
     try:
         soup = BeautifulSoup(summary_text, 'html.parser')
         
-        # Extract EVENT SUMMARY
-        event_section = soup.find('h3', string='EVENT SUMMARY')
+        # Extract EVENT SUMMARY - use lambda to handle whitespace in prettified HTML
+        event_section = soup.find('h3', string=lambda text: text and text.strip() == 'EVENT SUMMARY')
         if event_section and event_section.find_next_sibling('p'):
             result['event_summary'] = event_section.find_next_sibling('p').get_text().strip()
         
         # Extract NEWSWORTHINESS
-        news_section = soup.find('h3', string='NEWSWORTHINESS')
+        news_section = soup.find('h3', string=lambda text: text and text.strip() == 'NEWSWORTHINESS')
         if news_section:
             news_paras = news_section.find_next_siblings('p')
             for para in news_paras:
@@ -56,7 +56,7 @@ def parse_ai_summary(summary_text):
                     break
         
         # Extract STORY elements
-        story_section = soup.find('h3', string='STORY')
+        story_section = soup.find('h3', string=lambda text: text and text.strip() == 'STORY')
         if story_section:
             story_ul = story_section.find_next_sibling('ul')
             if story_ul:
@@ -70,7 +70,7 @@ def parse_ai_summary(summary_text):
                         result['story_body'] = text[5:].strip()
         
         # Extract KEY DETAILS
-        details_section = soup.find('h3', string='KEY DETAILS')
+        details_section = soup.find('h3', string=lambda text: text and text.strip() == 'KEY DETAILS')
         if details_section:
             details_ul = details_section.find_next_sibling('ul')
             if details_ul:
@@ -93,7 +93,7 @@ def parse_ai_summary(summary_text):
                         })
         
         # Extract WHAT'S NEXT
-        next_section = soup.find('h3', string="WHAT'S NEXT")
+        next_section = soup.find('h3', string=lambda text: text and text.strip() == "WHAT'S NEXT")
         if next_section and next_section.find_next_sibling('p'):
             result['whats_next'] = next_section.find_next_sibling('p').get_text().strip()
     

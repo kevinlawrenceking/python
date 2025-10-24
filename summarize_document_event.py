@@ -17,12 +17,23 @@ from pdf2image import convert_from_path
 from cleantext import clean as clean_unicode
 from scraper_base import log_message, setup_logging
 import unicodedata
-import google.generativeai as genai
 from summary_parser import parse_ai_summary, save_structured_summary
 import logging
 
+# Use consolidated service account helper (NO API KEYS)
+from gemini_service_account import call_gemini, call_gemini_json, get_available_model
+
 
 FACT_GUARD = os.getenv("FACT_GUARD", "true").strip().lower() == "true"
+
+# Safety settings for legal documents - more permissive since court documents
+# legitimately discuss sensitive topics (violence, harassment, etc.)
+SAFETY_SETTINGS = [
+    {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_ONLY_HIGH"},
+    {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_ONLY_HIGH"},
+    {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_ONLY_HIGH"},
+    {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_ONLY_HIGH"},
+]
 
 # Configuration
 DSN = "Docketwatch"
@@ -158,10 +169,19 @@ EXTRACTION_PROMPT_TEMPLATE = (
     "  \"verbatim_support\": [],\n"
     "  \"confidence\": \"low\"\n"
     "}}\n\n"
+    "CRITICAL JSON FORMATTING RULES:\n"
+    "1. Your response MUST be valid, complete JSON - no truncation allowed\n"
+    "2. Always close all braces, brackets, and quotes\n"
+    "3. Escape special characters in strings (quotes as \\\", backslashes as \\\\)\n"
+    "4. Use null for truly unknown values in required fields\n"
+    "5. Do NOT include markdown code fences or explanations\n"
+    "6. Ensure proper comma placement between all fields\n"
+    "7. If approaching token limit, summarize remaining content concisely rather than truncating\n\n"
     "Instructions:\n"
     "- Populate text fields with concise summaries drawn verbatim or paraphrased directly from the document.\n"
     "- Use ISO format (YYYY-MM-DD) for dates when provided.\n"
     "- For lists, provide each discrete request, order, hearing, or financial term as a separate string.\n"
+    "- CRITICAL: counts_convicted, counts_dismissed, and counts_alleged must contain integer count numbers (e.g., [1, 3, 5]) if the document explicitly mentions which counts were found guilty, dismissed, or charged. If the document says 'Count 3' or 'counts 3 and 5', extract those integers into the appropriate array. Include count numbers in filing_action_summary when they appear (e.g., 'pleaded guilty to counts 3 and 5' not just 'pleaded guilty to two counts').\n"
     "- For every field you populate with more than \"unknown\" or an empty list, add an object to verbatim_support with keys \"field\" and \"quote\" holding the supporting snippet.\n"
     "- If a field truly has no information, leave it as \"unknown\" or []. Do not invent values.\n\n"
     "Document context:\n"
@@ -338,25 +358,56 @@ def _simple_log(message: str, level: str = "INFO"):
             logging.info(message)
 
 
-def get_available_model(api_key: str) -> str:
-    """Return the single approved Gemini model for summaries."""
-    global CACHED_MODEL_NAME
-    if not CACHED_MODEL_NAME:
-        CACHED_MODEL_NAME = "gemini-2.5-pro"
-    # Ensure client is configured for completeness
-    genai.configure(api_key=api_key)
-    return CACHED_MODEL_NAME
+# Note: get_available_model() is now provided by gemini_service_account module
+# No longer needs API key parameter
 
 
 def _response_to_text(response: Any) -> str:
-    if hasattr(response, "text") and response.text:
-        return response.text.strip()
+    # Check finish_reason first to handle blocked responses
+    if hasattr(response, "candidates") and response.candidates:
+        candidate = response.candidates[0]
+        finish_reason = getattr(candidate, "finish_reason", None)
+        
+        # finish_reason: 1=STOP (normal), 2=MAX_TOKENS, 3=SAFETY, 4=RECITATION, 5=OTHER
+        if finish_reason == 3:  # SAFETY
+            safety_ratings = getattr(candidate, "safety_ratings", [])
+            blocked_categories = [
+                f"{rating.category.name}:{rating.probability.name}" 
+                for rating in safety_ratings 
+                if hasattr(rating, 'probability') and rating.probability.name in ['HIGH', 'MEDIUM']
+            ]
+            raise ValueError(
+                f"LLM response blocked by safety filter. Categories: {', '.join(blocked_categories) if blocked_categories else 'unknown'}. "
+                f"This may occur with sensitive legal content (e.g., assault allegations). Consider adjusting safety_settings."
+            )
+        elif finish_reason == 4:  # RECITATION
+            raise ValueError("LLM response blocked due to potential copyright/recitation issues")
+        elif finish_reason == 2:  # MAX_TOKENS
+            # Response was truncated - try to extract whatever partial content exists
+            logging.warning("Response truncated due to token limit - attempting to extract partial content")
+            parts = candidate.content.parts if candidate.content else []
+            texts = [getattr(part, "text", "") for part in parts]
+            combined = "".join(texts).strip()
+            if combined:
+                return combined
+            raise ValueError("Response truncated due to max_output_tokens limit and no partial content available. Consider increasing token limit.")
+    
+    # Try the quick accessor first (only works for normal completions)
+    try:
+        if hasattr(response, "text") and response.text:
+            return response.text.strip()
+    except ValueError:
+        # Quick accessor failed, fall through to manual extraction
+        pass
+    
+    # Manual extraction from candidates
     if hasattr(response, "candidates") and response.candidates:
         parts = response.candidates[0].content.parts if response.candidates[0].content else []
         texts = [getattr(part, "text", "") for part in parts]
         combined = "".join(texts).strip()
         if combined:
             return combined
+    
     raise ValueError("LLM response did not contain text content")
 
 
@@ -590,8 +641,70 @@ def extraction_has_substance(extraction: Dict[str, Any]) -> bool:
     return False
 
 
-def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date: str, api_key: str, doc_uid: Optional[str] = None) -> Tuple[str, Dict[str, Any]]:
-    model = genai.GenerativeModel(get_available_model(api_key))
+def auto_close_json(truncated_json: str) -> str:
+    """
+    Attempt to close unclosed JSON structures in truncated response.
+    Handles cases where API response was cut off mid-output.
+    """
+    result = truncated_json
+    
+    # Count quotes to see if we're inside a string
+    quote_count = 0
+    escaped = False
+    for char in result:
+        if char == '\\' and not escaped:
+            escaped = True
+            continue
+        if char == '"' and not escaped:
+            quote_count += 1
+        escaped = False
+    
+    # If odd number of quotes, we're inside a string - close it
+    if quote_count % 2 == 1:
+        result += '"'
+    
+    # Now count brackets/braces (only outside of strings)
+    open_braces = 0
+    open_brackets = 0
+    in_string = False
+    escaped = False
+    
+    for char in result:
+        if char == '\\' and not escaped:
+            escaped = True
+            continue
+        if char == '"' and not escaped:
+            in_string = not in_string
+        if not in_string and not escaped:
+            if char == '{':
+                open_braces += 1
+            elif char == '}':
+                open_braces -= 1
+            elif char == '[':
+                open_brackets += 1
+            elif char == ']':
+                open_brackets -= 1
+        escaped = False
+    
+    # Close any open arrays first, then objects
+    result += ']' * max(0, open_brackets)
+    result += '}' * max(0, open_braces)
+    
+    return result
+
+
+def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date: str, doc_uid: Optional[str] = None) -> Tuple[str, Dict[str, Any]]:
+    """
+    Extract structured facts from document using AI with robust error handling.
+    
+    Implements:
+    - Increased token limits (8192) to prevent truncation
+    - JSON repair for malformed responses
+    - Detailed error logging with preview
+    - Graceful degradation
+    
+    NOTE: No longer requires api_key parameter - uses service account
+    """
     prompt = EXTRACTION_PROMPT_TEMPLATE.format(
         hard_rules=HARD_RULES_PREFACE,
         case_overview=case_overview or "unknown",
@@ -599,14 +712,27 @@ def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date
         event_desc=event_desc or "unknown",
         pdf_body=pdf_text or ""
     )
-    response = model.generate_content(prompt)
-    raw_json = unwrap_code_fence(_response_to_text(response))
-    if not raw_json.strip():
+    
+    # Use consolidated service account helper
+    raw_json = call_gemini(
+        prompt,
+        max_tokens=8192,  # Maximum for gemini-2.5-flash (large JSON extraction)
+        temperature=0.1
+    )
+    
+    if not raw_json or not raw_json.strip():
         raise ValueError("Extraction response was empty")
+    
+    raw_json = unwrap_code_fence(raw_json)
     trimmed = raw_json.strip()
+    
+    # Attempt to parse JSON with progressive repair strategies
     try:
         data = json.loads(trimmed)
     except json.JSONDecodeError as exc:
+        _simple_log(f"JSON parse error at position {exc.pos}: {exc.msg}", "WARNING")
+        
+        # Repair Strategy 1: Add missing opening/closing braces
         repaired = trimmed
         changed = False
         if repaired and not repaired.startswith("{"):
@@ -615,51 +741,108 @@ def extract_facts(pdf_text: str, case_overview: str, event_desc: str, event_date
         if repaired and not repaired.endswith("}"):
             repaired = repaired + "}"
             changed = True
+        
         if changed:
             try:
                 data = json.loads(repaired)
                 raw_json = repaired
+                _simple_log(f"JSON repair (add braces) successful for {doc_uid or 'unknown'}", "INFO")
             except json.JSONDecodeError:
                 data = None
         else:
             data = None
+        
+        # Repair Strategy 2: Auto-close truncated JSON
         if data is None:
-            preview_raw = trimmed[:400]
+            try:
+                # Try to close structures that were cut off
+                truncated_at = min(exc.pos + 100, len(trimmed))  # Include some context after error
+                repaired = auto_close_json(trimmed[:truncated_at])
+                data = json.loads(repaired)
+                raw_json = repaired
+                _simple_log(f"JSON repair (auto-close) successful for {doc_uid or 'unknown'}", "INFO")
+            except json.JSONDecodeError:
+                data = None
+        
+        # All repair attempts failed - raise detailed error
+        if data is None:
+            preview_raw = trimmed[:500]
             preview_repr = repr(preview_raw)
+            error_context = f"at position {exc.pos}" if hasattr(exc, 'pos') else ""
+            
             if doc_uid:
-                _simple_log(f"Extraction parse failure for {doc_uid}: {preview_repr}", "ERROR")
+                _simple_log(f"Extraction parse failure for {doc_uid} {error_context}: {preview_repr}", "ERROR")
             else:
-                _simple_log(f"Extraction parse failure preview: {preview_repr}", "ERROR")
+                _simple_log(f"Extraction parse failure {error_context}: {preview_repr}", "ERROR")
+            
+            # Create user-friendly preview
             preview = trimmed.replace("\n", " ")
-            preview = preview[:400] + ("…" if len(preview) > 400 else "")
-            raise ValueError(f"Extraction JSON parse failed: {exc}. Preview: {preview}")
+            preview = preview[:500] + ("…" if len(preview) > 500 else "")
+            
+            raise ValueError(
+                f"Extraction JSON parse failed: {exc}. "
+                f"Position: {exc.pos if hasattr(exc, 'pos') else 'unknown'}. "
+                f"Preview: {preview}"
+            )
+    
     if not isinstance(data, dict):
         raise ValueError("Extraction response must be a JSON object")
+    
     normalized = ensure_extraction_schema(data)
     return raw_json, normalized
 
 
-def render_summary(extraction: Dict[str, Any], api_key: str) -> str:
-    model = genai.GenerativeModel(get_available_model(api_key))
+def render_summary(extraction: Dict[str, Any]) -> str:
+    """
+    Render HTML summary from structured extraction data.
+    Uses increased token limit to accommodate detailed summaries.
+    
+    NOTE: No longer requires api_key parameter - uses service account
+    """
     extraction_json = serialize_extraction(extraction)
     prompt = SUMMARY_PROMPT_TEMPLATE.format(
         hard_rules=HARD_RULES_PREFACE,
         professional_guidance=PRO_SUMMARY_GUIDANCE,
         extraction_json=extraction_json
     )
-    response = model.generate_content(prompt)
-    return _response_to_text(response)
+    
+    # Use consolidated service account helper
+    response = call_gemini(
+        prompt,
+        max_tokens=8192,  # High limit for detailed summaries
+        temperature=0.3
+    )
+    
+    if not response:
+        raise ValueError("Summary rendering returned no response")
+    
+    return response
 
 
-def verify_summary(extraction: Dict[str, Any], html_summary: str, api_key: str) -> Tuple[bool, str]:
-    model = genai.GenerativeModel(get_available_model(api_key))
+def verify_summary(extraction: Dict[str, Any], html_summary: str) -> Tuple[bool, str]:
+    """
+    Verify summary against extraction data for accuracy.
+    Uses moderate token limit since verification responses are shorter.
+    
+    NOTE: No longer requires api_key parameter - uses service account
+    """
     prompt = VERIFIER_PROMPT_TEMPLATE.format(
         hard_rules=HARD_RULES_PREFACE,
         extraction_json=serialize_extraction(extraction),
         summary_html=html_summary
     )
-    response = model.generate_content(prompt)
-    verdict = _response_to_text(response).strip()
+    
+    # Use consolidated service account helper
+    response = call_gemini(
+        prompt,
+        max_tokens=4096,  # Moderate limit for verification feedback
+        temperature=0.1
+    )
+    
+    if not response:
+        raise ValueError("Verification returned no response")
+    
+    verdict = response.strip()
     if verdict == "PASSED":
         return True, verdict
     return False, verdict
@@ -693,9 +876,11 @@ def local_validate(extraction: Dict[str, Any], summary_html: str) -> List[str]:
         missing = sorted(mentioned_counts - counts_supported)
         contradictions.append(f"Count references not supported by extraction: {missing}")
 
-    # Only flag sex trafficking if it's explicitly called out by name (not just a synonym for prostitution)
-    if re.search(r"\bsex traffick", text) and not any("1591" in str(statute).lower() for statute in extraction.get("statutes", [])):
-        contradictions.append("Sex trafficking language present without supporting statute in DATA")
+    # Only flag if "sex trafficking" appears as a standalone crime label (not "transportation" which is different)
+    if re.search(r"\bsex\s+traffick(?:ing|ed|er)", text) and not any("1591" in str(statute).lower() for statute in extraction.get("statutes", [])):
+        # Double-check it's not just part of "transportation to engage in prostitution"
+        if not re.search(r"transportation\s+to\s+engage\s+in\s+prostitution", text):
+            contradictions.append("Sex trafficking language present without supporting statute in DATA")
 
     return contradictions
 
@@ -749,10 +934,130 @@ def persist_summary(cursor, doc_uid: str, summary_text: str, summary_html: str, 
             (summary_text, summary_html, datetime.now(), doc_uid)
         )
 
-def refine_ocr_with_ai(text: str, api_key: str) -> str:
-    genai.configure(api_key=api_key)
-    model_name = get_available_model(api_key)
-    model = genai.GenerativeModel(model_name)
+def generate_event_summary(cursor, event_id: str) -> Optional[str]:
+    """
+    Generate a summary for an entire case event by aggregating all document summaries.
+    Updates case_events.summarize with the generated summary.
+    
+    Args:
+        cursor: Database cursor
+        event_id: GUID of the case_event
+        
+    Returns:
+        The generated event summary, or None if generation failed
+    """
+    try:
+        # Get all documents for this event with their summaries
+        cursor.execute("""
+            SELECT 
+                d.doc_uid,
+                d.event_summary,
+                d.summary_ai,
+                d.newsworthiness,
+                d.newsworthiness_reason,
+                e.event_description,
+                e.event_date,
+                c.case_name,
+                c.case_number
+            FROM docketwatch.dbo.documents d
+            JOIN docketwatch.dbo.case_events e ON d.fk_case_event = e.id
+            JOIN docketwatch.dbo.cases c ON e.fk_cases = c.id
+            WHERE e.id = CAST(? AS uniqueidentifier)
+              AND d.event_summary IS NOT NULL
+            ORDER BY d.date_downloaded ASC
+        """, (event_id,))
+        
+        docs = cursor.fetchall()
+        if not docs:
+            _simple_log(f"No documents with summaries found for event {event_id}", "WARNING")
+            return None
+        
+        # Build aggregated context
+        case_name = docs[0].case_name if docs[0].case_name else "Unknown Case"
+        case_number = docs[0].case_number if docs[0].case_number else "Unknown"
+        event_desc = docs[0].event_description if docs[0].event_description else "Unknown Event"
+        # Handle event_date whether it's a datetime object or string
+        if docs[0].event_date:
+            event_date = docs[0].event_date.strftime('%Y-%m-%d') if hasattr(docs[0].event_date, 'strftime') else str(docs[0].event_date)
+        else:
+            event_date = "Unknown"
+        
+        document_summaries = []
+        for idx, doc in enumerate(docs, 1):
+            doc_summary = doc.event_summary or doc.summary_ai or "No summary available"
+            # Truncate very long summaries
+            if len(doc_summary) > 500:
+                doc_summary = doc_summary[:500] + "..."
+            document_summaries.append(f"Document {idx}: {doc_summary}")
+        
+        combined_docs = "\n\n".join(document_summaries)
+        
+        # Create prompt for event-level summary
+        prompt = f"""You are a legal journalist. Create a brief event-level summary that synthesizes the following document summaries into a cohesive overview.
+
+CASE INFORMATION:
+Case: {case_name} ({case_number})
+Event Date: {event_date}
+Event Description: {event_desc}
+
+DOCUMENT SUMMARIES:
+{combined_docs}
+
+Instructions:
+- Write 2-4 sentences that capture the overall significance of this event
+- Focus on what happened and why it matters
+- If multiple documents describe the same event from different angles, synthesize them
+- Do not list documents separately - create a unified narrative
+- Keep it concise and journalist-friendly
+- Do not use markdown or HTML formatting
+
+Event Summary:"""
+        
+        # Generate summary using service account helper
+        try:
+            event_summary = call_gemini(
+                prompt,
+                temperature=0.5,
+                max_tokens=2048
+            )
+            
+            if not event_summary or not event_summary.strip():
+                _simple_log(f"Empty response from Gemini for event {event_id}", "WARNING")
+                print(f"WARNING: Empty response from Gemini")
+                return None
+                
+        except Exception as vertex_err:
+            error_msg = str(vertex_err)
+            if "429" in error_msg or "quota" in error_msg.lower() or "ResourceExhausted" in error_msg:
+                _simple_log(f"Vertex AI quota exceeded for event {event_id}", "WARNING")
+                print(f"WARNING: Vertex AI quota exceeded - cannot generate event summary")
+                return None
+            else:
+                # Re-raise other errors
+                raise
+        
+        # Update case_events table with the summary
+        cursor.execute("""
+            UPDATE docketwatch.dbo.case_events
+            SET summarize = ?
+            WHERE id = CAST(? AS uniqueidentifier)
+        """, (event_summary, event_id))
+        
+        _simple_log(f"Generated event summary for {event_id}: {event_summary[:100]}...", "INFO")
+        return event_summary
+        
+    except Exception as e:
+        tb = traceback.format_exc()
+        _simple_log(f"Failed to generate event summary for {event_id}: {e}\n{tb}", "ERROR")
+        return None
+
+def refine_ocr_with_ai(text: str) -> str:
+    """
+    Clean OCR errors using AI.
+    Uses high token limit since OCR text can be lengthy.
+    
+    NOTE: No longer requires api_key parameter - uses service account
+    """
     prompt = f"""
 SYSTEM: You are an expert legal document cleaner.
 Your job is to correct OCR errors in legal text while preserving original meaning.
@@ -764,27 +1069,28 @@ Fix split words, misspellings, and remove junk characters.
 
 Return only the corrected text. Do not summarize or explain.
 """
-    try:
-        response = model.generate_content(prompt)
-        return response.candidates[0].content.parts[0].text.strip()
-    except Exception as e:
-        if '404' in str(e) and 'not found' in str(e):
-            _simple_log(f"Refine OCR model {model_name} 404. Retrying with {model_name}.", "WARNING")
-            try:
-                fallback = genai.GenerativeModel(model_name)
-                response = fallback.generate_content(prompt)
-                return response.candidates[0].content.parts[0].text.strip()
-            except Exception as inner:
-                _simple_log(f"Fallback refine OCR failed: {inner}", "ERROR")
-        raise
+    
+    # Use consolidated service account helper
+    response = call_gemini(
+        prompt,
+        max_tokens=8192,  # Maximum for large OCR text cleanup
+        temperature=0.1
+    )
+    
+    if not response:
+        raise ValueError("OCR refinement returned no response")
+    
+    return response.strip()
 
-def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
-    genai.configure(api_key=api_key)
-    model_name = get_available_model(api_key)
-    model = genai.GenerativeModel(model_name)
-
+def ask_gemini(case_summary, event_desc, event_date, pdf_text):
+    """
+    Legacy single-shot summarization (used when FACT_GUARD=false).
+    Uses high token limit for complete summaries.
+    
+    NOTE: No longer requires api_key parameter - uses service account
+    """
     # Ensure input size is controlled
-    case_summary = (case_summary or "")[:2000]  # #2: Increased limit to preserve case detail
+    case_summary = (case_summary or "")[:2000]  # Increased limit to preserve case detail
     event_desc = (event_desc or "")[:500]
 
     # Build the body content with event info and PDF text
@@ -795,31 +1101,17 @@ def ask_gemini(case_summary, event_desc, event_date, pdf_text, api_key):
     # Replace both placeholders in the rules template
     full_prompt = RULES.replace("{CASE_OVERVIEW}", case_summary).replace("{PDF_BODY}", body_text)
 
-    # Optional debug output (commented out for now)
-    # print("========== GEMINI PROMPT START ==========")
-    # print(full_prompt[:16000])
-    # print("=========== GEMINI PROMPT END ===========")
-
-    # Submit with retry handling for model issues
-    attempt_models = [model_name, model_name]
-
-    last_err = None
-    for idx, mname in enumerate(attempt_models):
-        try:
-            if idx > 0:
-                _simple_log(f"Retrying summary with {mname}", "WARNING")
-            alt_model = genai.GenerativeModel(mname)
-            response = alt_model.generate_content(full_prompt[:16000])
-            # Prefer response.text if present, else drill into candidates
-            if hasattr(response, 'text') and response.text:
-                return response.text.strip()
-            return response.candidates[0].content.parts[0].text.strip()
-        except Exception as e:
-            last_err = e
-            _simple_log(f"Model {mname} error: {e}", "WARNING")
-            continue
-    _simple_log(f"All model attempts failed: {last_err}", "ERROR")
-    raise last_err
+    # Use consolidated service account helper
+    response = call_gemini(
+        full_prompt[:16000],
+        max_tokens=8192,  # Maximum for detailed legacy summaries
+        temperature=0.3
+    )
+    
+    if not response:
+        raise ValueError("Legacy summary generation returned no response")
+    
+    return response.strip()
 
 
 def process_single_pdf(doc_uid: str):
@@ -832,11 +1124,11 @@ def process_single_pdf(doc_uid: str):
     conn, cur = get_cursor()
     log_message(cur, None, "INFO", f"Starting PDF processing for doc_uid: {doc_uid}")
     
-    key = get_util(cur, "gemini_api")
+    # No longer need API key - using service account
     docs_root = get_util(cur, "docs_root")
-    if not (key and docs_root):
-        log_message(cur, None, "ERROR", "Missing Gemini key or docs_root configuration")
-        print("Missing Gemini key or docs_root.")
+    if not docs_root:
+        log_message(cur, None, "ERROR", "Missing docs_root configuration")
+        print("Missing docs_root.")
         return
 
     cur.execute("""
@@ -873,7 +1165,7 @@ WHERE p.doc_uid = ?
         raw = pdf_to_text(abs_path)
         clean = clean_ocr_text(raw)
         try:
-            clean = refine_ocr_with_ai(clean, key)
+            clean = refine_ocr_with_ai(clean)  # No API key needed
             log_message(cur, None, "INFO", f"OCR text refined with AI for {doc_uid}")
         except Exception as e:
             log_message(cur, None, "WARNING", f"Refinement failed for {doc_uid}: {e}")
@@ -906,7 +1198,7 @@ WHERE p.doc_uid = ?
 
         if FACT_GUARD:
             log_message(cur, None, "INFO", f"FACT_GUARD enabled for {doc_uid}; using extract-verify pipeline")
-            raw_extraction, extraction = extract_facts(pdf_text, summ or "", ev_desc or "", ev_date or "", key, doc_uid)
+            raw_extraction, extraction = extract_facts(pdf_text, summ or "", ev_desc or "", ev_date or "", doc_uid)  # No API key
             extraction_json_str = serialize_extraction(extraction)
             persist_guard_metadata(cur, doc_uid, extraction_json=raw_extraction)
 
@@ -918,7 +1210,7 @@ WHERE p.doc_uid = ?
                 log_message(cur, None, "ERROR", f"Extraction produced no substantive facts for {doc_uid}")
                 return
 
-            summary_html = render_summary(extraction, key)
+            summary_html = render_summary(extraction)  # No API key
             summary_html = fix_encoding_garbage(summary_html)
             summary_html = normalize_quotes(summary_html)
             summary_text = summary_html
@@ -935,7 +1227,7 @@ WHERE p.doc_uid = ?
                 log_message(cur, None, "ERROR", f"Local validation failed for {doc_uid}: {verifier_notes}. Extraction preview: {preview_json}. Summary preview: {preview_html}")
                 return
 
-            passed, verdict = verify_summary(extraction, summary_html, key)
+            passed, verdict = verify_summary(extraction, summary_html)  # No API key
             verifier_result = "PASSED" if passed else "FAILED"
             verifier_notes = None if verdict == "PASSED" else verdict
             persist_guard_metadata(cur, doc_uid, verifier_result=verifier_result, verifier_notes=verifier_notes)
@@ -948,7 +1240,7 @@ WHERE p.doc_uid = ?
             summary_text = summary_html
             parsed_summary = parse_ai_summary(summary_text)
         else:
-            gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text, key)
+            gem = ask_gemini(summ or "", ev_desc or "", ev_date or "", pdf_text)  # No API key
             gem = fix_encoding_garbage(gem)
             gem = normalize_quotes(gem)
             summary_text = gem
@@ -980,6 +1272,29 @@ WHERE p.doc_uid = ?
     except Exception as e:
         log_message(cur, None, "WARNING", f"Failed to save structured data for {doc_uid}: {e}")
         log_message(cur, None, "INFO", f"PDF {doc_uid} processed (summary only)")
+    
+    # Generate event-level summary after processing this document
+    try:
+        # Get the event_id for this document
+        cur.execute("""
+            SELECT fk_case_event 
+            FROM docketwatch.dbo.documents 
+            WHERE doc_uid = CAST(? AS uniqueidentifier)
+        """, (doc_uid,))
+        event_row = cur.fetchone()
+        if event_row and event_row.fk_case_event:
+            event_id = str(event_row.fk_case_event)
+            event_summary = generate_event_summary(cur, event_id)
+            if event_summary:
+                log_message(cur, None, "INFO", f"Generated event summary for event {event_id}")
+            else:
+                log_message(cur, None, "WARNING", f"Event summary generation returned None for event {event_id}")
+        else:
+            log_message(cur, None, "DEBUG", f"Document {doc_uid} has no associated case_event, skipping event summary generation")
+    except Exception as e:
+        tb = traceback.format_exc()
+        log_message(cur, None, "WARNING", f"Failed to generate event summary: {e}\n{tb}")
+        # Don't fail the whole process - document summary is already saved
     
     conn.commit()
     stage_times['total_sec'] = round(time.time() - t_start, 2)
