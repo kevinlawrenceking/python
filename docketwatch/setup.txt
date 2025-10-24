@@ -1,0 +1,13 @@
+DO NOT MODIFY ANYTHING BESIDES NUMBERS, NO SPACES BETWEEN
+
+MondayStartDate:09012025
+
+TV
+Season:18
+MondayEpisodeStart:313
+WGStart:53
+
+LIVE
+Season:13
+MondayEpisodeStart:261
+WGStart:53
