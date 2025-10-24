@@ -13636,3 +13636,9 @@ No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: 515BB2F1-97
 START: Fri 10/24/2025 13:00:00.16 summarize_document_event --order 
 No unsummarized documents found for today.
 Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Fri 10/24/2025 13:03:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
+START: Fri 10/24/2025 13:06:00.13 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]

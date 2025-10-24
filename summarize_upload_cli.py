@@ -13,6 +13,17 @@ import traceback
 from datetime import datetime
 from typing import Dict, Any, Optional
 
+# Fix Windows console encoding for Unicode characters
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Python < 3.7
+        import codecs
+        sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+        sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
 # Redirect all regular output to stderr to keep stdout clean for JSON only
 original_stdout = sys.stdout
 sys.stdout = sys.stderr

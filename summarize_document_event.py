@@ -20,6 +20,17 @@ import unicodedata
 from summary_parser import parse_ai_summary, save_structured_summary
 import logging
 
+# Fix Windows console encoding for Unicode characters
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        # Python < 3.7
+        import codecs
+        sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+        sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
 # Use consolidated service account helper (NO API KEYS)
 from gemini_service_account import call_gemini, call_gemini_json, get_available_model
 
