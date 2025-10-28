@@ -17387,3 +17387,6 @@ START: Tue 10/28/2025 14:36:00.12 summarize_document_event --order
 C:\Program Files\Python312\Lib\site-packages\vertexai\generative_models\_generative_models.py:433: UserWarning: This feature is deprecated as of June 24, 2025 and will be removed on June 24, 2026. For details, see https://cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.
   warning_logs.show_deprecation_warning()
 No doc_uid argument supplied. Selecting by date_downloaded ASC. Doc: BB3866FF-E3F3-4E6D-8B70-BF3772ADF686
+START: Tue 10/28/2025 14:39:00.14 summarize_document_event --order 
+No unsummarized documents found for today.
+Usage: python summarize_document_event.py <doc_uid> [--order=asc|desc]
